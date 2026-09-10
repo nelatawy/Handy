@@ -31,6 +31,7 @@ export const routes: Routes = [
       { path: 'request/:id/offers', loadComponent: () => import('./features/user/live-offers/live-offers.component').then(m => m.LiveOffersComponent) },
       { path: 'job/:id',     loadComponent: () => import('./features/user/active-job/active-job.component').then(m => m.ActiveJobComponent) },
       { path: 'history',     loadComponent: () => import('./features/user/transaction-history/transaction-history.component').then(m => m.TransactionHistoryComponent) },
+      { path: 'profile',     loadComponent: () => import('./features/user/user-profile/user-profile.component').then(m => m.UserProfileComponent) },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

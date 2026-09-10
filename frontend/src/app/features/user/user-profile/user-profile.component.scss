@@ -1,0 +1,254 @@
+@use "../../../../styles/variables" as v;
+@use "../../../../styles/mixins" as m;
+
+.user-profile {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: v.$space-6 v.$space-4;
+
+  @include m.md { padding: v.$space-8 v.$space-6; }
+
+  // ── Card ─────────────────────────────────────────────────────────────────
+  &__card {
+    background: v.$color-surface;
+    border: 1px solid v.$color-border;
+    border-radius: v.$radius-2xl;
+    box-shadow: v.$shadow-lg;
+    overflow: hidden;
+  }
+
+  // ── Header ────────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: v.$space-4;
+    padding: v.$space-6;
+    background: linear-gradient(135deg, v.$color-primary-50, v.$color-white);
+    border-bottom: 1px solid v.$color-border;
+    flex-wrap: wrap;
+  }
+
+  &__avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, v.$color-primary-400, v.$color-primary-600);
+    color: v.$color-white;
+    font-size: v.$font-size-lg;
+    font-weight: v.$font-weight-bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: v.$shadow-md;
+    letter-spacing: 0.05em;
+  }
+
+  &__identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-1;
+  }
+
+  &__name {
+    font-size: v.$font-size-2xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-text-primary;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  &__role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: v.$space-1 v.$space-3;
+    background: v.$color-primary-100;
+    color: v.$color-primary-700;
+    border-radius: v.$radius-full;
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-semibold;
+    width: fit-content;
+  }
+
+  &__edit-btn {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  // ── View mode: fields list ─────────────────────────────────────────────────
+  &__fields {
+    padding: v.$space-2 0;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-1;
+    padding: v.$space-4 v.$space-6;
+    border-bottom: 1px solid v.$color-border;
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__field-label {
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__field-value {
+    font-size: v.$font-size-base;
+    color: v.$color-text-primary;
+    font-weight: v.$font-weight-medium;
+
+    &--mono {
+      font-family: v.$font-mono;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__field-note {
+    font-size: v.$font-size-xs;
+    color: v.$color-text-muted;
+    font-style: italic;
+  }
+
+  // ── Edit form ─────────────────────────────────────────────────────────────
+  &__form {
+    padding: v.$space-6;
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-5;
+  }
+
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-2;
+  }
+
+  &__form-label {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+  }
+
+  &__input {
+    width: 100%;
+    padding: v.$space-3 v.$space-4;
+    border: 1.5px solid v.$color-border;
+    border-radius: v.$radius-lg;
+    font-size: v.$font-size-base;
+    font-family: inherit;
+    color: v.$color-text-primary;
+    background: v.$color-white;
+    transition: v.$transition-fast;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: v.$color-border-focus;
+      box-shadow: v.$shadow-glow;
+    }
+
+    &--readonly {
+      background: v.$color-gray-50;
+      color: v.$color-text-muted;
+      cursor: not-allowed;
+    }
+  }
+
+  &__form-error {
+    font-size: v.$font-size-xs;
+    color: v.$color-danger;
+  }
+
+  &__form-actions {
+    display: flex;
+    gap: v.$space-3;
+    justify-content: flex-end;
+    padding-top: v.$space-2;
+    border-top: 1px solid v.$color-border;
+  }
+
+  // ── Skeleton ──────────────────────────────────────────────────────────────
+  &__skeleton {
+    padding: v.$space-8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: v.$space-4;
+  }
+
+  &__avatar-skeleton {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+  }
+
+  // ── Empty / error ─────────────────────────────────────────────────────────
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: v.$space-4;
+    padding: v.$space-16 v.$space-4;
+    text-align: center;
+    color: v.$color-text-secondary;
+  }
+
+  &__empty-icon { font-size: 3rem; }
+}
+
+// ── Shared skeleton base ──────────────────────────────────────────────────────
+.skeleton {
+  background: linear-gradient(90deg, v.$color-gray-100 25%, v.$color-gray-200 50%, v.$color-gray-100 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: v.$radius-sm;
+  height: 1rem;
+
+  &--line { width: 100%; }
+  &--w40  { width: 40%; }
+  &--w50  { width: 50%; }
+  &--w60  { width: 60%; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ── Shared buttons ────────────────────────────────────────────────────────────
+.btn-outline-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-1;
+  padding: v.$space-2 v.$space-4;
+  border: 1.5px solid v.$color-primary-400;
+  border-radius: v.$radius-lg;
+  color: v.$color-primary-600;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-semibold;
+  background: transparent;
+  cursor: pointer;
+  transition: v.$transition-base;
+
+  &:hover { background: v.$color-primary-50; border-color: v.$color-primary-500; }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

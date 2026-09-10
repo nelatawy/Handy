@@ -14,6 +14,8 @@
                     translate }}</a>
                 <a routerLink="/user/history" routerLinkActive="navbar__link--active" class="navbar__link">{{
                     'NAV.HISTORY' | translate }}</a>
+                <a routerLink="/user/profile" routerLinkActive="navbar__link--active" class="navbar__link">{{
+                    'NAV.PROFILE' | translate }}</a>
                 } @else {
                 <a routerLink="/worker/home" routerLinkActive="navbar__link--active" class="navbar__link">{{ 'NAV.HOME'
                     | translate }}</a>
@@ -46,6 +48,7 @@
             @if (auth.isUser()) {
             <a routerLink="/user/home" class="navbar__mobile-link">{{ 'NAV.HOME' | translate }}</a>
             <a routerLink="/user/history" class="navbar__mobile-link">{{ 'NAV.HISTORY' | translate }}</a>
+            <a routerLink="/user/profile" class="navbar__mobile-link">{{ 'NAV.PROFILE' | translate }}</a>
             } @else {
             <a routerLink="/worker/home" class="navbar__mobile-link">{{ 'NAV.HOME' | translate }}</a>
             <a routerLink="/worker/feed" class="navbar__mobile-link">{{ 'NAV.REQUESTS' | translate }}</a>

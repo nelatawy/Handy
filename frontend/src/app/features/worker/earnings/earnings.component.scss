@@ -1,0 +1,315 @@
+@use "../../../../styles/variables" as v;
+@use "../../../../styles/mixins" as m;
+
+.earnings {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: v.$space-6 v.$space-4;
+
+  @include m.md {
+    padding: v.$space-8 v.$space-6;
+  }
+
+  // ── Hero balance card ─────────────────────────────────────────────────────
+  &__hero {
+    background: linear-gradient(135deg, v.$color-primary-700 0%, v.$color-primary-500 60%, v.$color-primary-400 100%);
+    border-radius: v.$radius-2xl;
+    padding: v.$space-8 v.$space-6;
+    color: v.$color-white;
+    text-align: center;
+    margin-bottom: v.$space-8;
+    box-shadow: v.$shadow-xl;
+    position: relative;
+    overflow: hidden;
+
+    // Decorative glow orb
+    &::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    &--skeleton {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: v.$space-4;
+      background: v.$color-gray-100;
+    }
+  }
+
+  &__hero-label {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+    margin-bottom: v.$space-3;
+  }
+
+  &__hero-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: v.$space-2;
+    margin-bottom: v.$space-2;
+  }
+
+  &__hero-value {
+    font-size: v.$font-size-4xl;
+    font-weight: v.$font-weight-bold;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__hero-currency {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-semibold;
+    opacity: 0.85;
+  }
+
+  &__hero-total {
+    font-size: v.$font-size-sm;
+    opacity: 0.75;
+    margin: 0 0 v.$space-6;
+  }
+
+  &__withdraw-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: v.$color-white;
+    backdrop-filter: blur(4px);
+    padding: v.$space-3 v.$space-8;
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-semibold;
+    border-radius: v.$radius-full;
+    cursor: pointer;
+    transition: v.$transition-base;
+    display: inline-flex;
+    align-items: center;
+    gap: v.$space-2;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__payout-note {
+    font-size: v.$font-size-xs;
+    opacity: 0.65;
+    margin: v.$space-3 0 0;
+  }
+
+  // ── Section title ─────────────────────────────────────────────────────────
+  &__section-title {
+    font-size: v.$font-size-lg;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+    margin-bottom: v.$space-4;
+    padding-bottom: v.$space-2;
+    border-bottom: 2px solid v.$color-border;
+  }
+
+  // ── Transaction list ──────────────────────────────────────────────────────
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-3;
+  }
+
+  // ── Empty state ───────────────────────────────────────────────────────────
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: v.$space-4;
+    padding: v.$space-12 v.$space-4;
+    text-align: center;
+  }
+
+  &__empty-icon { font-size: 3rem; line-height: 1; }
+
+  &__empty-title {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+    margin: 0;
+  }
+
+  &__empty-text {
+    font-size: v.$font-size-base;
+    color: v.$color-text-secondary;
+    margin: 0;
+  }
+}
+
+// ── Shared tx-card (same as transaction-history) ──────────────────────────────
+.tx-card {
+  display: flex;
+  align-items: center;
+  gap: v.$space-4;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-xl;
+  padding: v.$space-4 v.$space-5;
+  box-shadow: v.$shadow-sm;
+  transition: v.$transition-base;
+  border-left: 4px solid v.$color-border;
+
+  &:hover { box-shadow: v.$shadow-md; transform: translateY(-1px); }
+
+  &--confirmed { border-left-color: v.$color-success; }
+  &--pending   { border-left-color: v.$color-warning; }
+  &--failed    { border-left-color: v.$color-danger; }
+
+  &--skeleton {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: v.$space-2;
+    pointer-events: none;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: v.$space-3;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: v.$radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+
+    &--online { background: v.$color-online-light; }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-1;
+    min-width: 0;
+  }
+
+  &__job-id {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+    font-family: v.$font-mono;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__date { font-size: v.$font-size-xs; color: v.$color-text-muted; }
+
+  &__badges {
+    display: flex;
+    gap: v.$space-1;
+    align-items: center;
+  }
+
+  &__amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  &__amount-value {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-text-primary;
+    line-height: 1.2;
+  }
+
+  &__amount-currency { font-size: v.$font-size-xs; color: v.$color-text-muted; font-weight: v.$font-weight-medium; }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+
+  &--success { background: v.$color-success-light; color: #16a34a; }
+  &--warning { background: v.$color-warning-light; color: #b45309; }
+  &--danger  { background: v.$color-danger-light;  color: v.$color-danger; }
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────────────
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+.skeleton {
+  background: linear-gradient(90deg, v.$color-gray-100 25%, v.$color-gray-200 50%, v.$color-gray-100 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: v.$radius-sm;
+
+  &--line  { width: 100%; height: 1rem; }
+  &--h3    { height: 2.5rem; }
+  &--h6    { height: 1rem; }
+  &--btn   { height: 2.5rem; width: 10rem; border-radius: v.$radius-full; }
+  &--w40   { width: 40%; }
+  &--w60   { width: 60%; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ── Outline button ─────────────────────────────────────────────────────────────
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: v.$space-3 v.$space-6;
+  border: 2px solid v.$color-primary-500;
+  color: v.$color-primary-600;
+  border-radius: v.$radius-lg;
+  font-weight: v.$font-weight-semibold;
+  text-decoration: none;
+  transition: v.$transition-base;
+
+  &:hover {
+    background: v.$color-primary-50;
+    transform: translateY(-1px);
+  }
+}

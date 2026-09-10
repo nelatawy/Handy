@@ -177,20 +177,39 @@
     "TOTAL_RATINGS": "ratings",
     "COMPLETED_JOBS": "Completed Jobs",
     "BIO": "About",
-    "SHOP": "Shop"
+    "SHOP": "Shop",
+    "USERNAME": "Username",
+    "PHONE": "Phone Number",
+    "PHONE_NOTE": "Phone number cannot be changed here — contact support.",
+    "COUNTRY": "Country",
+    "GOVERNORATE": "Governorate",
+    "WORK_TYPE": "Work Type",
+    "SHOP_LOCATION": "Shop Location",
+    "NO_BIO": "No bio added yet.",
+    "NO_SHOP": "No shop listed."
   },
 
   "PAYMENT": {
     "HISTORY_TITLE": "Payment History",
+    "HISTORY_SUBTITLE": "All your past payments for completed jobs",
     "HISTORY_EMPTY": "No transactions yet",
+    "HISTORY_EMPTY_DESC": "Once you complete a job and pay, your transactions will appear here.",
     "EARNINGS_TITLE": "Earnings",
+    "EARNINGS_TOTAL": "Total Earned",
     "BALANCE": "Available Balance",
     "WITHDRAW": "Withdraw",
     "PAYOUT_VIA": "Payout via Paymob",
+    "PAYOUT_HISTORY": "Payout History",
     "DATE": "Date",
     "AMOUNT": "Amount",
     "STATUS": "Status",
-    "TYPE": "Payment Type"
+    "TYPE": "Payment Type",
+    "TRANSACTION_ID": "Transaction",
+    "TOTAL_LABEL": "Total Spent",
+    "WITHDRAW_INITIATED": "Payout initiated successfully!",
+    "STATUS_CONFIRMED": "Confirmed",
+    "STATUS_PENDING": "Pending",
+    "STATUS_FAILED": "Failed"
   },
 
   "TOAST": {

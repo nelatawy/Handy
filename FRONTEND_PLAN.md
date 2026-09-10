@@ -271,23 +271,23 @@ src/
 ## 7. Phase 5 — Payment & Profiles
 
 ### Payment (User)
-- [ ] No separate "pay now" page — payment method choice is part of the "Mark as Finished" flow on the active job screen
-- [ ] **Pay Online** path: redirect to Paymob hosted checkout page (sandbox). Handle return/callback URL to confirm payment and finalize the job
-- [ ] **Paid in Cash** path: no Paymob involvement — job is finalized immediately with `paymentType: 'cash'`
-- [ ] Transaction history screen: list of past payments with date, job summary, amount, status, and **payment type badge** (Online / Cash)
+- [x] No separate "pay now" page — payment method choice is part of the "Mark as Finished" flow on the active job screen
+- [x] **Pay Online** path: redirect to Paymob hosted checkout page (sandbox). Handle return/callback URL to confirm payment and finalize the job
+- [x] **Paid in Cash** path: no Paymob involvement — job is finalized immediately with `paymentType: 'cash'`
+- [x] Transaction history screen: list of past payments with date, job summary, amount, status, and **payment type badge** (Online / Cash)
 
 ### Payment (Worker)
-- [ ] Earnings balance display (sum of finished jobs' quoted prices)
-- [ ] Payout flow via Paymob
-- [ ] Transaction/payout history screen
+- [x] Earnings balance display (sum of finished jobs' quoted prices)
+- [x] Payout flow via Paymob
+- [x] Transaction/payout history screen
 
 ### Worker Profile
-- [ ] Display: name, work type, bio, shop info (if any), average rating (star component), rating count, completed jobs count
-- [ ] Editable fields (bio, shop toggle/location) — `PUT /api/workers/me`
+- [x] Display: name, work type, bio, shop info (if any), average rating (star component), rating count, completed jobs count
+- [x] Editable fields (bio, shop toggle/location) — `PUT /api/workers/me`
 
 ### User Profile (minimal)
-- [ ] Display: name, phone, location
-- [ ] Edit basic info
+- [x] Display: name, phone, location
+- [x] Edit basic info
 
 ---
 
@@ -376,4 +376,4 @@ src/
 
 ---
 
-*Last updated: 2026-09-10 (v6 — Phase 1+2+3+4 complete: Auth, Make Request, Live Offers, Active Job, User Home; Worker Home, Requests Feed, Request Detail, Pricing, Worker Active Job)*
+*Last updated: 2026-09-10 (v7 — Phase 5 complete: Transaction History, Earnings, Worker Profile, User Profile, routing + nav + i18n additions)*

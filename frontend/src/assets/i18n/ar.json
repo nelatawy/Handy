@@ -177,20 +177,39 @@
     "TOTAL_RATINGS": "تقييم",
     "COMPLETED_JOBS": "مهمة مكتملة",
     "BIO": "نبذة",
-    "SHOP": "المحل"
+    "SHOP": "المحل",
+    "USERNAME": "اسم المستخدم",
+    "PHONE": "رقم الهاتف",
+    "PHONE_NOTE": "لا يمكن تغيير رقم الهاتف هنا — تواصل مع الدعم.",
+    "COUNTRY": "الدولة",
+    "GOVERNORATE": "المحافظة",
+    "WORK_TYPE": "نوع العمل",
+    "SHOP_LOCATION": "موقع المحل",
+    "NO_BIO": "لم تُضف نبذة بعد.",
+    "NO_SHOP": "لا يوجد محل مدرج."
   },
 
   "PAYMENT": {
     "HISTORY_TITLE": "سجل المدفوعات",
+    "HISTORY_SUBTITLE": "جميع مدفوعاتك السابقة للمهام المكتملة",
     "HISTORY_EMPTY": "لا توجد معاملات بعد",
+    "HISTORY_EMPTY_DESC": "بمجرد إتمام مهمة والدفع، ستظهر معاملاتك هنا.",
     "EARNINGS_TITLE": "الأرباح",
+    "EARNINGS_TOTAL": "إجمالي الأرباح",
     "BALANCE": "الرصيد المتاح",
     "WITHDRAW": "سحب",
     "PAYOUT_VIA": "سحب عبر Paymob",
+    "PAYOUT_HISTORY": "سجل المدفوعات",
     "DATE": "التاريخ",
     "AMOUNT": "المبلغ",
     "STATUS": "الحالة",
-    "TYPE": "طريقة الدفع"
+    "TYPE": "طريقة الدفع",
+    "TRANSACTION_ID": "معاملة",
+    "TOTAL_LABEL": "إجمالي المدفوع",
+    "WITHDRAW_INITIATED": "تم بدء عملية السحب بنجاح!",
+    "STATUS_CONFIRMED": "مؤكد",
+    "STATUS_PENDING": "قيد الانتظار",
+    "STATUS_FAILED": "فاشل"
   },
 
   "TOAST": {
