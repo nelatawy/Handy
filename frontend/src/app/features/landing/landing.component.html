@@ -1,0 +1,242 @@
+<!-- ========================================================== -->
+<!--  HANDY — Landing Page (Bilingual: Arabic + English)        -->
+<!-- ========================================================== -->
+<div class="landing">
+
+  <!-- ── Floating Island Nav ── -->
+  <nav class="nav-island">
+    <a class="nav-island__logo" routerLink="/">
+      <span class="nav-island__wrench">🔧</span>
+      <span class="nav-island__name">Handy</span>
+    </a>
+    <div class="nav-island__actions">
+      <!-- Language toggle -->
+      <button class="btn-lang" (click)="toggleLang()" type="button" [attr.aria-label]="lang.isRtl() ? 'Switch to English' : 'التبديل إلى العربية'">
+        {{ lang.isRtl() ? 'English 🇬🇧' : 'عربي 🇪🇬' }}
+      </button>
+      <button class="btn-ghost" (click)="goLogin()" type="button">{{ 'LANDING.NAV_SIGNIN' | translate }}</button>
+      <button class="btn-pill btn-pill--primary" (click)="goRegister()" type="button">
+        {{ 'LANDING.NAV_GET_STARTED' | translate }}
+        <span class="btn-pill__icon">↗</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero__inner">
+      <!-- Headline — Arabic is a single-line structure, English uses line breaks -->
+      @if (lang.isRtl()) {
+        <h1 class="hero__headline reveal">
+          {{ 'LANDING.HERO_HEADLINE_1' | translate }}<br>
+          <span class="hero__headline--accent">{{ 'LANDING.HERO_HEADLINE_2' | translate }}</span>
+        </h1>
+      } @else {
+        <h1 class="hero__headline reveal">
+          {{ 'LANDING.HERO_HEADLINE_1' | translate }}<br>
+          <span class="hero__headline--accent">{{ 'LANDING.HERO_HEADLINE_2' | translate }}</span><br>
+          {{ 'LANDING.HERO_HEADLINE_3' | translate }}
+        </h1>
+      }
+
+      <!-- Sub -->
+      <p class="hero__sub reveal">{{ 'LANDING.HERO_SUB' | translate }}</p>
+
+      <!-- CTAs -->
+      <div class="hero__cta reveal">
+        <button class="btn-pill btn-pill--primary btn-pill--lg" (click)="goRegister()" type="button">
+          {{ 'LANDING.HERO_CTA_PRIMARY' | translate }}
+          <span class="btn-pill__icon btn-pill__icon--lg">↗</span>
+        </button>
+        <button class="btn-ghost btn-ghost--lg" (click)="goLogin()" type="button">
+          {{ 'LANDING.HERO_CTA_SECONDARY' | translate }}
+        </button>
+      </div>
+
+      <!-- Worker type pills — scrollable row showing all 14 trades -->
+      <div class="worker-pills-wrap reveal">
+        <div class="worker-pills">
+          @for (w of workerTypes; track w.key) {
+            <span class="worker-pill">
+              <span>{{ w.emoji }}</span>
+              <span>{{ w.key | translate }}</span>
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative orbs (CSS only, fixed position) -->
+    <div class="orb orb--1" aria-hidden="true"></div>
+    <div class="orb orb--2" aria-hidden="true"></div>
+    <div class="orb orb--3" aria-hidden="true"></div>
+  </section>
+
+  <!-- ── How it works ── -->
+  <section class="section how">
+    <div class="section__inner">
+      <span class="eyebrow reveal">{{ 'LANDING.HOW_EYEBROW' | translate }}</span>
+      <h2 class="section__title reveal">{{ 'LANDING.HOW_TITLE' | translate }}</h2>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step__shell">
+            <div class="step__core">
+              <span class="step__num">{{ 'LANDING.STEP1_NUM' | translate }}</span>
+              <span class="step__emoji">📝</span>
+              <h3 class="step__title">{{ 'LANDING.STEP1_TITLE' | translate }}</h3>
+              <p class="step__desc">{{ 'LANDING.STEP1_DESC' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step__shell">
+            <div class="step__core">
+              <span class="step__num">{{ 'LANDING.STEP2_NUM' | translate }}</span>
+              <span class="step__emoji">⚡</span>
+              <h3 class="step__title">{{ 'LANDING.STEP2_TITLE' | translate }}</h3>
+              <p class="step__desc">{{ 'LANDING.STEP2_DESC' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step__shell">
+            <div class="step__core">
+              <span class="step__num">{{ 'LANDING.STEP3_NUM' | translate }}</span>
+              <span class="step__emoji">✅</span>
+              <h3 class="step__title">{{ 'LANDING.STEP3_TITLE' | translate }}</h3>
+              <p class="step__desc">{{ 'LANDING.STEP3_DESC' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features bento ── -->
+  <section class="section features">
+    <div class="section__inner">
+      <span class="eyebrow reveal">{{ 'LANDING.FEAT_EYEBROW' | translate }}</span>
+      <h2 class="section__title reveal">{{ 'LANDING.FEAT_TITLE' | translate }}</h2>
+
+      <div class="bento">
+        @for (f of featureKeys; track f.titleKey; let i = $index) {
+          <div class="bento-card reveal" [class]="'bento-card--' + i">
+            <div class="bento-card__shell">
+              <div class="bento-card__core">
+                <span class="bento-card__emoji">{{ f.emoji }}</span>
+                <h3 class="bento-card__title">{{ f.titleKey | translate }}</h3>
+                <p class="bento-card__desc">{{ f.descKey | translate }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── For Handymen ── -->
+  <section class="section worker-section">
+    <div class="section__inner worker-inner">
+      <div class="worker-content reveal">
+        <span class="eyebrow eyebrow--light">{{ 'LANDING.WORKER_EYEBROW' | translate }}</span>
+        <h2 class="worker-content__title">{{ 'LANDING.WORKER_TITLE' | translate }}</h2>
+        <p class="worker-content__desc">{{ 'LANDING.WORKER_DESC' | translate }}</p>
+        <ul class="worker-list">
+          @for (key of workerBulletKeys; track key) {
+            <li class="worker-list__item">{{ key | translate }}</li>
+          }
+        </ul>
+        <button class="btn-pill btn-pill--white btn-pill--lg" (click)="goRegister()" type="button">
+          {{ 'LANDING.WORKER_CTA' | translate }}
+          <span class="btn-pill__icon btn-pill__icon--lg btn-pill__icon--dark">↗</span>
+        </button>
+      </div>
+
+      <div class="worker-visual reveal">
+        <div class="worker-card-demo">
+          <div class="wcd__shell">
+            <div class="wcd__core">
+              <div class="wcd__header">
+                <div class="wcd__avatar">MK</div>
+                <div>
+                  <div class="wcd__name">{{ lang.isRtl() ? 'محمد ك.' : 'Mohamed K.' }}</div>
+                  <div class="wcd__type">{{ 'LANDING.DEMO_TYPE' | translate }}</div>
+                </div>
+                <div class="wcd__live-badge">{{ 'LANDING.LIVE_BADGE' | translate }}</div>
+              </div>
+              <div class="wcd__stars">★★★★★ <span class="wcd__rating">4.9</span> <span class="wcd__jobs">(47 {{ lang.isRtl() ? 'عمل' : 'jobs' }})</span></div>
+              <div class="wcd__price-row">
+                <span class="wcd__price-label">{{ 'LANDING.DEMO_QUOTED' | translate }}</span>
+                <span class="wcd__price">{{ 'LANDING.DEMO_PRICE' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Trust bar ── -->
+  <section class="section trust">
+    <div class="section__inner trust-inner">
+      <div class="trust-stat reveal">
+        <span class="trust-stat__num">{{ 'LANDING.TRUST_LABEL1' | translate }}</span>
+        <span class="trust-stat__label">{{ 'LANDING.TRUST_STAT1' | translate }}</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-stat reveal">
+        <span class="trust-stat__num">{{ 'LANDING.TRUST_LABEL2' | translate }}</span>
+        <span class="trust-stat__label">{{ 'LANDING.TRUST_STAT2' | translate }}</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-stat reveal">
+        <span class="trust-stat__num">{{ 'LANDING.TRUST_LABEL3' | translate }}</span>
+        <span class="trust-stat__label">{{ 'LANDING.TRUST_STAT3' | translate }}</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-stat reveal">
+        <span class="trust-stat__num">{{ 'LANDING.TRUST_LABEL4' | translate }}</span>
+        <span class="trust-stat__label">{{ 'LANDING.TRUST_STAT4' | translate }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ── -->
+  <section class="section cta-section">
+    <div class="section__inner cta-inner">
+      <div class="cta-card">
+        <div class="cta-card__shell">
+          <div class="cta-card__core">
+            <span class="eyebrow eyebrow--light reveal">{{ 'LANDING.CTA_EYEBROW' | translate }}</span>
+            <h2 class="cta-card__title reveal">{{ 'LANDING.CTA_TITLE' | translate }}</h2>
+            <p class="cta-card__desc reveal">{{ 'LANDING.CTA_DESC' | translate }}</p>
+            <div class="cta-card__btns reveal">
+              <button class="btn-pill btn-pill--primary btn-pill--lg" (click)="goRegister()" type="button">
+                {{ 'LANDING.CTA_PRIMARY' | translate }}
+                <span class="btn-pill__icon btn-pill__icon--lg">↗</span>
+              </button>
+              <button class="btn-ghost btn-ghost--lg btn-ghost--on-dark" (click)="goLogin()" type="button">
+                {{ 'LANDING.CTA_SECONDARY' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <span>🔧</span>
+        <span class="footer__name">Handy</span>
+      </div>
+      <p class="footer__copy">{{ 'LANDING.FOOTER_COPY' | translate }}</p>
+    </div>
+  </footer>
+
+</div>

@@ -1,0 +1,88 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.toast-container {
+  position: fixed;
+  bottom: v.$space-6;
+  inset-inline-end: v.$space-6;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+  z-index: v.$z-toast;
+  pointer-events: none;
+  max-width: 380px;
+  width: calc(100vw - #{v.$space-12});
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-4 v.$space-5;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-xl;
+  backdrop-filter: blur(8px);
+  pointer-events: all;
+  border: 1px solid transparent;
+
+  &--success {
+    background: rgba(220, 252, 231, 0.97);
+    border-color: rgba(34, 197, 94, 0.3);
+    .toast__icon { color: v.$color-success; }
+  }
+  &--error {
+    background: rgba(254, 226, 226, 0.97);
+    border-color: rgba(239, 68, 68, 0.3);
+    .toast__icon { color: v.$color-danger; }
+  }
+  &--warning {
+    background: rgba(254, 243, 199, 0.97);
+    border-color: rgba(245, 158, 11, 0.3);
+    .toast__icon { color: v.$color-warning; }
+  }
+  &--info {
+    background: rgba(224, 242, 254, 0.97);
+    border-color: rgba(14, 165, 233, 0.3);
+    .toast__icon { color: v.$color-primary-500; }
+  }
+
+  &__icon {
+    font-size: v.$font-size-lg;
+    font-weight: v.$font-weight-bold;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+  }
+
+  &__message {
+    flex: 1;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-primary;
+    line-height: v.$line-height-base;
+  }
+
+  &__action {
+    @include m.btn-base;
+    font-size: v.$font-size-xs;
+    padding: v.$space-1 v.$space-3;
+    background: rgba(0,0,0,0.08);
+    color: v.$color-text-primary;
+    border-radius: v.$radius-md;
+    flex-shrink: 0;
+    &:hover { background: rgba(0,0,0,0.14); }
+  }
+
+  &__close {
+    @include m.btn-base;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: v.$radius-full;
+    background: transparent;
+    color: v.$color-text-muted;
+    font-size: v.$font-size-xs;
+    flex-shrink: 0;
+    &:hover { background: rgba(0,0,0,0.08); color: v.$color-text-primary; }
+  }
+}

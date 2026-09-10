@@ -1,0 +1,137 @@
+<div class="worker-job-page">
+
+  @if (loading()) {
+    <div class="skeleton skeleton--card"></div>
+    <div class="skeleton skeleton--card skeleton--sm"></div>
+  } @else if (job()) {
+
+    <!-- Page title + badge -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-header__title">{{ 'JOB.TITLE' | translate }}</h1>
+        <p class="page-header__sub">{{ 'WORK_TYPE.' + job()!.workType | translate }}</p>
+      </div>
+      <app-job-status-badge [status]="job()!.status" [showStepper]="true" />
+    </div>
+
+    <!-- ── PENDING ────────────────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Pending) {
+      <div class="info-banner info-banner--pending">
+        <span class="info-banner__icon">⏳</span>
+        <div>
+          <strong>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START' | translate }}</strong>
+          <p>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START_SUB' | translate }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- ── STARTED ────────────────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Started) {
+      <div class="info-banner info-banner--started">
+        <span class="info-banner__icon">🛠️</span>
+        <div>
+          <strong>{{ 'WORKER.JOB_IN_PROGRESS' | translate }}</strong>
+          <p>{{ 'WORKER.JOB_IN_PROGRESS_SUB' | translate }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- ── FINISHED ───────────────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Finished) {
+      <div class="earnings-card">
+        <div class="earnings-card__icon">🎉</div>
+        <h2 class="earnings-card__title">{{ 'WORKER.JOB_COMPLETED_TITLE' | translate }}</h2>
+        <p class="earnings-card__sub">{{ 'JOB.EARNINGS_INFO' | translate }}</p>
+        <div class="earnings-card__amount">
+          <span class="earnings-card__label">{{ 'WORKER.YOUR_EARNINGS' | translate }}</span>
+          <span class="earnings-card__value">{{ earnings() | number : '1.0-2' }} EGP</span>
+        </div>
+        @if (job()!.paymentType) {
+          <div class="payment-type-badge" [class.payment-type-badge--online]="job()!.paymentType === PaymentType.Online">
+            @if (job()!.paymentType === PaymentType.Online) { 💳 {{ 'PAYMENT_TYPE.online' | translate }} }
+            @else { 💵 {{ 'PAYMENT_TYPE.cash' | translate }} }
+          </div>
+        }
+        <div class="earnings-card__actions">
+          <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
+          <button class="btn btn--ghost" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
+        </div>
+      </div>
+    }
+
+    <!-- ── CANCELED ───────────────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Canceled) {
+      <div class="info-banner info-banner--canceled">
+        <span class="info-banner__icon">❌</span>
+        <div>
+          @if (job()!.canceledBy === 'worker') {
+            <strong>{{ 'WORKER.YOU_CANCELED_JOB' | translate }}</strong>
+            <p>{{ 'WORKER.CUSTOMER_NOTIFIED_NO_PAYMENT' | translate }}</p>
+          } @else {
+            <strong>{{ 'JOB.CANCELED_BY_USER' | translate }}</strong>
+            <p>{{ 'WORKER.NO_PAYMENT_PROCESSED' | translate }}</p>
+          }
+        </div>
+      </div>
+      <div class="canceled-actions">
+        <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
+        <button class="btn btn--ghost" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
+      </div>
+    }
+
+    <!-- ── Job detail card (always shown except finished) ─────────────── -->
+    @if (job()!.status !== JobStatus.Finished) {
+      <div class="job-card">
+        <div class="job-card__row">
+          <span class="job-card__label">{{ 'WORKER.JOB_TYPE' | translate }}</span>
+          <span class="job-card__value">{{ 'WORK_TYPE.' + job()!.workType | translate }}</span>
+        </div>
+        <div class="job-card__row">
+          <span class="job-card__label">{{ 'WORKER.YOUR_PRICE' | translate }}</span>
+          <span class="job-card__value job-card__value--highlight">{{ job()!.price | number : '1.0-2' }} EGP</span>
+        </div>
+        <div class="job-card__row">
+          <span class="job-card__label">{{ 'WORKER.CUSTOMER_PAYS' | translate }}</span>
+          <span class="job-card__value">{{ job()!.userPrice | number : '1.0-2' }} EGP</span>
+        </div>
+        <div class="job-card__divider"></div>
+        <div class="job-card__desc-label">{{ 'REQUEST.DESCRIPTION' | translate }}</div>
+        <p class="job-card__desc">{{ job()!.description }}</p>
+      </div>
+    }
+
+    <!-- ── Cancel button (only if job can be canceled) ────────────────── -->
+    @if (canCancel()) {
+      <button class="btn btn--danger-outline cancel-btn" (click)="openCancelConfirm()">
+        {{ 'WORKER.CANCEL_JOB' | translate }}
+      </button>
+    }
+
+  } @else {
+    <div class="not-found">
+      <p>{{ 'WORKER.JOB_NOT_FOUND' | translate }}</p>
+      <button class="btn btn--primary" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
+    </div>
+  }
+
+  <!-- ── Cancel Confirm Modal ─────────────────────────────────────────────── -->
+  @if (showCancelConfirm()) {
+    <div class="modal-overlay" (click)="closeCancelConfirm()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal__icon">⚠️</div>
+        <h3 class="modal__title">{{ 'WORKER.CANCEL_JOB_TITLE' | translate }}</h3>
+        <p class="modal__body">{{ 'WORKER.CANCEL_CONFIRM' | translate }}</p>
+        <div class="modal__actions">
+          <button class="btn btn--ghost" (click)="closeCancelConfirm()" [disabled]="cancelLoading()">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button class="btn btn--danger" (click)="confirmCancel()" [disabled]="cancelLoading()">
+            @if (cancelLoading()) { <span class="spinner"></span> }
+            {{ 'WORKER.YES_CANCEL_JOB' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

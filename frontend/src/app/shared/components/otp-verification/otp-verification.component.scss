@@ -1,0 +1,73 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.otp-wrap {
+  @include m.flex-col;
+  gap: v.$space-4;
+}
+
+.phone-row {
+  display: flex;
+  gap: v.$space-2;
+  align-items: stretch;
+
+  .phone-input { flex: 1; }
+}
+
+.otp-hint {
+  font-size: v.$font-size-sm;
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  margin: 0;
+
+  &--whatsapp {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+  }
+
+  &--telegram {
+    background: #e0f2fe;
+    color: v.$color-primary-700;
+    border: 1px solid v.$color-primary-200;
+  }
+}
+
+.telegram-fallback {
+  @include m.flex-col;
+  gap: v.$space-3;
+}
+
+.telegram-btn {
+  align-self: flex-start;
+}
+
+.otp-code-input {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.otp-actions {
+  display: flex;
+  gap: v.$space-3;
+  align-items: center;
+}
+
+.otp-verified {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-3 v.$space-4;
+  background: v.$color-success-light;
+  color: #15803d;
+  border-radius: v.$radius-md;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm;
+
+  &__icon {
+    font-size: v.$font-size-lg;
+    font-weight: v.$font-weight-bold;
+  }
+}

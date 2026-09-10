@@ -1,0 +1,107 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.login {
+  @include m.flex-col;
+  gap: v.$space-6;
+
+  &__header {
+    text-align: center;
+    @include m.flex-col;
+    gap: v.$space-2;
+  }
+
+  &__title {
+    font-size: v.$font-size-3xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-text-primary;
+    margin: 0;
+  }
+
+  &__sub {
+    color: v.$color-text-muted;
+    font-size: v.$font-size-sm;
+    margin: 0;
+  }
+
+  &__form {
+    @include m.flex-col;
+    gap: v.$space-5;
+  }
+
+  &__footer {
+    text-align: center;
+    font-size: v.$font-size-sm;
+    color: v.$color-text-secondary;
+    margin: 0;
+
+    a {
+      color: v.$color-primary-600;
+      font-weight: v.$font-weight-semibold;
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
+
+.identifier-toggle {
+  display: flex;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+
+  &__btn {
+    flex: 1;
+    padding: v.$space-2 v.$space-4;
+    border: none;
+    background: v.$color-gray-50;
+    color: v.$color-text-secondary;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    cursor: pointer;
+    transition: v.$transition-fast;
+
+    &:not(:last-child) { border-right: 1px solid v.$color-border; }
+
+    &--active {
+      background: v.$color-primary-500;
+      color: v.$color-white;
+      font-weight: v.$font-weight-semibold;
+    }
+
+    &:hover:not(&--active) {
+      background: v.$color-gray-100;
+    }
+  }
+}
+
+.pw-wrap {
+  position: relative;
+
+  .form-control { padding-inline-end: 44px; }
+}
+
+.pw-toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 44px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: v.$color-text-muted;
+
+  &:hover { color: v.$color-text-primary; }
+}
+
+.server-error {
+  background: v.$color-danger-light;
+  color: v.$color-danger;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: v.$space-3 v.$space-4;
+  border-radius: v.$radius-md;
+  font-size: v.$font-size-sm;
+}

@@ -1,0 +1,124 @@
+<div class="pricing-page">
+
+  @if (loading()) {
+    <div class="skeleton skeleton--card"></div>
+  } @else {
+
+    <!-- ── FORM state ─────────────────────────────────────────────────────── -->
+    @if (state() === 'form') {
+      <button class="btn btn--ghost btn--sm back-btn" (click)="goBack()">← Back</button>
+
+      <div class="pricing-card">
+        <div class="pricing-card__hero">
+          <div class="pricing-card__icon">💰</div>
+          <h1 class="pricing-card__title">{{ 'WORKER.YOUR_PRICE' | translate }}</h1>
+          <p class="pricing-card__sub">{{ 'WORKER.PRICING_SUB' | translate }}</p>
+        </div>
+
+        <!-- Request summary -->
+        @if (request()) {
+          <div class="request-summary">
+            <span class="request-summary__type">{{ 'WORK_TYPE.' + request()!.workType | translate }}</span>
+            <p class="request-summary__desc">{{ request()!.description | slice:0:120 }}{{ request()!.description.length > 120 ? '…' : '' }}</p>
+          </div>
+        }
+
+        <!-- Price input -->
+        <div class="price-input-group">
+          <label class="price-input-group__label" for="price-input">
+            {{ 'WORKER.YOUR_PRICE' | translate }}
+          </label>
+          <div class="price-input-group__field">
+            <input
+              id="price-input"
+              type="number"
+              min="1"
+              step="any"
+              class="price-input-group__input"
+              [placeholder]="'WORKER.YOUR_PRICE_PLACEHOLDER' | translate"
+              [value]="priceInput() ?? ''"
+              (input)="onPriceChange($any($event.target).value)"
+            />
+            <span class="price-input-group__currency">EGP</span>
+          </div>
+        </div>
+
+        <!-- User pays preview -->
+        @if (userPrice()) {
+          <div class="price-preview">
+            <div class="price-preview__row">
+              <span class="price-preview__label">{{ 'WORKER.YOUR_EARNINGS' | translate }}</span>
+              <span class="price-preview__value">{{ priceInput() | number : '1.0-2' }} EGP</span>
+            </div>
+            <div class="price-preview__row">
+              <span class="price-preview__label">{{ 'WORKER.PLATFORM_FEE_LABEL' | translate }}</span>
+              <span class="price-preview__value fee">+ {{ ((userPrice()! - priceInput()!)) | number : '1.0-2' }} EGP</span>
+            </div>
+            <div class="price-preview__divider"></div>
+            <div class="price-preview__row price-preview__row--total">
+              <span class="price-preview__label">{{ 'WORKER.USER_PAYS_PREVIEW' | translate }}</span>
+              <span class="price-preview__total">{{ userPrice() | number : '1.0-2' }} EGP</span>
+            </div>
+            <p class="price-preview__hint">{{ 'WORKER.PLATFORM_FEE' | translate }}</p>
+          </div>
+        }
+
+        <button
+          class="btn btn--primary btn--lg submit-btn"
+          [disabled]="!priceInput() || priceInput()! <= 0 || submitting()"
+          (click)="submitOffer()"
+        >
+          @if (submitting()) {
+            <span class="spinner"></span> {{ 'WORKER.SUBMITTING' | translate }}
+          } @else {
+            {{ 'WORKER.SUBMIT_OFFER' | translate }}
+          }
+        </button>
+      </div>
+    }
+
+    <!-- ── WAITING state ──────────────────────────────────────────────────── -->
+    @if (state() === 'waiting') {
+      <div class="state-card state-card--waiting">
+        <div class="state-card__pulse-ring">
+          <div class="state-card__icon">⏳</div>
+        </div>
+        <h2 class="state-card__title">{{ 'WORKER.WAITING_FOR_SELECTION' | translate }}</h2>
+        <p class="state-card__sub">{{ 'WORKER.WAITING_FOR_SELECTION_SUB' | translate }}</p>
+        <div class="offer-summary">
+          <div class="offer-summary__row">
+            <span>{{ 'WORKER.YOUR_PRICE' | translate }}</span>
+            <strong>{{ priceInput() | number : '1.0-2' }} EGP</strong>
+          </div>
+          <div class="offer-summary__row">
+            <span>{{ 'WORKER.CUSTOMER_PAYS' | translate }}</span>
+            <strong>{{ userPrice() | number : '1.0-2' }} EGP</strong>
+          </div>
+        </div>
+        <button class="btn btn--ghost" (click)="goFeed()">← {{ 'WORKER.BROWSE_OTHER_REQUESTS' | translate }}</button>
+      </div>
+    }
+
+    <!-- ── CHOSEN state ───────────────────────────────────────────────────── -->
+    @if (state() === 'chosen') {
+      <div class="state-card state-card--chosen">
+        <div class="state-card__icon state-card__icon--big">🎉</div>
+        <h2 class="state-card__title">{{ 'WORKER.YOU_WERE_CHOSEN' | translate }}</h2>
+        <p class="state-card__sub">{{ 'OFFERS.REDIRECTING_TO_JOB' | translate }}</p>
+        <div class="spinner spinner--lg"></div>
+      </div>
+    }
+
+    <!-- ── REJECTED state ─────────────────────────────────────────────────── -->
+    @if (state() === 'rejected') {
+      <div class="state-card state-card--rejected">
+        <div class="state-card__icon">😔</div>
+        <h2 class="state-card__title">{{ 'WORKER.OFFER_REJECTED' | translate }}</h2>
+        <p class="state-card__sub">{{ 'WORKER.OFFER_REJECTED_SUB' | translate }}</p>
+        <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
+      </div>
+    }
+
+  }
+
+</div>

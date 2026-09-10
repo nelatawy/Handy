@@ -1,0 +1,881 @@
+// ============================================================
+//  Handy Landing Page — Premium Styles
+//
+//  Vibe: Soft Structuralism (Consumer / Trust)
+//  Layout: Z-Axis Cascade with Asymmetric Bento
+//  Font: Outfit (Google Fonts, loaded via index.html)
+//  Motion: spring cubic-bezier — no linear/ease-in-out
+// ============================================================
+
+// ── Design tokens (standalone — no SCSS imports needed here as
+//    this is a standalone page outside the main layout) ──────
+$sky-50:  #eff8fe;
+$sky-100: #dceffc;
+$sky-200: #bae0f9;
+$sky-300: #82c9f3;
+$sky-400: #43ade8;
+$sky-500: #1c92d4;
+$sky-600: #0b6fa4;
+$sky-700: #0a5a86;
+$sky-800: #0d4c6e;
+$sky-900: #10405c;
+
+$ink-900: #0b0f17;
+$ink-800: #161c28;
+$ink-700: #1f2836;
+$ink-600: #2b3648;
+
+$white: #ffffff;
+$gray-50:  #f7f9fb;
+$gray-100: #eef2f7;
+$gray-200: #e0e6ee;
+$gray-300: #c7d0dc;
+$gray-500: #5b6b7f;
+$gray-600: #44546a;
+$gray-700: #33465c;
+$gray-800: #1f2937;
+$gray-900: #111823;
+
+$radius-pill: 999px;
+$radius-card: 2rem;
+$radius-inner: calc(2rem - 6px);
+
+$spring: cubic-bezier(0.32, 0.72, 0, 1);
+$snappy: cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Scroll reveal — only active after JS sets .landing-init ──
+// This prevents above-fold flicker before IntersectionObserver runs.
+.landing-init .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s $spring,
+    transform 0.7s $spring;
+}
+
+.landing-init .reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+// Stagger siblings for a cascading reveal effect
+.landing-init .step:nth-child(2) { transition-delay: 0.1s; }
+.landing-init .step:nth-child(3) { transition-delay: 0.2s; }
+.landing-init .bento-card:nth-child(2) { transition-delay: 0.07s; }
+.landing-init .bento-card:nth-child(3) { transition-delay: 0.14s; }
+.landing-init .bento-card:nth-child(4) { transition-delay: 0.21s; }
+.landing-init .bento-card:nth-child(5) { transition-delay: 0.07s; }
+.landing-init .bento-card:nth-child(6) { transition-delay: 0.14s; }
+
+// ── Root ─────────────────────────────────────────────────────
+.landing {
+  background: $gray-50;
+  color: $gray-900;
+  font-family: 'Outfit', system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+// Arabic: switch to Cairo which is purpose-built for Arabic script
+[dir="rtl"] .landing {
+  font-family: 'Cairo', system-ui, sans-serif;
+}
+
+// ── Nav Island ───────────────────────────────────────────────
+.nav-island {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  background: rgba($white, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba($sky-600, 0.12);
+  border-radius: $radius-pill;
+  padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  box-shadow:
+    0 4px 24px rgba($sky-800, 0.08),
+    0 1px 4px rgba($ink-900, 0.06);
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: $gray-900;
+  }
+
+  &__wrench { font-size: 1.25rem; }
+
+  &__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: $sky-700;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+// ── Reusable buttons ─────────────────────────────────────────
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: $radius-pill;
+  padding: 0.55rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.5s $spring;
+
+  &--primary {
+    background: $sky-600;
+    color: $white;
+    box-shadow: 0 2px 12px rgba($sky-600, 0.35);
+
+    &:hover {
+      background: $sky-700;
+      box-shadow: 0 4px 20px rgba($sky-600, 0.45);
+      transform: translateY(-1px);
+    }
+    &:active { transform: scale(0.98); }
+  }
+
+  &--white {
+    background: $white;
+    color: $sky-700;
+    box-shadow: 0 2px 12px rgba($ink-900, 0.1);
+
+    &:hover {
+      box-shadow: 0 4px 20px rgba($ink-900, 0.15);
+      transform: translateY(-1px);
+    }
+    &:active { transform: scale(0.98); }
+  }
+
+  &--lg {
+    padding: 0.8rem 1.4rem;
+    font-size: 1rem;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba($white, 0.2);
+    font-size: 0.85rem;
+    transition: transform 0.5s $spring;
+
+    .btn-pill:hover & {
+      transform: translateX(2px) translateY(-1px) scale(1.05);
+    }
+
+    &--lg {
+      width: 1.75rem;
+      height: 1.75rem;
+      font-size: 1rem;
+    }
+
+    &--dark { background: rgba($ink-900, 0.12); color: $sky-700; }
+  }
+}
+
+// ── Language toggle button ────────────────────────────────────
+.btn-lang {
+  background: rgba($sky-600, 0.08);
+  border: 1px solid rgba($sky-600, 0.18);
+  border-radius: $radius-pill;
+  padding: 0.4rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $sky-700;
+  cursor: pointer;
+  transition: all 0.4s $spring;
+  white-space: nowrap;
+
+  &:hover { background: rgba($sky-600, 0.14); }
+  &:active { transform: scale(0.97); }
+}
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  border-radius: $radius-pill;
+  padding: 0.55rem 1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $gray-600;
+  cursor: pointer;
+  transition: all 0.4s $spring;
+
+  &:hover { background: rgba($sky-600, 0.06); color: $sky-700; }
+  &:active { transform: scale(0.98); }
+
+  &--lg {
+    padding: 0.8rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  &--on-dark {
+    color: rgba($white, 0.7);
+    &:hover {
+      background: rgba($white, 0.1);
+      color: $white;
+    }
+  }
+}
+
+// ── Eyebrow ──────────────────────────────────────────────────
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba($sky-500, 0.1);
+  color: $sky-700;
+  border: 1px solid rgba($sky-500, 0.2);
+  border-radius: $radius-pill;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  &--light {
+    background: rgba($white, 0.15);
+    color: $sky-200;
+    border-color: rgba($white, 0.25);
+  }
+}
+
+// ── Decorative orbs (fixed, GPU-safe) ────────────────────────
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  will-change: transform;
+  animation: orb-drift 18s ease-in-out infinite alternate;
+
+  &--1 {
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba($sky-400, 0.18) 0%, transparent 70%);
+    top: -120px;
+    right: -80px;
+    animation-delay: 0s;
+  }
+
+  &--2 {
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba($sky-300, 0.12) 0%, transparent 70%);
+    bottom: 20%;
+    left: -100px;
+    animation-delay: -6s;
+  }
+
+  &--3 {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba($sky-500, 0.1) 0%, transparent 70%);
+    top: 50%;
+    right: 15%;
+    animation-delay: -12s;
+  }
+}
+
+@keyframes orb-drift {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(40px) scale(1.05); }
+}
+
+// ── Hero ─────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: 7rem 1.5rem 5rem;
+
+  &__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
+  }
+
+  &__headline {
+    font-size: clamp(3.2rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: $gray-900;
+    margin: 0;
+
+    &--accent { color: $sky-600; }
+  }
+
+  &__sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: $gray-500;
+    max-width: 520px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+}
+
+// Worker type pills — horizontal scroll with fade masks
+.worker-pills-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  // Fade edges to hint scrollability
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    pointer-events: none;
+    z-index: 1;
+  }
+  &::before {
+    inset-inline-start: 0;
+    background: linear-gradient(to right, $gray-50 0%, transparent 100%);
+  }
+  &::after {
+    inset-inline-end: 0;
+    background: linear-gradient(to left, $gray-50 0%, transparent 100%);
+  }
+}
+
+.worker-pills {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 3rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.worker-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: $white;
+  border: 1.5px solid $gray-200;
+  border-radius: $radius-pill;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: $gray-600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba($ink-900, 0.04);
+  transition: all 0.4s $spring;
+
+  &:hover {
+    border-color: $sky-300;
+    color: $sky-700;
+    box-shadow: 0 2px 8px rgba($sky-500, 0.12);
+  }
+}
+
+// ── Section shell ─────────────────────────────────────────────
+.section {
+  padding: 7rem 1.5rem;
+  position: relative;
+
+  &__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    color: $gray-900;
+    margin: 0.75rem 0 3rem;
+    line-height: 1.1;
+  }
+}
+
+// ── How it works — steps ─────────────────────────────────────
+.how { background: $white; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step {
+  &__shell {
+    background: rgba($sky-500, 0.04);
+    border: 1px solid rgba($sky-500, 0.12);
+    border-radius: $radius-card;
+    padding: 5px;
+    height: 100%;
+  }
+
+  &__core {
+    background: $gray-50;
+    border-radius: $radius-inner;
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: inset 0 1px 2px rgba($white, 0.9);
+    transition: all 0.5s $spring;
+
+    .step__shell:hover & {
+      background: $white;
+      box-shadow:
+        inset 0 1px 2px rgba($white, 1),
+        0 4px 20px rgba($sky-500, 0.08);
+    }
+  }
+
+  &__num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: $sky-500;
+    text-transform: uppercase;
+  }
+
+  &__emoji { font-size: 2.25rem; }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 0.92rem;
+    color: $gray-500;
+    line-height: 1.65;
+    margin: 0;
+  }
+}
+
+// ── Bento features grid ──────────────────────────────────────
+.features { background: $gray-50; }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: auto;
+  gap: 1rem;
+
+  @media (max-width: 767px) { grid-template-columns: 1fr; }
+}
+
+.bento-card {
+  // Default span — will be overridden per card index below
+  grid-column: span 6;
+
+  // Large feature cards
+  &--0 { grid-column: span 7; }
+  &--1 { grid-column: span 5; }
+  &--2 { grid-column: span 5; }
+  &--3 { grid-column: span 7; }
+  &--4 { grid-column: span 4; }
+  &--5 { grid-column: span 8; }
+
+  @media (max-width: 767px) {
+    &--0, &--1, &--2, &--3, &--4, &--5 { grid-column: span 1; }
+  }
+
+  &__shell {
+    height: 100%;
+    background: rgba($sky-500, 0.04);
+    border: 1px solid rgba($sky-500, 0.1);
+    border-radius: $radius-card;
+    padding: 5px;
+    transition: border-color 0.5s $spring;
+
+    &:hover { border-color: rgba($sky-500, 0.25); }
+  }
+
+  &__core {
+    height: 100%;
+    background: $white;
+    border-radius: $radius-inner;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    box-shadow: inset 0 1px 2px rgba($white, 1);
+    transition: all 0.5s $spring;
+
+    .bento-card__shell:hover & {
+      box-shadow:
+        inset 0 1px 2px rgba($white, 1),
+        0 6px 24px rgba($sky-500, 0.07);
+    }
+  }
+
+  &__emoji { font-size: 2rem; }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 0.88rem;
+    color: $gray-500;
+    line-height: 1.65;
+    margin: 0;
+  }
+}
+
+// ── For Handymen section ─────────────────────────────────────
+.worker-section {
+  background: linear-gradient(135deg, $sky-800 0%, $sky-900 60%, $ink-800 100%);
+  color: $white;
+
+  .section__title { color: $white; }
+}
+
+.worker-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.worker-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &__title {
+    font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  &__desc {
+    color: rgba($white, 0.7);
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0;
+  }
+}
+
+.worker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+
+  &__item {
+    font-size: 0.95rem;
+    color: rgba($white, 0.85);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+// ── Handyman card demo ────────────────────────────────────────
+.worker-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.worker-card-demo {
+  width: 100%;
+  max-width: 340px;
+}
+
+.wcd {
+  &__shell {
+    background: rgba($white, 0.08);
+    border: 1px solid rgba($white, 0.15);
+    border-radius: $radius-card;
+    padding: 5px;
+    box-shadow:
+      0 24px 64px rgba($ink-900, 0.4),
+      0 1px 0 rgba($white, 0.06) inset;
+  }
+
+  &__core {
+    background: rgba($ink-800, 0.85);
+    border-radius: $radius-inner;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: inset 0 1px 2px rgba($white, 0.05);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $sky-500, $sky-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $white;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: $white;
+    font-size: 1rem;
+  }
+
+  &__type {
+    font-size: 0.78rem;
+    color: rgba($white, 0.55);
+    margin-top: 0.15rem;
+  }
+
+  &__live-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    border-radius: $radius-pill;
+    padding: 0.2rem 0.6rem;
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+
+  &__stars {
+    font-size: 0.9rem;
+    color: #fbbf24;
+  }
+
+  &__rating {
+    color: $white;
+    font-weight: 600;
+  }
+
+  &__jobs {
+    color: rgba($white, 0.45);
+    font-size: 0.78rem;
+  }
+
+  &__price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba($white, 0.08);
+    padding-top: 1rem;
+  }
+
+  &__price-label {
+    font-size: 0.78rem;
+    color: rgba($white, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  &__price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $white;
+    letter-spacing: -0.02em;
+  }
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+// ── Trust bar ────────────────────────────────────────────────
+.trust { background: $white; padding: 5rem 1.5rem; }
+
+.trust-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem 3rem;
+}
+
+.trust-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+
+  &__num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: $sky-600;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    color: $gray-500;
+    font-weight: 500;
+  }
+}
+
+.trust-divider {
+  width: 1px;
+  height: 2.5rem;
+  background: $gray-200;
+
+  @media (max-width: 600px) { display: none; }
+}
+
+// ── Final CTA section ─────────────────────────────────────────
+.cta-section { background: $gray-50; }
+
+.cta-inner { max-width: 800px; }
+
+.cta-card {
+  &__shell {
+    background: linear-gradient(135deg, $sky-600, $sky-800);
+    border-radius: $radius-card;
+    padding: 6px;
+    box-shadow: 0 24px 64px rgba($sky-800, 0.25);
+  }
+
+  &__core {
+    background: linear-gradient(135deg, $sky-700, $sky-900);
+    border-radius: $radius-inner;
+    padding: 3.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: inset 0 1px 2px rgba($white, 0.1);
+
+    @media (max-width: 540px) { padding: 2.5rem 1.5rem; }
+  }
+
+  &__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: $white;
+    letter-spacing: -0.04em;
+    margin: 0;
+    line-height: 1.05;
+  }
+
+  &__desc {
+    color: rgba($white, 0.88);
+    font-size: 1rem;
+    max-width: 380px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &__btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+}
+
+// ── Footer ───────────────────────────────────────────────────
+.footer {
+  background: $gray-900;
+  padding: 2rem 1.5rem;
+
+  &__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.1rem;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: $sky-400;
+  }
+
+  &__copy {
+    font-size: 0.8rem;
+    color: rgba($white, 0.35);
+    margin: 0;
+  }
+}

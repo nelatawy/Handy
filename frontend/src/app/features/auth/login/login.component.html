@@ -1,0 +1,68 @@
+<div class="login">
+    <div class="login__header">
+        <h1 class="login__title">{{ 'AUTH.LOGIN' | translate }}</h1>
+        <p class="login__sub">{{ 'APP_TAGLINE' | translate }}</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login__form" novalidate>
+
+        <!-- Identifier type selector -->
+        <div class="form-group">
+            <label>{{ 'AUTH.IDENTIFIER_TYPE' | translate }}</label>
+            <div class="identifier-toggle">
+                <button type="button" class="identifier-toggle__btn"
+                    [class.identifier-toggle__btn--active]="identifierType() === IdentifierType.Username"
+                    (click)="setIdentifierType(IdentifierType.Username)">{{ 'AUTH.IDENTIFIER_USERNAME' | translate
+                    }}</button>
+                <button type="button" class="identifier-toggle__btn"
+                    [class.identifier-toggle__btn--active]="identifierType() === IdentifierType.Phone"
+                    (click)="setIdentifierType(IdentifierType.Phone)">{{ 'AUTH.IDENTIFIER_PHONE' | translate }}</button>
+            </div>
+        </div>
+
+        <!-- Identifier input -->
+        <div class="form-group">
+            <label>{{ identifierLabel() | translate }}</label>
+            <input class="form-control" [class.error]="isInvalid('identifier')"
+                [type]="identifierType() === IdentifierType.Phone ? 'tel' : 'text'"
+                [placeholder]="identifierPlaceholder() | translate" formControlName="identifier"
+                autocomplete="username" />
+            @if (isInvalid('identifier')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label>{{ 'AUTH.PASSWORD' | translate }}</label>
+            <div class="pw-wrap">
+                <input class="form-control" [class.error]="isInvalid('password')"
+                    [type]="showPw() ? 'text' : 'password'" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+                    formControlName="password" autocomplete="current-password" />
+                <button type="button" class="pw-toggle" (click)="showPw.update(v => !v)">
+                    {{ showPw() ? '🙈' : '👁️' }}
+                </button>
+            </div>
+            @if (isInvalid('password')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Server error -->
+        @if (serverError()) {
+        <div class="server-error">{{ serverError() | translate }}</div>
+        }
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-full btn-lg" [disabled]="loading()">
+            @if (loading()) { <span class="spinner"></span> }
+            {{ 'AUTH.LOGIN_BTN' | translate }}
+        </button>
+
+    </form>
+
+    <p class="login__footer">
+        {{ 'AUTH.NO_ACCOUNT' | translate }}
+        <a routerLink="/auth/register">{{ 'AUTH.REGISTER' | translate }}</a>
+    </p>
+</div>

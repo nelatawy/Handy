@@ -1,0 +1,94 @@
+@use '../../../../styles/variables' as v;
+
+// Inline badge
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+
+  &--pending  { background: v.$color-warning-light; color: #b45309; }
+  &--started  { background: v.$color-primary-100;   color: v.$color-primary-700; }
+  &--finished { background: v.$color-success-light; color: #15803d; }
+  &--canceled { background: v.$color-danger-light;  color: #b91c1c; }
+}
+
+// Stepper
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  min-width: 260px;
+
+  &__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: v.$space-2;
+    flex: 1;
+  }
+
+  &__dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid v.$color-gray-300;
+    background: v.$color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+
+    .stepper__step--active & {
+      border-color: v.$color-primary-500;
+      background: v.$color-primary-500;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+    }
+
+    .stepper__step--done & {
+      border-color: v.$color-success;
+      background: v.$color-success;
+    }
+  }
+
+  &__dot-inner {
+    color: v.$color-white;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-bold;
+
+    .stepper__step--active &::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: v.$color-white;
+    }
+  }
+
+  &__label {
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-muted;
+    text-align: center;
+    white-space: nowrap;
+
+    .stepper__step--active & { color: v.$color-primary-600; font-weight: v.$font-weight-semibold; }
+    .stepper__step--done &   { color: v.$color-success; }
+  }
+
+  &__line {
+    flex: 1;
+    height: 2px;
+    background: v.$color-gray-200;
+    margin-bottom: 22px; // aligns with dot vertically
+    transition: background 0.3s ease;
+
+    &--done { background: v.$color-success; }
+  }
+}

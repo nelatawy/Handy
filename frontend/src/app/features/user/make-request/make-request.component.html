@@ -1,0 +1,110 @@
+<div class="request-page">
+  <div class="request-page__header">
+    <h1 class="request-page__title">{{ 'REQUEST.MAKE_REQUEST' | translate }}</h1>
+    <p class="request-page__sub">{{ 'REQUEST.PAGE_SUB' | translate }}</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="request-form" novalidate>
+
+    <!-- Images -->
+    <div class="form-section">
+      <label class="form-label">{{ 'REQUEST.IMAGES' | translate }}</label>
+      <app-image-upload (imagesChange)="onImagesChange($event)" />
+    </div>
+
+    <!-- Description -->
+    <div class="form-group" [class.form-group--error]="desc.invalid && desc.touched">
+      <label class="form-label" for="description">
+        {{ 'REQUEST.DESCRIPTION' | translate }}
+        <span class="form-label__required">*</span>
+      </label>
+      <div class="textarea-wrap">
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="5"
+          class="form-textarea"
+          [placeholder]="'REQUEST.DESCRIPTION_PLACEHOLDER' | translate"
+        ></textarea>
+        <button
+          type="button"
+          class="ai-btn"
+          [class.ai-btn--loading]="aiLoading()"
+          (click)="onAiSuggest()"
+          [disabled]="aiLoading()"
+          title="{{ 'REQUEST.AI_SUGGEST' | translate }}"
+        >
+          @if (aiLoading()) {
+            <span class="spinner"></span>
+          } @else {
+            <span class="ai-btn__icon">✨</span>
+          }
+          {{ aiLoading() ? ('REQUEST.AI_SUGGEST_LOADING' | translate) : ('REQUEST.AI_SUGGEST' | translate) }}
+        </button>
+      </div>
+      @if (desc.invalid && desc.touched) {
+        <p class="form-error">
+          @if (desc.errors?.['required']) { {{ 'REQUEST.ERRORS.DESCRIPTION_REQUIRED' | translate }} }
+          @else if (desc.errors?.['minlength']) { {{ 'REQUEST.ERRORS.DESCRIPTION_MIN_LENGTH' | translate }} }
+        </p>
+      }
+    </div>
+
+    <!-- AI Suggestion Card -->
+    @if (aiSuggestion()) {
+      <div class="ai-card animate-fade-in-up">
+        <div class="ai-card__header">
+          <span class="ai-card__icon">✨</span>
+          <span class="ai-card__title">{{ 'REQUEST.AI_SUGGESTION_TITLE' | translate }}</span>
+        </div>
+        <p class="ai-card__description">{{ aiSuggestion()!.suggestedDescription }}</p>
+        <div class="ai-card__meta">
+          <span class="badge badge--info">{{ 'WORK_TYPE.' + aiSuggestion()!.recommendedWorkType | translate }}</span>
+        </div>
+        <div class="ai-card__actions">
+          <button type="button" class="btn btn--primary btn--sm" (click)="acceptAiSuggestion()">
+            ✓ {{ 'REQUEST.AI_ACCEPT' | translate }}
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" (click)="dismissAiSuggestion()">
+            {{ 'REQUEST.AI_DISMISS' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Work Type -->
+    <div class="form-group" [class.form-group--error]="wt.invalid && wt.touched">
+      <label class="form-label" for="workType">
+        {{ 'REQUEST.WORK_TYPE' | translate }}
+        <span class="form-label__required">*</span>
+      </label>
+      <select id="workType" formControlName="workType" class="form-select">
+        <option value="" disabled>{{ 'AUTH.WORK_TYPE_PLACEHOLDER' | translate }}</option>
+        @for (type of workTypes; track type) {
+          <option [value]="type">{{ 'WORK_TYPE.' + type | translate }}</option>
+        }
+      </select>
+      @if (wt.invalid && wt.touched) {
+        <p class="form-error">{{ 'REQUEST.ERRORS.WORK_TYPE_REQUIRED' | translate }}</p>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="request-form__actions">
+      <button type="button" class="btn btn--outline" (click)="onCancel()" [disabled]="submitting()">
+        {{ 'REQUEST.CANCEL' | translate }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn--primary btn--lg"
+        [disabled]="form.invalid || submitting()"
+      >
+        @if (submitting()) {
+          <span class="spinner"></span>
+        }
+        {{ 'REQUEST.CONFIRM' | translate }}
+      </button>
+    </div>
+
+  </form>
+</div>

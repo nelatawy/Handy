@@ -1,0 +1,75 @@
+<div class="otp-wrap">
+
+    <!-- Step 1: Phone entry (if not pre-filled) -->
+    @if (!phoneFixed) {
+    <div class="form-group">
+        <label>{{ 'AUTH.PHONE' | translate }}</label>
+        <div class="phone-row">
+            <app-country-prefix-dropdown [(selectedCode)]="dialCode" (selectedCodeChange)="onDialChange()" />
+            <input class="form-control phone-input" type="tel" [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate"
+                [(ngModel)]="localPhone" [disabled]="step() !== 'phone'" />
+        </div>
+    </div>
+    }
+
+    @if (step() === 'phone' || step() === 'sending') {
+    <button class="btn btn-primary w-full" [disabled]="(!phoneFixed && !localPhone) || step() === 'sending'" (click)="sendOtp()">
+        @if (step() === 'sending') {
+        <span class="spinner"></span>
+        }
+        {{ 'AUTH.OTP_SEND' | translate }}
+    </button>
+    }
+
+    <!-- Step 2: Code entry -->
+    @if (step() === 'code' || step() === 'verifying' || step() === 'error') {
+
+    @if (channel() === 'whatsapp') {
+    <p class="otp-hint otp-hint--whatsapp">
+        📱 {{ 'AUTH.OTP_SENT_WHATSAPP' | translate }}
+    </p>
+    } @else {
+    <div class="telegram-fallback">
+        <p class="otp-hint otp-hint--telegram">
+            ✈️ {{ 'AUTH.OTP_SENT_TELEGRAM' | translate }}
+        </p>
+        @if (telegramBotUrl()) {
+        <a [href]="telegramBotUrl()!" target="_blank" class="btn btn-secondary btn-sm telegram-btn">
+            {{ 'AUTH.OTP_OPEN_TELEGRAM' | translate }} →
+        </a>
+        }
+    </div>
+    }
+
+    <div class="form-group">
+        <label>{{ 'AUTH.OTP_CODE' | translate }}</label>
+        <input class="form-control otp-code-input" type="text" inputmode="numeric" maxlength="6"
+            [placeholder]="'AUTH.OTP_CODE_PLACEHOLDER' | translate" [(ngModel)]="code"
+            [class.error]="step() === 'error'" (keyup.enter)="verifyOtp()" autocomplete="one-time-code" />
+        @if (step() === 'error') {
+        <span class="error-message">{{ errorMsg() | translate }}</span>
+        }
+    </div>
+
+    <div class="otp-actions">
+        <button class="btn btn-primary" [disabled]="code.length < 4 || step() === 'verifying'" (click)="verifyOtp()">
+            @if (step() === 'verifying') {
+            <span class="spinner"></span>
+            }
+            {{ 'AUTH.OTP_VERIFY' | translate }}
+        </button>
+        <button class="btn btn-ghost btn-sm" (click)="reset()" [disabled]="step() === 'verifying'">
+            {{ 'AUTH.OTP_RESEND' | translate }}
+        </button>
+    </div>
+    }
+
+    <!-- Verified -->
+    @if (step() === 'verified') {
+    <div class="otp-verified">
+        <span class="otp-verified__icon">✓</span>
+        <span>{{ 'AUTH.OTP_VERIFIED' | translate }}</span>
+    </div>
+    }
+
+</div>

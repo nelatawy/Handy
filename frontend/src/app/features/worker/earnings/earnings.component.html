@@ -1,0 +1,95 @@
+<section class="earnings">
+
+  <!-- Loading skeletons -->
+  @if (loading()) {
+    <div class="earnings__hero earnings__hero--skeleton">
+      <div class="skeleton skeleton--h3 skeleton--w40"></div>
+      <div class="skeleton skeleton--h6 skeleton--w60"></div>
+      <div class="skeleton skeleton--btn"></div>
+    </div>
+    <div class="earnings__list">
+      @for (i of [1,2,3]; track i) {
+        <div class="tx-card tx-card--skeleton">
+          <div class="skeleton skeleton--line skeleton--w60"></div>
+          <div class="skeleton skeleton--line skeleton--w40"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (error()) {
+    <div class="earnings__empty">
+      <div class="earnings__empty-icon">⚠️</div>
+      <p class="earnings__empty-text">{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <!-- Balance hero card -->
+    <div class="earnings__hero">
+      <div class="earnings__hero-label">{{ 'PAYMENT.BALANCE' | translate }}</div>
+      <div class="earnings__hero-amount">
+        <span class="earnings__hero-value">{{ balance() | number:'1.0-0' }}</span>
+        <span class="earnings__hero-currency">{{ 'COMMON.CURRENCY' | translate }}</span>
+      </div>
+      <p class="earnings__hero-total">
+        {{ 'PAYMENT.EARNINGS_TOTAL' | translate }}: {{ totalEarned() | number:'1.0-0' }} {{ 'COMMON.CURRENCY' | translate }}
+      </p>
+      <button
+        class="btn-primary earnings__withdraw-btn"
+        [disabled]="balance() <= 0 || withdrawing()"
+        (click)="withdraw()"
+        id="withdraw-btn">
+        @if (withdrawing()) {
+          <span class="spinner"></span>
+          {{ 'COMMON.LOADING' | translate }}
+        } @else {
+          💸 {{ 'PAYMENT.WITHDRAW' | translate }}
+        }
+      </button>
+      <p class="earnings__payout-note">{{ 'PAYMENT.PAYOUT_VIA' | translate }}</p>
+    </div>
+
+    <!-- Empty earnings state -->
+    @if (isEmpty()) {
+      <div class="earnings__empty">
+        <div class="earnings__empty-icon">📭</div>
+        <h2 class="earnings__empty-title">{{ 'PAYMENT.PAYOUT_HISTORY' | translate }}</h2>
+        <p class="earnings__empty-text">{{ 'PAYMENT.HISTORY_EMPTY' | translate }}</p>
+        <a class="btn-outline" routerLink="/worker/feed">{{ 'WORKER.FEED_TITLE' | translate }}</a>
+      </div>
+    }
+
+    <!-- Transaction list -->
+    @if (transactions().length > 0) {
+      <div class="earnings__section-title">{{ 'PAYMENT.PAYOUT_HISTORY' | translate }}</div>
+      <div class="earnings__list">
+        @for (tx of transactions(); track tx.jobId) {
+          <div class="tx-card tx-card--confirmed">
+
+            <div class="tx-card__left">
+              <div class="tx-card__icon tx-card__icon--online">💰</div>
+              <div class="tx-card__info">
+                <span class="tx-card__job-id">{{ 'PAYMENT.TRANSACTION_ID' | translate }} #{{ tx.jobId.slice(0,8) }}</span>
+                <span class="tx-card__date">{{ formatDate(tx.finishedAt) }}</span>
+              </div>
+            </div>
+
+            <div class="tx-card__badges">
+              <span class="badge badge--success">
+                {{ 'PAYMENT.STATUS_PAID' | translate }}
+              </span>
+            </div>
+
+            <div class="tx-card__amount">
+              <span class="tx-card__amount-value">{{ tx.amount | number:'1.0-0' }}</span>
+              <span class="tx-card__amount-currency">{{ 'COMMON.CURRENCY' | translate }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+</section>

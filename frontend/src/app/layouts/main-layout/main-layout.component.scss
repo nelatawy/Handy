@@ -1,0 +1,150 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m;
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: v.$color-bg;
+
+  &__content {
+    flex: 1;
+    padding: v.$space-6 0 v.$space-12;
+  }
+}
+
+// ── Navbar ─────────────────────────────────────────────────────
+.navbar {
+  background: v.$color-surface;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid v.$color-border;
+  position: sticky;
+  top: 0;
+  z-index: v.$z-sticky;
+  height: v.$navbar-height;
+
+  &__inner {
+    @include m.flex-between;
+    height: 100%;
+  }
+
+  &__brand {
+    @include m.flex-center;
+    gap: v.$space-2;
+    text-decoration: none;
+    flex-shrink: 0;
+
+    &:hover { text-decoration: none; }
+  }
+
+  &__logo { font-size: 1.6rem; line-height: 1; }
+
+  &__name {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-primary-600;
+    letter-spacing: -0.02em;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: v.$space-1;
+  }
+
+  &__link {
+    padding: v.$space-2 v.$space-3;
+    border-radius: v.$radius-md;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-secondary;
+    text-decoration: none;
+    transition: v.$transition-fast;
+
+    &:hover {
+      background: v.$color-surface-2;
+      color: v.$color-primary-600;
+      text-decoration: none;
+    }
+
+    &--active {
+      background: v.$color-surface-2;
+      color: v.$color-primary-600;
+      font-weight: v.$font-weight-semibold;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: v.$space-3;
+  }
+
+  &__logout {
+    color: v.$color-text-secondary;
+    font-size: v.$font-size-sm;
+    &:hover { color: v.$color-danger; background: v.$color-surface-2; }
+  }
+
+  &__hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: v.$space-2;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: v.$radius-md;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: v.$color-text-primary;
+      border-radius: 2px;
+      transition: v.$transition-fast;
+    }
+
+    &:hover { background: v.$color-surface-2; }
+  }
+
+  &__mobile-nav {
+    background: v.$color-surface;
+    border-top: 1px solid v.$color-border;
+    padding: v.$space-4;
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-1;
+    box-shadow: v.$shadow-lg;
+    position: absolute;
+    top: v.$navbar-height;
+    inset-inline: 0;
+    z-index: v.$z-dropdown;
+  }
+
+  &__mobile-link {
+    display: block;
+    padding: v.$space-3 v.$space-4;
+    border-radius: v.$radius-md;
+    font-size: v.$font-size-base;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-primary;
+    text-decoration: none;
+    background: none;
+    border: none;
+    text-align: start;
+    cursor: pointer;
+    width: 100%;
+    transition: v.$transition-fast;
+
+    &:hover { background: v.$color-surface-2; color: v.$color-primary-600; }
+  }
+
+  &__mobile-logout {
+    color: v.$color-danger;
+    margin-top: v.$space-2;
+    border-top: 1px solid v.$color-border;
+    padding-top: v.$space-3;
+    &:hover { background: v.$color-surface-2; }
+  }
+}

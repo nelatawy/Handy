@@ -1,0 +1,63 @@
+<div class="feed-page">
+
+  <div class="feed-header">
+    <div>
+      <h1 class="feed-header__title">{{ 'WORKER.FEED_TITLE' | translate }}</h1>
+      <p class="feed-header__sub">{{ 'WORKER.FEED_SUB' | translate }}</p>
+    </div>
+    <div class="feed-header__ws-dot" [class.feed-header__ws-dot--live]="true" [title]="'WORKER.LIVE_UPDATES_ON' | translate"></div>
+  </div>
+
+  @if (loading()) {
+    <div class="feed-skeleton">
+      @for (i of [1,2,3]; track i) {
+        <div class="skeleton skeleton--card"></div>
+      }
+    </div>
+  } @else if (requests().length === 0) {
+    <div class="feed-empty">
+      <div class="feed-empty__icon">📭</div>
+      <p class="feed-empty__text">{{ 'WORKER.FEED_EMPTY' | translate }}</p>
+    </div>
+  } @else {
+    <div class="feed-grid">
+      @for (req of requests(); track req.id) {
+        <div
+          class="request-card"
+          (click)="openRequest(req)"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="openRequest(req)"
+        >
+          <div class="request-card__header">
+            <span class="request-card__emoji">{{ getWorkTypeEmoji(req.workType) }}</span>
+            <div>
+              <span class="request-card__type-badge">{{ 'WORK_TYPE.' + req.workType | translate }}</span>
+              <span class="request-card__time">{{ timeAgo(req.createdAt).key | translate : timeAgo(req.createdAt).params }}</span>
+            </div>
+          </div>
+
+          <p class="request-card__desc">{{ req.description }}</p>
+
+          @if (req.images.length) {
+            <div class="request-card__images">
+              @for (url of (req.images | slice:0:3); track url) {
+                <img [src]="url" alt="job photo" class="request-card__thumb" />
+              }
+              @if (req.images.length > 3) {
+                <div class="request-card__thumb request-card__thumb--more">
+                  +{{ req.images.length - 3 }}
+                </div>
+              }
+            </div>
+          }
+
+          <div class="request-card__footer">
+            <span class="request-card__cta">{{ 'WORKER.VIEW_AND_SUBMIT_OFFER' | translate }} →</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

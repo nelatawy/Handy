@@ -1,0 +1,174 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// ============================================================
+//  Handy — Typography
+//
+//  Hierarchy is carried by WEIGHT and COLOUR first, size second.
+//  That is what keeps a bilingual UI stable: size changes cascade
+//  differently across two scripts, weight and colour do not.
+// ============================================================
+
+h1 {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: v.$tracking-tight;
+  line-height: v.$line-height-tight;
+}
+
+h2 {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-semibold;
+  letter-spacing: v.$tracking-tight;
+  line-height: v.$line-height-snug;
+}
+
+h3 {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-semibold;
+  line-height: v.$line-height-snug;
+}
+
+h4 { font-size: v.$font-size-md;   font-weight: v.$font-weight-semibold; }
+h5 { font-size: v.$font-size-base; font-weight: v.$font-weight-semibold; }
+h6 { font-size: v.$font-size-sm;   font-weight: v.$font-weight-semibold; }
+
+// Display sizes — opt in explicitly. Never let an h1 scream by
+// default; a marketplace needs to look competent, not loud.
+.display-lg {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: v.$tracking-tighter;
+  line-height: v.$line-height-tight;
+
+  @include m.md { font-size: v.$font-size-4xl; }
+}
+
+.display-sm {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: v.$tracking-tight;
+  line-height: v.$line-height-tight;
+
+  @include m.md { font-size: v.$font-size-3xl; }
+}
+
+// ============================================================
+//  RTL optical correction
+//
+//  Cairo has a taller x-height and heavier stems than Geist at the
+//  same nominal size, so identical tokens make Arabic read darker
+//  and larger than English. These rules pull it back to the same
+//  optical weight:
+//    1. a small negative size step on headings
+//    2. one weight step down where Geist used bold
+//  Both are optical, not structural — the grid is untouched, so
+//  layouts still mirror cleanly.
+// ============================================================
+[dir='rtl'] {
+  h1, h2, h3,
+  .display-lg,
+  .display-sm {
+    font-size: 0.94em;
+    letter-spacing: 0;   // Arabic must never be letter-spaced
+  }
+
+  h1,
+  .display-lg,
+  .display-sm {
+    font-weight: v.$font-weight-semibold;   // 700 -> 600
+  }
+}
+
+// ============================================================
+//  Size / weight / colour utilities
+// ============================================================
+.text-xs   { font-size: v.$font-size-xs; }
+.text-sm   { font-size: v.$font-size-sm; }
+.text-base { font-size: v.$font-size-base; }
+.text-md   { font-size: v.$font-size-md; }
+.text-lg   { font-size: v.$font-size-lg; }
+.text-xl   { font-size: v.$font-size-xl; }
+.text-2xl  { font-size: v.$font-size-2xl; }
+.text-3xl  { font-size: v.$font-size-3xl; }
+.text-4xl  { font-size: v.$font-size-4xl; }
+
+.font-normal   { font-weight: v.$font-weight-normal; }
+.font-medium   { font-weight: v.$font-weight-medium; }
+.font-semibold { font-weight: v.$font-weight-semibold; }
+.font-bold     { font-weight: v.$font-weight-bold; }
+
+.text-primary   { color: v.$color-text-primary; }
+.text-secondary { color: v.$color-text-secondary; }
+.text-muted     { color: v.$color-text-muted; }
+.text-link      { color: v.$color-text-link; }
+.text-brand     { color: v.$color-accent; }
+.text-accent    { color: v.$color-accent-text; }
+.text-success   { color: v.$color-success-text; }
+.text-danger    { color: v.$color-danger-text; }
+.text-warning   { color: v.$color-warning-text; }
+.text-inverse   { color: v.$color-text-inverse; }
+
+// Logical alignment — start/end flip with direction, left/right do not.
+.text-start  { text-align: start; }
+.text-center { text-align: center; }
+.text-end    { text-align: end; }
+
+// ============================================================
+//  Numerals
+//
+//  Prices, ratings and job counts are the numbers a marketplace is
+//  judged on. Tabular figures keep them aligned digit-for-digit when
+//  stacked in a column of offer cards, so they can be compared at a
+//  glance instead of read one at a time.
+// ============================================================
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.numeric {
+  font-family: v.$font-mono;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: v.$tracking-tight;
+
+  // The mono face has no Arabic coverage and numbers stay Western in
+  // this UI, so direction is isolated to keep digit order correct
+  // even inside an RTL paragraph.
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+// Uppercase micro-label ("PLUMBER", "CASH"). Arabic has no letter
+// case, so the transform and tracking are both dropped under RTL.
+.label-caps {
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: v.$tracking-caps;
+  color: v.$color-text-muted;
+
+  [dir='rtl'] & {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+}
+
+// ============================================================
+//  Truncation & measure
+// ============================================================
+.truncate     { @include m.text-truncate; }
+.line-clamp-1 { @include m.line-clamp(1); }
+.line-clamp-2 { @include m.line-clamp(2); }
+.line-clamp-3 { @include m.line-clamp(3); }
+
+// Measure cap for prose. 65ch is comfortable in Latin; Arabic sets
+// wider per character, so it gets a slightly tighter cap.
+.prose {
+  max-width: 65ch;
+  line-height: v.$line-height-relaxed;
+  color: v.$color-text-secondary;
+
+  [dir='rtl'] & { max-width: 58ch; }
+}

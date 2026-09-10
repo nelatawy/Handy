@@ -1,0 +1,143 @@
+<section class="profile">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="profile__skeleton">
+      <div class="profile__avatar-skeleton skeleton"></div>
+      <div class="skeleton skeleton--line skeleton--w40"></div>
+      <div class="skeleton skeleton--line skeleton--w60"></div>
+      <div class="profile__stats-skeleton">
+        @for (i of [1,2,3]; track i) { <div class="skeleton profile__stat-skeleton"></div> }
+      </div>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="profile__empty">
+      <span class="profile__empty-icon">⚠️</span>
+      <p>{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && worker()) {
+    <!-- Profile card -->
+    <div class="profile__card">
+
+      <!-- Avatar + identity -->
+      <div class="profile__header">
+        <div class="profile__avatar">{{ initials() }}</div>
+        <div class="profile__identity">
+          <h1 class="profile__name">{{ worker()!.username }}</h1>
+          <span class="profile__worktype-badge">{{ workTypeKey() | translate }}</span>
+        </div>
+        @if (!editMode()) {
+          <button class="btn-outline-sm profile__edit-btn" (click)="enterEditMode()" id="edit-profile-btn">
+            ✏️ {{ 'PROFILE.EDIT' | translate }}
+          </button>
+        }
+      </div>
+
+      <!-- Stats row -->
+      <div class="profile__stats">
+        <div class="profile__stat">
+          <app-star-rating [value]="worker()!.averageRating" [showCount]="false" size="md" />
+          <span class="profile__stat-value">{{ worker()!.averageRating | number:'1.1-1' }}</span>
+          <span class="profile__stat-label">{{ 'PROFILE.AVERAGE_RATING' | translate }}</span>
+        </div>
+        <div class="profile__stat-divider"></div>
+        <div class="profile__stat">
+          <span class="profile__stat-value profile__stat-value--lg">{{ worker()!.ratingsCount }}</span>
+          <span class="profile__stat-label">{{ 'PROFILE.TOTAL_RATINGS' | translate }}</span>
+        </div>
+        <div class="profile__stat-divider"></div>
+        <div class="profile__stat">
+          <span class="profile__stat-value profile__stat-value--lg">{{ worker()!.completedJobsCount }}</span>
+          <span class="profile__stat-label">{{ 'PROFILE.COMPLETED_JOBS' | translate }}</span>
+        </div>
+      </div>
+
+      <!-- VIEW MODE: bio + shop info -->
+      @if (!editMode()) {
+        <div class="profile__section">
+          <h2 class="profile__section-title">{{ 'PROFILE.BIO' | translate }}</h2>
+          @if (worker()!.bio) {
+            <p class="profile__bio">{{ worker()!.bio }}</p>
+          } @else {
+            <p class="profile__bio profile__bio--empty">{{ 'PROFILE.NO_BIO' | translate }}</p>
+          }
+        </div>
+
+        <div class="profile__section">
+          <h2 class="profile__section-title">{{ 'PROFILE.SHOP' | translate }}</h2>
+          @if (worker()!.hasShop) {
+            <div class="profile__shop-info">
+              <span class="profile__shop-icon">🏪</span>
+              <span>{{ worker()!.shopLocation || ('PROFILE.SHOP_LOCATION' | translate) }}</span>
+            </div>
+          } @else {
+            <p class="profile__bio profile__bio--empty">{{ 'PROFILE.NO_SHOP' | translate }}</p>
+          }
+        </div>
+      }
+
+      <!-- EDIT MODE: reactive form -->
+      @if (editMode()) {
+        <form class="profile__form" [formGroup]="form" (ngSubmit)="saveProfile()">
+
+          <div class="profile__form-group">
+            <label class="profile__form-label" for="bio-input">{{ 'PROFILE.BIO' | translate }}</label>
+            <textarea
+              id="bio-input"
+              class="profile__textarea"
+              formControlName="bio"
+              rows="4"
+              [placeholder]="'AUTH.BIO_PLACEHOLDER' | translate">
+            </textarea>
+          </div>
+
+          <div class="profile__form-group">
+            <label class="profile__toggle-label">
+              <div class="profile__toggle-wrapper">
+                <input type="checkbox" class="profile__toggle-input" formControlName="hasShop" id="has-shop-toggle" />
+                <span class="profile__toggle-track">
+                  <span class="profile__toggle-thumb"></span>
+                </span>
+              </div>
+              <span>{{ 'AUTH.HAS_SHOP' | translate }}</span>
+            </label>
+          </div>
+
+          @if (form.get('hasShop')?.value) {
+            <div class="profile__form-group profile__form-group--animate">
+              <label class="profile__form-label" for="shop-location-input">{{ 'AUTH.SHOP_LOCATION' | translate }}</label>
+              <input
+                id="shop-location-input"
+                type="text"
+                class="profile__input"
+                formControlName="shopLocation"
+                [placeholder]="'AUTH.SHOP_LOCATION_PLACEHOLDER' | translate" />
+              @if (form.get('shopLocation')?.invalid && form.get('shopLocation')?.touched) {
+                <span class="profile__form-error">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+              }
+            </div>
+          }
+
+          <div class="profile__form-actions">
+            <button type="button" class="btn-ghost" (click)="cancelEdit()" id="cancel-edit-btn">
+              {{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="form.invalid || saving()" id="save-profile-btn">
+              @if (saving()) {
+                <span class="spinner"></span>
+              }
+              {{ 'PROFILE.SAVE' | translate }}
+            </button>
+          </div>
+        </form>
+      }
+
+    </div>
+  }
+
+</section>

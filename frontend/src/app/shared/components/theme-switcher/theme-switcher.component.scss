@@ -1,0 +1,27 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.theme-btn {
+  @include m.btn-base;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: v.$color-surface;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  color: v.$color-text-primary;
+  transition: v.$transition-base;
+
+  &:hover {
+    background: v.$color-primary-50;
+    border-color: v.$color-primary-300;
+    color: v.$color-primary-700;
+  }
+
+  &__icon {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+}

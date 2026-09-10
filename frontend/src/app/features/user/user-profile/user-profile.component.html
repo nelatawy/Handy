@@ -1,0 +1,124 @@
+<section class="user-profile">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="user-profile__skeleton">
+      <div class="user-profile__avatar-skeleton skeleton"></div>
+      <div class="skeleton skeleton--line skeleton--w40"></div>
+      <div class="skeleton skeleton--line skeleton--w60"></div>
+      <div class="skeleton skeleton--line skeleton--w50"></div>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="user-profile__empty">
+      <span class="user-profile__empty-icon">⚠️</span>
+      <p>{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && user()) {
+    <div class="user-profile__card">
+
+      <!-- Header -->
+      <div class="user-profile__header">
+        <div class="user-profile__avatar">{{ initials() }}</div>
+        <div class="user-profile__identity">
+          <h1 class="user-profile__name">{{ user()!.username }}</h1>
+          <span class="user-profile__role-badge">{{ 'AUTH.ROLE_USER' | translate }}</span>
+        </div>
+        @if (!editMode()) {
+          <button class="btn-outline-sm user-profile__edit-btn" (click)="enterEditMode()" id="edit-user-profile-btn">
+            ✏️ {{ 'PROFILE.EDIT' | translate }}
+          </button>
+        }
+      </div>
+
+      <!-- VIEW MODE -->
+      @if (!editMode()) {
+        <div class="user-profile__fields">
+
+          <div class="user-profile__field">
+            <span class="user-profile__field-label">{{ 'PROFILE.USERNAME' | translate }}</span>
+            <span class="user-profile__field-value">{{ user()!.username }}</span>
+          </div>
+
+          <div class="user-profile__field">
+            <span class="user-profile__field-label">{{ 'PROFILE.PHONE' | translate }}</span>
+            <span class="user-profile__field-value user-profile__field-value--mono">{{ maskedPhone() }}</span>
+            <span class="user-profile__field-note">{{ 'PROFILE.PHONE_NOTE' | translate }}</span>
+          </div>
+
+          <div class="user-profile__field">
+            <span class="user-profile__field-label">{{ 'PROFILE.COUNTRY' | translate }}</span>
+            <span class="user-profile__field-value">{{ user()!.country }}</span>
+          </div>
+
+          <div class="user-profile__field">
+            <span class="user-profile__field-label">{{ 'PROFILE.GOVERNORATE' | translate }}</span>
+            <span class="user-profile__field-value">{{ user()!.governorate }}</span>
+          </div>
+
+        </div>
+      }
+
+      <!-- EDIT MODE -->
+      @if (editMode()) {
+        <form class="user-profile__form" [formGroup]="form" (ngSubmit)="saveProfile()">
+
+          <div class="user-profile__form-group">
+            <label class="user-profile__form-label" for="up-username">{{ 'PROFILE.USERNAME' | translate }}</label>
+            <input id="up-username" type="text" class="user-profile__input"
+                   formControlName="username"
+                   [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate" />
+            @if (form.get('username')?.invalid && form.get('username')?.touched) {
+              <span class="user-profile__form-error">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+          </div>
+
+          <!-- Phone is read-only in edit mode — changing phone requires OTP re-verification -->
+          <div class="user-profile__form-group">
+            <label class="user-profile__form-label">{{ 'PROFILE.PHONE' | translate }}</label>
+            <input type="text" class="user-profile__input user-profile__input--readonly"
+                   [value]="maskedPhone()" readonly />
+            <span class="user-profile__field-note">{{ 'PROFILE.PHONE_NOTE' | translate }}</span>
+          </div>
+
+          <div class="user-profile__form-group">
+            <label class="user-profile__form-label" for="up-country">{{ 'PROFILE.COUNTRY' | translate }}</label>
+            <input id="up-country" type="text" class="user-profile__input"
+                   formControlName="country"
+                   [placeholder]="'AUTH.COUNTRY_PLACEHOLDER' | translate" />
+            @if (form.get('country')?.invalid && form.get('country')?.touched) {
+              <span class="user-profile__form-error">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+          </div>
+
+          <div class="user-profile__form-group">
+            <label class="user-profile__form-label" for="up-governorate">{{ 'PROFILE.GOVERNORATE' | translate }}</label>
+            <input id="up-governorate" type="text" class="user-profile__input"
+                   formControlName="governorate"
+                   [placeholder]="'AUTH.GOVERNORATE_PLACEHOLDER' | translate" />
+            @if (form.get('governorate')?.invalid && form.get('governorate')?.touched) {
+              <span class="user-profile__form-error">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+          </div>
+
+          <div class="user-profile__form-actions">
+            <button type="button" class="btn-ghost" (click)="cancelEdit()" id="cancel-user-edit-btn">
+              {{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="form.invalid || saving()" id="save-user-profile-btn">
+              @if (saving()) { <span class="spinner"></span> }
+              {{ 'PROFILE.SAVE' | translate }}
+            </button>
+          </div>
+
+        </form>
+      }
+
+    </div>
+  }
+
+</section>

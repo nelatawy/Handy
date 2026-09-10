@@ -1,0 +1,86 @@
+<section class="tx-history">
+  <!-- Header -->
+  <div class="tx-history__header">
+    <h1 class="tx-history__title">{{ 'PAYMENT.HISTORY_TITLE' | translate }}</h1>
+    <p class="tx-history__subtitle">{{ 'PAYMENT.HISTORY_SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- Loading skeletons -->
+  @if (loading()) {
+    <div class="tx-history__list">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="tx-card tx-card--skeleton">
+          <div class="skeleton skeleton--line skeleton--w60"></div>
+          <div class="skeleton skeleton--line skeleton--w40"></div>
+          <div class="skeleton skeleton--line skeleton--w80"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (error()) {
+    <div class="tx-history__empty">
+      <div class="tx-history__empty-icon">⚠️</div>
+      <p class="tx-history__empty-text">{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
+      <button class="btn-primary" routerLink="/user/home">{{ 'COMMON.BACK' | translate }}</button>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (isEmpty()) {
+    <div class="tx-history__empty">
+      <div class="tx-history__empty-icon">💳</div>
+      <h2 class="tx-history__empty-title">{{ 'PAYMENT.HISTORY_EMPTY' | translate }}</h2>
+      <p class="tx-history__empty-text">{{ 'PAYMENT.HISTORY_EMPTY_DESC' | translate }}</p>
+      <a class="btn-primary" routerLink="/user/request/new">{{ 'REQUEST.MAKE_REQUEST' | translate }}</a>
+    </div>
+  }
+
+  <!-- Transaction list -->
+  @if (!loading() && !error() && transactions().length > 0) {
+    <div class="tx-history__list">
+      @for (tx of transactions(); track tx.id) {
+        <div class="tx-card" [class.tx-card--confirmed]="tx.status === 'paid'"
+                             [class.tx-card--pending]="tx.status === 'pending'"
+                             [class.tx-card--failed]="tx.status === 'failed'">
+
+          <!-- Left: icon + info -->
+          <div class="tx-card__left">
+            <div class="tx-card__icon" [class.tx-card__icon--cash]="tx.method === PaymentType.Cash"
+                                        [class.tx-card__icon--online]="tx.method === PaymentType.Online">
+              {{ tx.method === PaymentType.Cash ? '💵' : '💳' }}
+            </div>
+            <div class="tx-card__info">
+              <span class="tx-card__job-id">{{ 'PAYMENT.TRANSACTION_ID' | translate }} #{{ tx.id.slice(0, 8) }}</span>
+              <span class="tx-card__date">{{ formatDate(tx.createdAt) }}</span>
+            </div>
+          </div>
+
+          <!-- Middle: badges -->
+          <div class="tx-card__badges">
+            <span class="badge"
+                  [class.badge--cash]="tx.method === PaymentType.Cash"
+                  [class.badge--online]="tx.method === PaymentType.Online">
+              {{ ('PAYMENT_TYPE.' + tx.method) | translate }}
+            </span>
+            <span class="badge"
+                  [class.badge--success]="tx.status === 'paid'"
+                  [class.badge--warning]="tx.status === 'pending'"
+                  [class.badge--danger]="tx.status === 'failed'">
+              {{ ('PAYMENT.STATUS_' + tx.status.toUpperCase()) | translate }}
+            </span>
+          </div>
+
+          <!-- Right: amount -->
+          <div class="tx-card__amount">
+            <span class="tx-card__amount-value">{{ tx.amount | number:'1.0-0' }}</span>
+            <span class="tx-card__amount-currency">{{ 'COMMON.CURRENCY' | translate }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+  }
+
+</section>

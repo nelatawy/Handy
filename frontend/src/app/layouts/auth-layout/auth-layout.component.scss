@@ -1,0 +1,80 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m;
+
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, v.$color-primary-50 0%, v.$color-white 50%, v.$color-primary-100 100%);
+
+  // Subtle animated background pattern
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &__header {
+    @include m.flex-between;
+    padding: v.$space-4 v.$space-6;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__brand {
+    @include m.flex-center;
+    gap: v.$space-2;
+    text-decoration: none;
+
+    &:hover { text-decoration: none; }
+  }
+
+  &__logo {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  &__name {
+    font-size: v.$font-size-2xl;
+    font-weight: v.$font-weight-bold;
+    color: v.$color-primary-600;
+    letter-spacing: -0.02em;
+  }
+
+  &__main {
+    flex: 1;
+    @include m.flex-center;
+    padding: v.$space-8 v.$space-4;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__card {
+    background: v.$color-white;
+    border: 1px solid v.$color-border;
+    border-radius: v.$radius-2xl;
+    box-shadow: v.$shadow-xl;
+    padding: v.$space-8;
+    width: 100%;
+    max-width: 480px;
+
+    @include m.max-sm {
+      padding: v.$space-6;
+      border-radius: v.$radius-xl;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    padding: v.$space-4;
+    color: v.$color-text-muted;
+    font-size: v.$font-size-sm;
+    position: relative;
+    z-index: 1;
+  }
+}

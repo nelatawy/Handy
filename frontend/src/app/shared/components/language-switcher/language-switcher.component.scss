@@ -1,0 +1,26 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.lang-btn {
+  @include m.btn-base;
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  background: v.$color-surface;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  color: v.$color-text-primary;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  transition: v.$transition-base;
+
+  &:hover {
+    background: v.$color-primary-50;
+    border-color: v.$color-primary-300;
+    color: v.$color-primary-700;
+  }
+
+  &__flag { font-size: 1.1em; line-height: 1; }
+  &__label { white-space: nowrap; }
+}

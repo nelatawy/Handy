@@ -1,0 +1,681 @@
+@use 'sass:string';
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// ============================================================
+//  Handy — Global Components & Utilities
+//
+//  Both naming conventions (.btn-primary and .btn--primary) are kept
+//  live: templates across the app use them interchangeably, and
+//  renaming them would be a functional change, not a visual one.
+// ============================================================
+
+// Builds the native-select chevron as a data URI. A data URI cannot
+// inherit currentColor, so the stroke has to be baked in — deriving it
+// from the token here keeps the two from drifting apart.
+@function chevron($color) {
+  $hex: '%23' + string.slice('#{$color}', 2);
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath stroke='#{$hex}' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+}
+
+// ------------------------------------------------------------
+//  Layout primitives
+// ------------------------------------------------------------
+.container        { @include m.container; }
+.container-narrow { @include m.container(v.$container-narrow); }
+
+// The default page wrapper: one column, consistent vertical rhythm.
+.page {
+  @include m.container;
+  @include m.stack(v.$space-6);
+  padding-block: v.$space-6 v.$space-16;
+}
+
+.page-narrow {
+  @include m.container(v.$container-narrow);
+  @include m.stack(v.$space-6);
+  padding-block: v.$space-6 v.$space-16;
+}
+
+// Section header: title on the start edge, optional action on the end.
+// Asymmetric by default — the Swiss move, and it mirrors for free.
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: v.$space-4;
+  flex-wrap: wrap;
+
+  &__title {
+    font-size: v.$font-size-xl;
+    font-weight: v.$font-weight-semibold;
+    letter-spacing: v.$tracking-tight;
+    color: v.$color-text-primary;
+  }
+
+  &__sub {
+    margin-top: v.$space-1;
+    font-size: v.$font-size-sm;
+    color: v.$color-text-muted;
+  }
+}
+
+// --- Display ---
+.d-flex        { display: flex; }
+.d-grid        { display: grid; }
+.d-block       { display: block; }
+.d-inline      { display: inline; }
+.d-inline-flex { display: inline-flex; }
+.d-none        { display: none; }
+
+// --- Flex ---
+.flex-col     { flex-direction: column; }
+.flex-row     { flex-direction: row; }
+.flex-wrap    { flex-wrap: wrap; }
+.flex-nowrap  { flex-wrap: nowrap; }
+.flex-1       { flex: 1; }
+.flex-none    { flex: none; }
+.flex-center  { @include m.flex-center; }
+.flex-between { @include m.flex-between; }
+
+.items-start   { align-items: flex-start; }
+.items-center  { align-items: center; }
+.items-end     { align-items: flex-end; }
+.items-stretch { align-items: stretch; }
+.items-baseline{ align-items: baseline; }
+
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-around  { justify-content: space-around; }
+
+// --- Gap ---
+.gap-1 { gap: v.$space-1; }
+.gap-2 { gap: v.$space-2; }
+.gap-3 { gap: v.$space-3; }
+.gap-4 { gap: v.$space-4; }
+.gap-5 { gap: v.$space-5; }
+.gap-6 { gap: v.$space-6; }
+.gap-8 { gap: v.$space-8; }
+
+// --- Auto-fit grid. Cards reflow without flexbox percentage math. ---
+.grid-cards {
+  display: grid;
+  gap: v.$space-4;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+
+// --- Size / position ---
+.w-full       { width: 100%; }
+.h-full       { height: 100%; }
+.min-h-screen { min-height: 100dvh; }
+.m-auto       { margin: auto; }
+.ms-auto      { margin-inline-start: auto; }
+.me-auto      { margin-inline-end: auto; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; }
+.inset-0  { inset: 0; }
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+
+.rounded      { border-radius: v.$radius-md; }
+.rounded-lg   { border-radius: v.$radius-lg; }
+.rounded-xl   { border-radius: v.$radius-xl; }
+.rounded-full { border-radius: v.$radius-full; }
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.select-none    { user-select: none; }
+
+.sr-only { @include m.visually-hidden; }
+
+// ============================================================
+//  Buttons
+//
+//  One geometry, tone applied on top. Every filled variant carries a
+//  ripple; every variant is verified for AA contrast on its own fill.
+// ============================================================
+.btn {
+  @include m.btn-base;
+  background: v.$color-surface;
+  color: v.$color-text-primary;
+  border-color: v.$color-border-strong;
+  @include m.ripple(v.$color-text-primary);
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-2;
+    border-color: v.$color-text-muted;
+  }
+}
+
+// --- Primary: the action colour. Rationed to one per view. ---
+.btn-primary,
+.btn--primary {
+  @include m.btn-base;
+  @include m.ripple(v.$color-white);
+  background: v.$color-accent;
+  color: v.$color-white;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    background: v.$color-accent-hover;
+    box-shadow: var(--shadow-md);
+  }
+
+  &:active:not(:disabled) {
+    box-shadow: var(--shadow-sm);
+    transform: scale(0.985);
+  }
+}
+
+// --- Secondary: accent-tinted, for the second-most-likely action. ---
+.btn-secondary,
+.btn--secondary {
+  @include m.btn-base;
+  @include m.ripple(v.$color-accent);
+  background: v.$color-accent-soft;
+  color: v.$color-accent-text;
+  border-color: transparent;
+
+  &:hover:not(:disabled) {
+    background: v.$color-accent-soft;
+    border-color: v.$color-accent;
+  }
+}
+
+.btn-success,
+.btn--success {
+  @include m.btn-base;
+  @include m.ripple(v.$color-white);
+  background: v.$color-success;
+  color: v.$color-white;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    background: v.$color-success-hover;
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.btn-danger,
+.btn--danger {
+  @include m.btn-base;
+  @include m.ripple(v.$color-white);
+  background: v.$color-danger;
+  color: v.$color-white;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    background: v.$color-danger-hover;
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.btn--danger-outline {
+  @include m.btn-base;
+  @include m.ripple(v.$color-danger-text);
+  background: transparent;
+  color: v.$color-danger-text;
+  border-color: currentColor;
+
+  &:hover:not(:disabled) { background: #{rgba(v.$color-danger, 0.08)}; }
+}
+
+.btn--outline {
+  @include m.btn-base;
+  @include m.ripple(v.$color-text-primary);
+  background: transparent;
+  color: v.$color-text-primary;
+  border-color: v.$color-border-strong;
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-2;
+    border-color: v.$color-text-muted;
+  }
+}
+
+.btn-ghost,
+.btn--ghost {
+  @include m.btn-base;
+  @include m.ripple(v.$color-text-primary);
+  background: transparent;
+  color: v.$color-text-secondary;
+  border-color: transparent;
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-2;
+    color: v.$color-text-primary;
+  }
+}
+
+// --- Selected state for segmented / choice buttons (work type,
+//     identifier type, payment method). Referenced by the auth and
+//     request templates. ---
+.btn--active {
+  background: v.$color-accent-soft;
+  color: v.$color-accent-text;
+  border-color: v.$color-accent;
+  font-weight: v.$font-weight-semibold;
+}
+
+// --- De-emphasised but still enabled (worker home CTA when a job is
+//     already in progress). Distinct from :disabled. ---
+.btn--muted {
+  background: v.$color-surface-2;
+  color: v.$color-text-muted;
+  border-color: v.$color-border;
+  box-shadow: none;
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-3;
+    color: v.$color-text-secondary;
+    box-shadow: none;
+  }
+}
+
+// --- In-flight. Label stays put (no layout shift); the button is
+//     inert but keeps its footprint. ---
+.btn--loading {
+  cursor: progress;
+  pointer-events: none;
+
+  > :not(.spinner):not(.spinner-sm) { opacity: 0.65; }
+}
+
+// --- Sizes ---
+.btn-sm,
+.btn--sm {
+  min-height: 32px;
+  padding: v.$space-2 v.$space-3;
+  font-size: v.$font-size-xs;
+  border-radius: v.$radius-md;
+}
+
+.btn-lg,
+.btn--lg {
+  min-height: 48px;
+  padding: v.$space-4 v.$space-6;
+  font-size: v.$font-size-md;
+  border-radius: v.$radius-xl;
+}
+
+.btn-outline-sm {
+  @include m.btn-base;
+  @include m.ripple(v.$color-text-primary);
+  min-height: 32px;
+  padding: v.$space-2 v.$space-3;
+  font-size: v.$font-size-xs;
+  border-radius: v.$radius-md;
+  background: transparent;
+  color: v.$color-text-secondary;
+  border-color: v.$color-border-strong;
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-2;
+    color: v.$color-text-primary;
+    border-color: v.$color-text-muted;
+  }
+}
+
+// Icon-only button. Square, centred, and large enough to hit reliably.
+.btn-icon {
+  @include m.btn-base;
+  @include m.ripple(v.$color-text-primary);
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: v.$radius-full;
+  background: transparent;
+  color: v.$color-text-secondary;
+  border-color: transparent;
+
+  &:hover:not(:disabled) {
+    background: v.$color-surface-2;
+    color: v.$color-text-primary;
+  }
+}
+
+// Full-width on mobile — CTAs should span the thumb's reach.
+.btn-block {
+  width: 100%;
+
+  @include m.md { width: auto; }
+}
+
+// ============================================================
+//  Badges / pills
+// ============================================================
+.badge {
+  @include m.pill(v.$color-text-secondary, v.$color-surface-2);
+}
+
+.badge-primary, .badge--info    { @include m.pill(v.$color-accent-text,  v.$color-accent-soft); }
+.badge-success, .badge--success { @include m.pill(v.$color-success-text, v.$tint-success); }
+.badge-danger,  .badge--danger  { @include m.pill(v.$color-danger-text,  v.$tint-danger); }
+.badge-warning, .badge--warning { @include m.pill(v.$color-warning-text, v.$tint-warning); }
+.badge-gray                     { @include m.pill(v.$color-text-secondary, v.$color-surface-2); }
+.badge-cash,    .badge--cash    { @include m.pill(v.$color-success-text, v.$tint-success); }
+.badge-online,  .badge--online  { @include m.pill(v.$color-accent-text,  v.$color-accent-soft); }
+
+// Job lifecycle. Pending reads as waiting, started as live, finished
+// as settled, canceled as neutral-negative — never alarm red, since a
+// cancelled job is a normal outcome rather than an error.
+.badge--pending  { @include m.pill(v.$color-warning-text, v.$tint-warning); }
+.badge--started  { @include m.pill(v.$color-accent-text,  v.$color-accent-soft); }
+.badge--finished { @include m.pill(v.$color-success-text, v.$tint-success); }
+.badge--canceled { @include m.pill(v.$color-text-muted,   v.$color-surface-2); }
+
+// ============================================================
+//  Surfaces
+// ============================================================
+.card {
+  @include m.surface(1);
+  padding: v.$space-5;
+
+  @include m.md { padding: v.$space-6; }
+}
+
+.card-flat    { @include m.surface(0); padding: v.$space-5; }
+.card-raised  { @include m.surface(2); padding: v.$space-5; }
+
+.card-hover {
+  @include m.surface(1);
+  @include m.interactive-lift;
+  padding: v.$space-5;
+  cursor: pointer;
+
+  &:hover { border-color: v.$color-accent; }
+
+  @include m.md { padding: v.$space-6; }
+}
+
+// ============================================================
+//  Forms
+//
+//  Label above input, error below, 8px rhythm throughout.
+// ============================================================
+.form-group {
+  @include m.flex-col;
+  gap: v.$space-2;
+
+  label,
+  .form-label {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-primary;
+  }
+
+  .error-message,
+  .form-error {
+    display: flex;
+    align-items: center;
+    gap: v.$space-1;
+    font-size: v.$font-size-xs;
+    color: v.$color-danger-text;
+  }
+
+  .form-hint {
+    font-size: v.$font-size-xs;
+    color: v.$color-text-muted;
+  }
+}
+
+// Standalone aliases — these appear outside .form-group in several
+// templates, so they need their own definitions too.
+.form-label {
+  display: block;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-primary;
+}
+
+.form-error,
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+  font-size: v.$font-size-xs;
+  color: v.$color-danger-text;
+}
+
+.form-hint {
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+}
+
+.form-control { @include m.input-base; }
+
+.form-textarea {
+  @include m.input-base;
+  min-height: 112px;
+  line-height: v.$line-height-base;
+  resize: vertical;
+}
+
+textarea.form-control {
+  min-height: 112px;
+  line-height: v.$line-height-base;
+  resize: vertical;
+}
+
+// Native select. The chevron is an inline SVG so it inherits no
+// dependency, and its side flips with direction.
+select.form-control,
+.form-select {
+  @include m.input-base;
+  cursor: pointer;
+  appearance: none;
+  background-image: chevron(v.$color-gray-500);
+  background-repeat: no-repeat;
+  background-position: right v.$space-4 center;
+  padding-inline-end: v.$space-10;
+
+  [dir='rtl'] & {
+    background-position: left v.$space-4 center;
+  }
+}
+
+:root.theme-dark {
+  select.form-control,
+  .form-select {
+    background-image: chevron(v.$color-ink-text-muted);
+  }
+}
+
+// Form-level server error, distinct from per-field validation.
+.server-error {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-2;
+  padding: v.$space-3 v.$space-4;
+  border: 1px solid #{rgba(v.$color-danger, 0.35)};
+  border-radius: v.$radius-lg;
+  background: v.$tint-danger;
+  font-size: v.$font-size-sm;
+  color: v.$color-danger-text;
+}
+
+// ============================================================
+//  Feedback: dividers, skeletons, spinners, states
+// ============================================================
+.divider {
+  display: flex;
+  align-items: center;
+  gap: v.$space-4;
+  color: v.$color-text-muted;
+  font-size: v.$font-size-sm;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: v.$color-border;
+  }
+}
+
+.skeleton {
+  @include m.skeleton;
+
+  &-text   { height: 0.9em; width: 60%; border-radius: v.$radius-sm; }
+  &-circle { border-radius: v.$radius-full; }
+  &-rect   { width: 100%; }
+
+  // Card-shaped placeholder, matched to .card's real height so the
+  // layout does not jump when content arrives.
+  &--card { height: 132px; border-radius: v.$radius-xl; }
+  &--sm   { height: 72px;  border-radius: v.$radius-lg; }
+}
+
+.custom-scroll { @include m.custom-scrollbar; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid v.$color-border;
+  border-top-color: v.$color-accent;
+  border-radius: v.$radius-full;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+// On a filled button the track must be the button's own text colour.
+.spinner-sm {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #{rgba(v.$color-white, 0.35)};
+  border-top-color: currentColor;
+  border-radius: v.$radius-full;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Empty / error / waiting state. Composed rather than a bare message:
+// an icon, a headline, a reason, and a way out.
+.state-card {
+  @include m.flex-col;
+  align-items: center;
+  gap: v.$space-3;
+  padding: v.$space-12 v.$space-6;
+  text-align: center;
+
+  &__icon {
+    @include m.flex-center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: v.$space-1;
+    border-radius: v.$radius-full;
+    background: v.$color-surface-2;
+    color: v.$color-text-muted;
+  }
+
+  &__title {
+    font-size: v.$font-size-md;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+  }
+
+  &__text {
+    max-width: 42ch;
+    font-size: v.$font-size-sm;
+    color: v.$color-text-muted;
+  }
+}
+
+// Inline informational banner.
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$space-3;
+  padding: v.$space-4;
+  border: 1px solid v.$color-border;
+  border-inline-start: 3px solid v.$color-accent;
+  border-radius: v.$radius-lg;
+  background: v.$color-surface-2;
+  font-size: v.$font-size-sm;
+  color: v.$color-text-secondary;
+
+  &--warning { border-inline-start-color: v.$color-warning-text; }
+  &--danger  { border-inline-start-color: v.$color-danger-text; }
+  &--success { border-inline-start-color: v.$color-success-text; }
+}
+
+// ============================================================
+//  Trust primitives — exposed as classes so any screen can use them
+// ============================================================
+.avatar {
+  @include m.avatar(44px);
+
+  &--sm { @include m.avatar(32px); }
+  &--lg { @include m.avatar(56px); }
+  &--xl { @include m.avatar(80px); }
+}
+
+.live-dot { @include m.live-dot; }
+
+// Numbers that carry weight: price, rating, completed jobs.
+.metric {
+  @include m.flex-col;
+  gap: 2px;
+
+  &__value {
+    @include m.numeric;
+    font-size: v.$font-size-lg;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+    line-height: 1.15;
+  }
+
+  &__label {
+    font-size: v.$font-size-xs;
+    color: v.$color-text-muted;
+  }
+}
+
+// ============================================================
+//  Motion utilities
+// ============================================================
+.animate-fade-in-up {
+  animation: fade-in-up #{v.$duration-slow} #{v.$ease-decelerate} both;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+// Staggered reveal for lists. Set --index on each child; the cascade
+// does the rest with no JS and no per-item timers.
+.stagger > * {
+  animation: fade-in-up #{v.$duration-slow} #{v.$ease-decelerate} both;
+  animation-delay: calc(var(--index, 0) * 55ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger > * { animation-delay: 0ms; }
+}
+
+// ============================================================
+//  Responsive visibility
+// ============================================================
+.hide-mobile  { @include m.max-md { display: none !important; } }
+.hide-desktop { @include m.md     { display: none !important; } }
