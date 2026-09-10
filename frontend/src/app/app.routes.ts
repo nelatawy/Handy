@@ -5,7 +5,7 @@ import { UserRole } from './core/models/enums';
 
 export const routes: Routes = [
   // Default redirect
-  { path: '', redirectTo: '/user/home', pathMatch: 'full' },
+  { path: '', loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent), canActivate: [noAuthGuard] },
 
   // Auth (unauthenticated only)
   {

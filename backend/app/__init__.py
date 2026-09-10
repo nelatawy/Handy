@@ -32,17 +32,55 @@ def create_app(config_name: str = "development") -> Flask:
         "http://127.0.0.1:5173",
     ]))
 
+    # CORS must be initialized BEFORE socketio and blueprint registration so that
+    # preflight OPTIONS requests are handled before any route/middleware intercepts them.
+    CORS(
+        app,
+        origins=allowed_origins,
+        supports_credentials=True,
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
+    )
+
     socketio.init_app(
         app, cors_allowed_origins=allowed_origins, async_mode=app.config["SOCKETIO_ASYNC_MODE"]
     )
-    CORS(app, origins=allowed_origins, supports_credentials=True)
 
     from app import models  # noqa: F401 — registers models with SQLAlchemy metadata
 
     register_blueprints(app)
     register_error_handlers(app)
+    _register_cors_fallback(app, allowed_origins)
 
     return app
+
+
+def _register_cors_fallback(app: Flask, allowed_origins: list[str]) -> None:
+    """Guarantee CORS headers on every response — including 500s.
+
+    flask-cors adds headers via after_request, but when Flask's own
+    exception handler generates a 500 response it can bypass those hooks.
+    This explicit hook runs last and stamps the header if it is missing.
+    """
+    @app.after_request
+    def _add_cors_headers(response):
+        origin = None
+        from flask import request as _req
+        try:
+            origin = _req.headers.get("Origin", "")
+        except RuntimeError:
+            pass  # No active request context (e.g. during testing teardown)
+
+        if origin in allowed_origins:
+            response.headers.setdefault("Access-Control-Allow-Origin", origin)
+            response.headers.setdefault("Access-Control-Allow-Credentials", "true")
+            response.headers.setdefault(
+                "Access-Control-Allow-Headers", "Content-Type, Authorization"
+            )
+            response.headers.setdefault(
+                "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            )
+        return response
 
 
 def register_blueprints(app: Flask) -> None:

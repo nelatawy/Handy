@@ -14,9 +14,9 @@ class Request(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
 
     description = db.Column(db.Text, nullable=False)
-    work_type = db.Column(SAEnum(WorkType, name="work_type"), nullable=False)
+    work_type = db.Column(SAEnum(WorkType, name="work_type", values_callable=lambda x: [e.value for e in x]), nullable=False)
     status = db.Column(
-        SAEnum(RequestStatus, name="request_status"),
+        SAEnum(RequestStatus, name="request_status", values_callable=lambda x: [e.value for e in x]),
         default=RequestStatus.OPEN,
         nullable=False,
     )

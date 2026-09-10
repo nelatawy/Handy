@@ -17,7 +17,7 @@ class Offer(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     price_with_fee = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(
-        SAEnum(OfferStatus, name="offer_status"),
+        SAEnum(OfferStatus, name="offer_status", values_callable=lambda x: [e.value for e in x]),
         default=OfferStatus.PENDING,
         nullable=False,
     )

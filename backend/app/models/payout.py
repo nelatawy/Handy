@@ -17,7 +17,7 @@ class Payout(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     paymob_reference = db.Column(db.String(80), nullable=True)
     status = db.Column(
-        SAEnum(PaymentStatus, name="payment_status"),
+        SAEnum(PaymentStatus, name="payment_status", values_callable=lambda x: [e.value for e in x]),
         default=PaymentStatus.PENDING,
         nullable=False,
     )

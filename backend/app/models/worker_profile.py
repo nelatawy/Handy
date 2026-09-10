@@ -13,7 +13,7 @@ class WorkerProfile(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.String(36), db.ForeignKey("users.id"), unique=True, nullable=False)
 
-    work_type = db.Column(SAEnum(WorkType, name="work_type"), nullable=False)
+    work_type = db.Column(SAEnum(WorkType, name="work_type", values_callable=lambda x: [e.value for e in x]), nullable=False)
     bio = db.Column(db.Text, nullable=True)
     has_shop = db.Column(db.Boolean, default=False, nullable=False)
     shop_location = db.Column(db.String(255), nullable=True)

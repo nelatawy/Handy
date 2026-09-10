@@ -13,9 +13,9 @@ class Payment(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     job_id = db.Column(db.String(36), db.ForeignKey("jobs.id"), nullable=False)
 
-    method = db.Column(SAEnum(PaymentMethod, name="payment_method"), nullable=False)
+    method = db.Column(SAEnum(PaymentMethod, name="payment_method", values_callable=lambda x: [e.value for e in x]), nullable=False)
     status = db.Column(
-        SAEnum(PaymentStatus, name="payment_status"),
+        SAEnum(PaymentStatus, name="payment_status", values_callable=lambda x: [e.value for e in x]),
         default=PaymentStatus.PENDING,
         nullable=False,
     )

@@ -17,12 +17,12 @@ class Job(db.Model):
     worker_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
 
     status = db.Column(
-        SAEnum(JobStatus, name="job_status"),
+        SAEnum(JobStatus, name="job_status", values_callable=lambda x: [e.value for e in x]),
         default=JobStatus.PENDING,
         nullable=False,
     )
-    payment_type = db.Column(SAEnum(PaymentMethod, name="payment_method"), nullable=True)
-    canceled_by = db.Column(SAEnum(CanceledBy, name="canceled_by"), nullable=True)
+    payment_type = db.Column(SAEnum(PaymentMethod, name="payment_method", values_callable=lambda x: [e.value for e in x]), nullable=True)
+    canceled_by = db.Column(SAEnum(CanceledBy, name="canceled_by", values_callable=lambda x: [e.value for e in x]), nullable=True)
 
     started_at = db.Column(db.DateTime, nullable=True)
     finished_at = db.Column(db.DateTime, nullable=True)
