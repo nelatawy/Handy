@@ -1,0 +1,230 @@
+<div class="job-page">
+
+  @if (loading()) {
+    <!-- Loading skeleton -->
+    <div class="job-skeleton">
+      <div class="skeleton skeleton--title"></div>
+      <div class="skeleton skeleton--card"></div>
+      <div class="skeleton skeleton--actions"></div>
+    </div>
+  } @else if (job()) {
+
+    <!-- Status stepper -->
+    <div class="job-stepper-wrap">
+      <app-job-status-badge [status]="job()!.status" [showStepper]="job()!.status !== JobStatus.Canceled" />
+    </div>
+
+    <!-- Job summary card -->
+    <div class="job-card">
+      <div class="job-card__header">
+        <div class="job-card__avatar">{{ job()!.workerName[0].toUpperCase() }}</div>
+        <div class="job-card__info">
+          <h1 class="job-card__title">{{ 'JOB.HANDYMAN' | translate }}</h1>
+          <p class="job-card__worker-name">{{ job()!.workerName }}</p>
+          <span class="badge badge--info">{{ 'WORK_TYPE.' + job()!.workType | translate }}</span>
+        </div>
+      </div>
+
+      <div class="job-card__divider"></div>
+
+      <div class="job-card__pricing">
+        <div class="job-card__price-row">
+          <span class="job-card__price-label">{{ 'JOB.PRICE' | translate }}</span>
+          <span class="job-card__price-val">{{ job()!.price | number : '1.0-0' }} EGP</span>
+        </div>
+        <div class="job-card__price-row job-card__price-row--total">
+          <span class="job-card__price-label">{{ 'JOB.YOU_PAY' | translate }}</span>
+          <span class="job-card__price-val job-card__price-val--primary">{{ job()!.userPrice | number : '1.0-0' }} EGP</span>
+        </div>
+      </div>
+
+      <!-- Payment type indicator (shown when Finished) -->
+      @if (job()!.status === JobStatus.Finished && job()!.paymentType) {
+        <div class="payment-indicator"
+             [class.payment-indicator--online]="job()!.paymentType === PaymentType.Online"
+             [class.payment-indicator--cash]="job()!.paymentType === PaymentType.Cash">
+          <span class="payment-indicator__icon">
+            {{ job()!.paymentType === PaymentType.Online ? '💳' : '💵' }}
+          </span>
+          <span>{{ 'PAYMENT_TYPE.' + job()!.paymentType | translate }}</span>
+        </div>
+      }
+
+      <div class="job-card__desc">
+        <p>{{ job()!.description }}</p>
+      </div>
+    </div>
+
+    <!-- ── STATE: PENDING ─────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Pending) {
+      <div class="job-actions">
+        <button class="btn btn--primary btn--lg" (click)="markStarted()" [disabled]="actionLoading()">
+          @if (actionLoading()) { <span class="spinner"></span> }
+          🚀 {{ 'JOB.MARK_STARTED' | translate }}
+        </button>
+        <button class="btn btn--danger-outline btn--lg" (click)="openCancelConfirm()">
+          {{ 'JOB.CANCEL_JOB' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- ── STATE: STARTED ─────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Started) {
+      <div class="job-actions">
+        <button class="btn btn--success btn--lg" (click)="openPaymentChoice()">
+          ✓ {{ 'JOB.MARK_FINISHED' | translate }}
+        </button>
+        <button class="btn btn--danger-outline btn--lg" (click)="openCancelConfirm()">
+          {{ 'JOB.CANCEL_JOB' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- ── STATE: FINISHED ────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Finished) {
+      <div class="job-finished-banner">
+        <span class="job-finished-banner__icon">🎉</span>
+        <div>
+          <h2>{{ 'JOB.FINISHED_TITLE' | translate }}</h2>
+          @if (!ratingSubmitted()) {
+            <p>Rate your experience to help others!</p>
+          } @else {
+            <p>Thanks for your rating!</p>
+          }
+        </div>
+        @if (!ratingSubmitted()) {
+          <button class="btn btn--primary" (click)="showRatingModal.set(true)">
+            ⭐ Rate
+          </button>
+        }
+      </div>
+    }
+
+    <!-- ── STATE: CANCELED ────────────────────────────────────────── -->
+    @if (job()!.status === JobStatus.Canceled) {
+      <div class="job-canceled-banner">
+        <span class="job-canceled-banner__icon">✕</span>
+        <div>
+          <h2>{{ 'JOB.CANCELED_TITLE' | translate }}</h2>
+          @if (job()!.canceledBy === 'worker') {
+            <p>{{ 'JOB.CANCELED_BY_WORKER' | translate }}</p>
+            <button class="btn btn--primary btn--sm mt-3" (click)="makeNewRequest()">
+              + {{ 'JOB.MAKE_NEW_REQUEST' | translate }}
+            </button>
+          } @else {
+            <p>{{ 'JOB.CANCELED_BY_USER' | translate }}</p>
+          }
+        </div>
+      </div>
+    }
+
+  }
+
+  <!-- ══ MODAL: Payment Choice ════════════════════════════════════════════ -->
+  @if (paymentStep() === 'choosingPayment') {
+    <div class="modal-backdrop" (click)="closePaymentChoice()">
+      <div class="modal animate-fade-in-up" (click)="$event.stopPropagation()">
+        <h2 class="modal__title">{{ 'JOB.FINISH_CONFIRM' | translate }}</h2>
+        @if (job()) {
+          <p class="modal__sub">
+            {{ 'JOB.FINISH_WARNING' | translate : { amount: (job()!.userPrice | number : '1.0-0') + ' EGP' } }}
+          </p>
+        }
+
+        <div class="payment-options">
+          <!-- Pay Online -->
+          <button
+            class="payment-option payment-option--online"
+            (click)="confirmPayOnline()"
+            [disabled]="paymentStep() === 'confirming'"
+          >
+            <span class="payment-option__icon">💳</span>
+            <div>
+              <div class="payment-option__title">{{ 'JOB.PAY_ONLINE' | translate }}</div>
+              <div class="payment-option__desc">{{ 'JOB.PAY_ONLINE_DESC' | translate }}</div>
+            </div>
+            <span class="payment-option__arrow">→</span>
+          </button>
+
+          <!-- Paid in Cash -->
+          <button
+            class="payment-option payment-option--cash"
+            (click)="confirmPayCash()"
+            [disabled]="paymentStep() === 'confirming'"
+          >
+            <span class="payment-option__icon">💵</span>
+            <div>
+              <div class="payment-option__title">{{ 'JOB.PAY_CASH' | translate }}</div>
+              <div class="payment-option__desc">{{ 'JOB.PAY_CASH_DESC' | translate }}</div>
+            </div>
+            <span class="payment-option__arrow">→</span>
+          </button>
+        </div>
+
+        <button class="btn btn--ghost btn--sm modal__cancel" (click)="closePaymentChoice()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ══ MODAL: Cancel Confirm ════════════════════════════════════════════ -->
+  @if (showCancelConfirm()) {
+    <div class="modal-backdrop" (click)="closeCancelConfirm()">
+      <div class="modal modal--sm animate-fade-in-up" (click)="$event.stopPropagation()">
+        <h2 class="modal__title">{{ 'JOB.CANCEL_JOB' | translate }}</h2>
+        <p class="modal__sub">{{ 'JOB.CANCEL_CONFIRM' | translate }}</p>
+        <div class="modal__actions">
+          <button class="btn btn--ghost" (click)="closeCancelConfirm()">{{ 'COMMON.NO' | translate }}</button>
+          <button class="btn btn--danger" (click)="confirmCancel()" [disabled]="cancelLoading()">
+            @if (cancelLoading()) { <span class="spinner"></span> }
+            {{ 'COMMON.YES' | translate }}, cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ══ MODAL: Rating ════════════════════════════════════════════════════ -->
+  @if (showRatingModal()) {
+    <div class="modal-backdrop">
+      <div class="modal animate-fade-in-up">
+        <h2 class="modal__title">{{ 'JOB.RATE_TITLE' | translate }}</h2>
+        <p class="modal__sub">{{ 'JOB.RATE_PROMPT' | translate }}</p>
+
+        <div class="rating-modal__stars">
+          <app-star-rating
+            [value]="ratingStars()"
+            [interactive]="true"
+            size="lg"
+            (ratingChange)="onRatingChange($event)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ 'JOB.RATE_COMMENT' | translate }}</label>
+          <textarea
+            class="form-textarea"
+            rows="3"
+            [placeholder]="'JOB.RATE_COMMENT_PLACEHOLDER' | translate"
+            [value]="ratingComment()"
+            (input)="ratingComment.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <div class="modal__actions">
+          <button class="btn btn--ghost" (click)="skipRating()">{{ 'JOB.RATE_SKIP' | translate }}</button>
+          <button
+            class="btn btn--primary"
+            (click)="submitRating()"
+            [disabled]="ratingStars() === 0 || ratingSubmitting()"
+          >
+            @if (ratingSubmitting()) { <span class="spinner"></span> }
+            {{ 'JOB.RATE_SUBMIT' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

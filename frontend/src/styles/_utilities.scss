@@ -76,7 +76,7 @@
   @include m.btn-base;
 }
 
-.btn-primary {
+.btn-primary, .btn--primary {
   @include m.btn-base;
   background: v.$color-primary-500;
   color: v.$color-white;
@@ -91,7 +91,7 @@
   }
 }
 
-.btn-secondary {
+.btn-secondary, .btn--secondary {
   @include m.btn-base;
   background: v.$color-white;
   color: v.$color-primary-600;
@@ -102,7 +102,7 @@
   }
 }
 
-.btn-success {
+.btn-success, .btn--success {
   @include m.btn-base;
   background: v.$color-success;
   color: v.$color-white;
@@ -113,7 +113,7 @@
   }
 }
 
-.btn-danger {
+.btn-danger, .btn--danger {
   @include m.btn-base;
   background: v.$color-danger;
   color: v.$color-white;
@@ -124,7 +124,29 @@
   }
 }
 
-.btn-ghost {
+.btn--danger-outline {
+  @include m.btn-base;
+  background: transparent;
+  color: v.$color-danger;
+  border: 1.5px solid v.$color-danger;
+  &:hover:not(:disabled) {
+    background: v.$color-danger-light;
+    transform: translateY(-1px);
+  }
+}
+
+.btn--outline {
+  @include m.btn-base;
+  background: transparent;
+  color: v.$color-text-primary;
+  border: 1.5px solid v.$color-border;
+  &:hover:not(:disabled) {
+    background: v.$color-gray-100;
+    border-color: v.$color-gray-300;
+  }
+}
+
+.btn-ghost, .btn--ghost {
   @include m.btn-base;
   background: transparent;
   color: v.$color-text-secondary;
@@ -134,12 +156,12 @@
   }
 }
 
-.btn-sm {
+.btn-sm, .btn--sm {
   padding: v.$space-2 v.$space-4;
   font-size: v.$font-size-xs;
 }
 
-.btn-lg {
+.btn-lg, .btn--lg {
   padding: v.$space-4 v.$space-8;
   font-size: v.$font-size-lg;
   border-radius: v.$radius-xl;
@@ -155,6 +177,19 @@
   color: v.$color-text-secondary;
   &:hover:not(:disabled) { background: v.$color-gray-100; }
 }
+
+// --- Badge BEM aliases ---
+.badge--info    { background: v.$color-primary-100; color: v.$color-primary-700; }
+.badge--success { background: v.$color-success-light; color: #15803d; }
+.badge--danger  { background: v.$color-danger-light; color: #b91c1c; }
+.badge--warning { background: v.$color-warning-light; color: #b45309; }
+.badge--cash    { background: v.$color-cash-light; color: v.$color-cash; }
+.badge--online  { background: v.$color-online-light; color: v.$color-online; }
+// Job status badge classes
+.badge--pending  { background: v.$color-warning-light; color: #b45309; }
+.badge--started  { background: v.$color-primary-100; color: v.$color-primary-700; }
+.badge--finished { background: v.$color-success-light; color: #15803d; }
+.badge--canceled { background: v.$color-danger-light; color: #b91c1c; }
 
 // --- Inputs ---
 .form-group {

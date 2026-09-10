@@ -1,0 +1,125 @@
+<div class="offers-page">
+
+  <!-- Request Summary Card -->
+  @if (request()) {
+    <div class="request-summary">
+      <div class="request-summary__badge">{{ 'WORK_TYPE.' + request()!.workType | translate }}</div>
+      <p class="request-summary__desc">{{ request()!.description }}</p>
+      @if (request()!.imageUrls.length > 0) {
+        <div class="request-summary__images">
+          @for (url of request()!.imageUrls; track url) {
+            <img [src]="url" alt="Request image" class="request-summary__img" />
+          }
+        </div>
+      }
+    </div>
+  } @else if (loading()) {
+    <div class="skeleton skeleton--card"></div>
+  }
+
+  <!-- Offers Header -->
+  <div class="offers-header">
+    <h1 class="offers-header__title">{{ 'OFFERS.TITLE' | translate }}</h1>
+    <span class="offers-header__count badge badge--info">{{ offers().length }} offer{{ offers().length !== 1 ? 's' : '' }}</span>
+  </div>
+
+  <!-- Chosen Banner -->
+  @if (chosenOfferId()) {
+    <div class="chosen-banner animate-fade-in-up">
+      <span class="chosen-banner__icon">🎉</span>
+      <span>{{ 'OFFERS.CHOSEN_CONFIRM' | translate : { name: chosenWorkerName() } }}</span>
+      <span class="chosen-banner__sub">Redirecting to your active job...</span>
+    </div>
+  }
+
+  <!-- Offers Grid -->
+  @if (offers().length > 0) {
+    <div class="offers-grid">
+      @for (offer of offers(); track offer.id) {
+        <div
+          class="offer-card"
+          [class.offer-card--selected]="selectedOfferId() === offer.id"
+          [class.offer-card--chosen]="chosenOfferId() === offer.id"
+          [class.offer-card--dimmed]="chosenOfferId() && chosenOfferId() !== offer.id"
+          (click)="selectOffer(offer.id)"
+          role="button"
+          [attr.aria-pressed]="selectedOfferId() === offer.id"
+          tabindex="0"
+          (keydown.enter)="selectOffer(offer.id)"
+          (keydown.space)="selectOffer(offer.id)"
+        >
+          <!-- Worker Info -->
+          <div class="offer-card__header">
+            <div class="offer-card__avatar">{{ offer.workerName[0].toUpperCase() }}</div>
+            <div class="offer-card__info">
+              <h3 class="offer-card__name">{{ offer.workerName }}</h3>
+              <app-star-rating
+                [value]="offer.workerRating"
+                [count]="0"
+                [showCount]="false"
+                size="sm"
+              />
+            </div>
+            @if (offer.workerHasShop) {
+              <span class="badge badge--success offer-card__shop-badge">🏪 Shop</span>
+            }
+          </div>
+
+          <!-- Stats -->
+          <div class="offer-card__stats">
+            <div class="offer-card__stat">
+              <span class="offer-card__stat-val">{{ offer.workerCompletedJobs }}</span>
+              <span class="offer-card__stat-lbl">{{ 'OFFERS.COMPLETED_JOBS' | translate }}</span>
+            </div>
+            <div class="offer-card__stat">
+              <span class="offer-card__stat-val">{{ offer.workerRating | number : '1.1-1' }}</span>
+              <span class="offer-card__stat-lbl">avg. rating</span>
+            </div>
+          </div>
+
+          <!-- Pricing -->
+          <div class="offer-card__pricing">
+            <div class="offer-card__price">
+              <span class="offer-card__price-val">{{ offer.userPrice | number : '1.0-0' }} EGP</span>
+              <span class="offer-card__price-lbl">{{ 'OFFERS.USER_PAYS' | translate }}</span>
+            </div>
+            <div class="offer-card__price-breakdown">
+              <span>{{ offer.price | number : '1.0-0' }} EGP + 5% fee</span>
+            </div>
+          </div>
+
+          <!-- Expanded actions (only when selected and not yet chosen) -->
+          @if (selectedOfferId() === offer.id && !chosenOfferId()) {
+            <div class="offer-card__actions animate-fade-in-up" (click)="$event.stopPropagation()">
+              <button
+                class="btn btn--success btn--sm"
+                (click)="chooseOffer()"
+                [disabled]="choosing()"
+              >
+                @if (choosing()) {
+                  <span class="spinner-sm"></span>
+                }
+                ✓ {{ 'OFFERS.CHOOSE' | translate }} {{ offer.workerName }}
+              </button>
+              <button class="btn btn--ghost btn--sm" (click)="selectOffer(offer.id)">
+                {{ 'COMMON.CANCEL' | translate }}
+              </button>
+            </div>
+          }
+
+          @if (chosenOfferId() === offer.id) {
+            <div class="offer-card__chosen-badge">✓ Hired</div>
+          }
+        </div>
+      }
+    </div>
+  } @else if (!loading()) {
+    <!-- Empty waiting state -->
+    <div class="offers-empty">
+      <div class="offers-empty__pulse"></div>
+      <p class="offers-empty__text">{{ 'OFFERS.WAITING' | translate }}</p>
+      <p class="offers-empty__sub">Handymen are reviewing your request in real time...</p>
+    </div>
+  }
+
+</div>

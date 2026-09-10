@@ -201,36 +201,36 @@ src/
 
 ---
 
-## 5. Phase 3 — Core Flow (User Side)
+## 5. Phase 3 — Core Flow (User Side) ✅
 
 > **Priority:** This is the critical path. Get request → offers → choose → start → finish → rate working end-to-end first.
 
 ### Make a Request
-- [ ] Form: image upload (optional, multi), description textarea (required), work-type dropdown
-- [ ] "AI Suggestion" button → `POST /api/ai-suggest` with current description → show editable preview (suggested description + recommended work type) → accept fills form, dismiss keeps original
-- [ ] "Confirm Request" → `POST /api/requests` → navigate to live offers screen
-- [ ] "Cancel" → navigate back / clear form
+- [x] Form: image upload (optional, multi), description textarea (required), work-type dropdown
+- [x] "AI Suggestion" button → `POST /api/ai-suggest` with current description → show editable preview (suggested description + recommended work type) → accept fills form, dismiss keeps original
+- [x] "Confirm Request" → `POST /api/requests` → navigate to live offers screen
+- [x] "Cancel" → navigate back / clear form
 
 ### Live Offers Screen
-- [ ] Request summary card at top
-- [ ] Responsive grid of offer cards, populated **live via WebSocket**
-- [ ] Each card: handyman name, quoted price, average rating (star-rating component, read-only), completed jobs count, shop badge (if applicable)
-- [ ] Card click → expand/reveal **Choose** (green) + **Cancel** (red) buttons
-- [ ] Only one card can be "selected" at a time (selecting another auto-deselects the previous)
-- [ ] Choose → `POST /api/requests/{id}/choose` → creates job (Pending), disable other cards, show confirmation state
-- [ ] Transition to Active Job Screen
+- [x] Request summary card at top
+- [x] Responsive grid of offer cards, populated **live via WebSocket**
+- [x] Each card: handyman name, quoted price, average rating (star-rating component, read-only), completed jobs count, shop badge (if applicable)
+- [x] Card click → expand/reveal **Choose** (green) + **Cancel** (red) buttons
+- [x] Only one card can be "selected" at a time (selecting another auto-deselects the previous)
+- [x] Choose → `POST /api/requests/{id}/choose` → creates job (Pending), disable other cards, show confirmation state
+- [x] Transition to Active Job Screen
 
 ### Active Job Screen (User)
-- [ ] Display job details: handyman info, price, status stepper
-- [ ] **Pending state:** "Mark as Started" button + "Cancel Job" (red) button
-- [ ] **Started state:** "Mark as Finished" button (with price warning: "This will charge you [price]") + "Cancel Job" button
-- [ ] **Finishing flow — payment type selection:** When the user taps "Mark as Finished", show a **payment method choice** before finalizing:
+- [x] Display job details: handyman info, price, status stepper
+- [x] **Pending state:** "Mark as Started" button + "Cancel Job" (red) button
+- [x] **Started state:** "Mark as Finished" button (with price warning: "This will charge you [price]") + "Cancel Job" button
+- [x] **Finishing flow — payment type selection:** When the user taps "Mark as Finished", show a **payment method choice** before finalizing:
   - **"Pay Online"** (primary) — redirects to Paymob hosted checkout (sandbox). On successful Paymob callback/redirect, the job is marked Finished with `paymentType: 'online'` sent to the backend.
   - **"Paid in Cash"** — confirms that the user already paid the handyman in cash on-site. Marks the job Finished immediately with `paymentType: 'cash'` sent to the backend. No Paymob redirect.
   - Both buttons send `PATCH /api/jobs/{id}/status` with `{ status: 'finished', paymentType: 'online' | 'cash' }`.
-- [ ] **Finished state:** read-only summary with a **payment type indicator** badge ("Paid Online" / "Paid in Cash"), payment confirmed indicator, **rating modal** auto-pops (star-rating interactive + optional comment → `POST /api/jobs/{id}/rate`)
-- [ ] **Canceled state:** read-only, banner distinguishing user-cancel vs handyman-cancel (with handyman-cancel: "The handyman canceled — no charge was made" + "Make a new request" link)
-- [ ] All state transitions update live via WebSocket
+- [x] **Finished state:** read-only summary with a **payment type indicator** badge ("Paid Online" / "Paid in Cash"), payment confirmed indicator, **rating modal** auto-pops (star-rating interactive + optional comment → `POST /api/jobs/{id}/rate`)
+- [x] **Canceled state:** read-only, banner distinguishing user-cancel vs handyman-cancel (with handyman-cancel: "The handyman canceled — no charge was made" + "Make a new request" link)
+- [x] All state transitions update live via WebSocket
 
 ---
 
@@ -369,4 +369,4 @@ src/
 
 ---
 
-*Last updated: 2026-09-10 (v4 — Phase 1 Foundation & Phase 2 Auth complete, templates extracted, live-tested)*
+*Last updated: 2026-09-10 (v5 — Phase 1+2+3 complete: Auth, Make Request, Live Offers, Active Job with payment choice modal, User Home)*

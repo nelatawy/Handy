@@ -1,0 +1,61 @@
+<div class="home-page">
+
+  <!-- Hero greeting -->
+  <div class="home-hero">
+    <div class="home-hero__text">
+      <h1 class="home-hero__title">
+        Hello, <span class="home-hero__name">{{ auth.username() ?? 'there' }}</span> 👋
+      </h1>
+      <p class="home-hero__sub">What do you need fixed today?</p>
+    </div>
+    <div class="home-hero__illustration">🔧</div>
+  </div>
+
+  <!-- Active job widget (if there's one) -->
+  @if (loadingJob()) {
+    <div class="skeleton skeleton--card"></div>
+  } @else if (activeJob()) {
+    <div class="active-job-widget" (click)="goActiveJob()" role="button" tabindex="0" (keydown.enter)="goActiveJob()">
+      <div class="active-job-widget__label">Active Job</div>
+      <div class="active-job-widget__worker">
+        <div class="active-job-widget__avatar">{{ activeJob()!.workerName[0].toUpperCase() }}</div>
+        <div>
+          <div class="active-job-widget__worker-name">{{ activeJob()!.workerName }}</div>
+          <div class="active-job-widget__type">{{ 'WORK_TYPE.' + activeJob()!.workType | translate }}</div>
+        </div>
+      </div>
+      <div class="active-job-widget__footer">
+        <app-job-status-badge [status]="activeJob()!.status" />
+        <span class="active-job-widget__price">{{ activeJob()!.userPrice | number : '1.0-0' }} EGP</span>
+        <span class="active-job-widget__arrow">→</span>
+      </div>
+    </div>
+  }
+
+  <!-- Primary CTA -->
+  <button
+    class="cta-btn"
+    (click)="goMakeRequest()"
+    [disabled]="activeJob()?.status === JobStatus.Pending || activeJob()?.status === JobStatus.Started"
+  >
+    <span class="cta-btn__icon">+</span>
+    <div>
+      <div class="cta-btn__title">Make a Request</div>
+      <div class="cta-btn__sub">Describe what needs fixing and get offers from handymen</div>
+    </div>
+    <span class="cta-btn__arrow">→</span>
+  </button>
+
+  <!-- Quick actions grid -->
+  <div class="quick-actions">
+    <button class="quick-action" routerLink="/user/history">
+      <span class="quick-action__icon">🧾</span>
+      <span class="quick-action__label">{{ 'NAV.HISTORY' | translate }}</span>
+    </button>
+    <button class="quick-action" [disabled]="!activeJob()" (click)="goActiveJob()">
+      <span class="quick-action__icon">⚡</span>
+      <span class="quick-action__label">{{ 'NAV.ACTIVE_JOB' | translate }}</span>
+    </button>
+  </div>
+
+</div>
