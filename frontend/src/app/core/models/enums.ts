@@ -10,21 +10,12 @@ export enum WorkType {
   IT          = 'it',
 }
 
-/** Human-readable labels for WorkType (used in UI dropdowns / display) */
-export const WorkTypeLabel: Record<WorkType, string> = {
-  [WorkType.Plumber]:     'Plumber',
-  [WorkType.Electrician]: 'Electrician',
-  [WorkType.Carpenter]:   'Carpenter',
-  [WorkType.IT]:          'IT Technician',
-};
-
-/** Arabic labels for WorkType */
-export const WorkTypeLabelAr: Record<WorkType, string> = {
-  [WorkType.Plumber]:     'سباك',
-  [WorkType.Electrician]: 'كهربائي',
-  [WorkType.Carpenter]:   'نجار',
-  [WorkType.IT]:          'تقنية معلومات',
-};
+/**
+ * Human-readable labels for WorkType are intentionally NOT defined here as plain
+ * string maps — all display of a WorkType in the UI must go through the translate
+ * pipe with keys 'WORK_TYPE.<value>' (see assets/i18n/en.json / ar.json) so labels
+ * localize correctly. Do not reintroduce a hardcoded English/Arabic label map.
+ */
 
 /** Job lifecycle states — driven by the user */
 export enum JobStatus {

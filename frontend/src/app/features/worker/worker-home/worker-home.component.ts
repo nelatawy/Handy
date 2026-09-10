@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription, finalize } from 'rxjs';
 
 import { Job } from '../../../core/models/models';
-import { JobStatus, WorkType, WorkTypeLabel } from '../../../core/models/enums';
+import { JobStatus } from '../../../core/models/enums';
 import { JobService } from '../../../core/services/job.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { WebSocketService } from '../../../core/services/websocket.service';
@@ -37,7 +37,6 @@ export class WorkerHomeComponent implements OnInit, OnDestroy {
   readonly activeJob    = signal<Job | null>(null);
   readonly loadingJob   = signal(true);
   readonly JobStatus    = JobStatus;
-  readonly WorkTypeLabel = WorkTypeLabel;
 
   private subs = new Subscription();
 
@@ -53,7 +52,7 @@ export class WorkerHomeComponent implements OnInit, OnDestroy {
     // Listen for new_request — show a toast
     this.subs.add(
       this.ws.on<{ request: { id: string } }>('new_request').subscribe(() => {
-        this.notify.info('New matching request available!');
+        this.notify.info('TOAST.NEW_REQUEST');
       })
     );
     // If a job status changes, refresh active job

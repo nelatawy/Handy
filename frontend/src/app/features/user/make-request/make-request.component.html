@@ -1,7 +1,7 @@
 <div class="request-page">
   <div class="request-page__header">
     <h1 class="request-page__title">{{ 'REQUEST.MAKE_REQUEST' | translate }}</h1>
-    <p class="request-page__sub">Tell us what you need and we'll find you the right handyman.</p>
+    <p class="request-page__sub">{{ 'REQUEST.PAGE_SUB' | translate }}</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="request-form" novalidate>
@@ -45,7 +45,7 @@
       @if (desc.invalid && desc.touched) {
         <p class="form-error">
           @if (desc.errors?.['required']) { {{ 'REQUEST.ERRORS.DESCRIPTION_REQUIRED' | translate }} }
-          @else if (desc.errors?.['minlength']) { Please add more detail (min 20 characters). }
+          @else if (desc.errors?.['minlength']) { {{ 'REQUEST.ERRORS.DESCRIPTION_MIN_LENGTH' | translate }} }
         </p>
       }
     </div>

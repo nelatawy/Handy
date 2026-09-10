@@ -3,9 +3,9 @@
   <div class="feed-header">
     <div>
       <h1 class="feed-header__title">{{ 'WORKER.FEED_TITLE' | translate }}</h1>
-      <p class="feed-header__sub">Open requests that match your specialty</p>
+      <p class="feed-header__sub">{{ 'WORKER.FEED_SUB' | translate }}</p>
     </div>
-    <div class="feed-header__ws-dot" [class.feed-header__ws-dot--live]="true" title="Live updates on"></div>
+    <div class="feed-header__ws-dot" [class.feed-header__ws-dot--live]="true" [title]="'WORKER.LIVE_UPDATES_ON' | translate"></div>
   </div>
 
   @if (loading()) {
@@ -33,7 +33,7 @@
             <span class="request-card__emoji">{{ getWorkTypeEmoji(req.workType) }}</span>
             <div>
               <span class="request-card__type-badge">{{ 'WORK_TYPE.' + req.workType | translate }}</span>
-              <span class="request-card__time">{{ timeAgo(req.createdAt) }}</span>
+              <span class="request-card__time">{{ timeAgo(req.createdAt).key | translate : timeAgo(req.createdAt).params }}</span>
             </div>
           </div>
 
@@ -53,7 +53,7 @@
           }
 
           <div class="request-card__footer">
-            <span class="request-card__cta">View &amp; Submit Offer →</span>
+            <span class="request-card__cta">{{ 'WORKER.VIEW_AND_SUBMIT_OFFER' | translate }} →</span>
           </div>
         </div>
       }

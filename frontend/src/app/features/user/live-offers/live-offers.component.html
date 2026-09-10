@@ -28,7 +28,9 @@
     <div class="chosen-banner animate-fade-in-up">
       <span class="chosen-banner__icon">🎉</span>
       <span>{{ 'OFFERS.CHOSEN_CONFIRM' | translate : { name: chosenWorkerName() } }}</span>
-      <span class="chosen-banner__sub">Redirecting to your active job...</span>
+      <span class="chosen-banner__sub">{{ 'OFFERS.REDIRECTING_TO_JOB' | translate }}</span>
+      <div class="offer-card__stat-lbl">{{ 'OFFERS.AVG_RATING' | translate }}</div>
++       <p class="offers-empty__sub">{{ 'OFFERS.WAITING_SUB' | translate }}</p>
     </div>
   }
 
@@ -73,7 +75,7 @@
             </div>
             <div class="offer-card__stat">
               <span class="offer-card__stat-val">{{ offer.workerRating | number : '1.1-1' }}</span>
-              <span class="offer-card__stat-lbl">avg. rating</span>
+              <span class="offer-card__stat-lbl">{{ 'OFFERS.AVG_RATING' | translate }}</span>
             </div>
           </div>
 
@@ -118,7 +120,7 @@
     <div class="offers-empty">
       <div class="offers-empty__pulse"></div>
       <p class="offers-empty__text">{{ 'OFFERS.WAITING' | translate }}</p>
-      <p class="offers-empty__sub">Handymen are reviewing your request in real time...</p>
+      <p class="offers-empty__sub">{{ 'OFFERS.WAITING_SUB' | translate }}</p>
     </div>
   }
 

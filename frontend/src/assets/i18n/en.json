@@ -2,6 +2,18 @@
   "APP_NAME": "Handy",
   "APP_TAGLINE": "Your trusted handyman, on demand",
 
+  "HOME": {
+    "GREETING": "Hello,",
+    "GREETING_FALLBACK_NAME": "there",
+    "USER_SUB": "What do you need fixed today?",
+    "MAKE_REQUEST_CTA": "Make a Request",
+    "MAKE_REQUEST_CTA_SUB": "Describe what needs fixing and get offers from handymen",
+    "WORKER_WELCOME": "Welcome back,",
+    "WORKER_SUB": "Ready to take on your next job?",
+    "BROWSE_REQUESTS_CTA": "Browse Requests",
+    "BROWSE_REQUESTS_CTA_SUB": "Find jobs matching your skill set and submit offers"
+  },
+
   "NAV": {
     "HOME": "Home",
     "REQUESTS": "Requests",
@@ -56,6 +68,8 @@
     "OTP_VERIFY": "Verify",
     "OTP_RESEND": "Resend Code",
     "OTP_VERIFIED": "Phone verified ✓",
+    "WORKER_DETAILS": "Worker Details",
+    "VERIFY_PHONE_HINT": "Please verify your phone number before registering.",
     "ERRORS": {
       "REQUIRED": "This field is required",
       "PHONE_FORMAT": "Enter a valid phone number",
@@ -63,6 +77,7 @@
       "INVALID_CREDENTIALS": "Invalid username or password",
       "ACCOUNT_NOT_FOUND": "Account not found",
       "OTP_INVALID": "Invalid or expired code",
+      "OTP_SEND_FAILED": "Failed to send OTP. Please check your number.",
       "GENERIC": "Something went wrong. Please try again."
     }
   },
@@ -88,13 +103,16 @@
 
   "REQUEST": {
     "MAKE_REQUEST": "Make a Request",
+    "PAGE_SUB": "Tell us what you need and we'll find you the right handyman.",
     "DESCRIPTION": "Job Description",
     "DESCRIPTION_PLACEHOLDER": "Describe what needs to be done...",
     "IMAGES": "Photos (optional)",
     "IMAGES_HINT": "Upload up to 5 photos (max 20 MB each)",
+    "REMOVE_IMAGE": "Remove image",
     "WORK_TYPE": "Worker Type Needed",
     "AI_SUGGEST": "AI Suggest",
     "AI_SUGGEST_LOADING": "Generating suggestion...",
+    "AI_SUGGEST_NEEDS_DESCRIPTION": "Please enter a description first to get AI suggestions.",
     "AI_SUGGESTION_TITLE": "AI Suggestion",
     "AI_ACCEPT": "Use This",
     "AI_DISMISS": "Keep Mine",
@@ -102,24 +120,29 @@
     "CANCEL": "Cancel",
     "ERRORS": {
       "DESCRIPTION_REQUIRED": "Please describe the job",
+      "DESCRIPTION_MIN_LENGTH": "Please add more detail (min 20 characters).",
       "WORK_TYPE_REQUIRED": "Please select a worker type",
       "TOO_MANY_IMAGES": "Maximum 5 images allowed",
-      "IMAGE_TOO_LARGE": "Each image must be under 20 MB"
+      "IMAGE_TOO_LARGE": "Each image must be under 20 MB",
+      "IMAGE_TOO_LARGE_NAMED": "{{name}} is too large (max 20 MB)"
     }
   },
 
   "OFFERS": {
     "TITLE": "Offers Received",
     "WAITING": "Waiting for offers...",
+    "WAITING_SUB": "Handymen are reviewing your request in real time...",
     "HANDYMAN_NAME": "Handyman",
     "PRICE": "Quoted Price",
     "USER_PAYS": "You pay",
     "RATING": "Rating",
+    "AVG_RATING": "avg. rating",
     "COMPLETED_JOBS": "jobs completed",
     "HAS_SHOP": "Has a shop",
     "CHOOSE": "Hire",
     "DECLINE": "Decline",
-    "CHOSEN_CONFIRM": "You've hired {{name}}!"
+    "CHOSEN_CONFIRM": "You've hired {{name}}!",
+    "REDIRECTING_TO_JOB": "Redirecting to your active job..."
   },
 
   "JOB": {
@@ -131,6 +154,7 @@
     "MARK_FINISHED": "Mark as Finished",
     "CANCEL_JOB": "Cancel Job",
     "CANCEL_CONFIRM": "Are you sure you want to cancel this job?",
+    "CANCEL_CONFIRM_YES": "Yes, cancel",
     "FINISH_CONFIRM": "Choose how to pay",
     "FINISH_WARNING": "Marking this finished will initiate payment of {{amount}}",
     "PAY_ONLINE": "Pay Online",
@@ -148,25 +172,65 @@
     "RATE_COMMENT_PLACEHOLDER": "Tell others about your experience...",
     "RATE_SUBMIT": "Submit Rating",
     "RATE_SKIP": "Skip",
+    "RATE_CTA": "Rate",
+    "RATE_ENCOURAGEMENT": "Rate your experience to help others!",
+    "RATE_THANKS": "Thanks for your rating!",
     "EARNINGS_INFO": "Your earnings for this job will be credited to your balance"
   },
 
   "WORKER": {
     "FEED_TITLE": "Available Requests",
+    "FEED_SUB": "Open requests that match your specialty",
     "FEED_EMPTY": "No open requests right now. Check back soon!",
+    "LIVE_UPDATES_ON": "Live updates on",
+    "VIEW_AND_SUBMIT_OFFER": "View & Submit Offer",
     "REQUEST_DETAIL": "Request Details",
+    "BACK_TO_FEED": "Back to Feed",
+    "REQUEST_CLOSED_WARNING": "This request was closed — another handyman was chosen.",
+    "REQUEST_NO_LONGER_AVAILABLE": "This request is no longer available — another handyman has been selected.",
+    "POSTED_ON": "Posted",
+    "STATUS_OPEN": "Open",
+    "STATUS_CLOSED": "Closed",
+    "PHOTOS": "Photos",
     "ACCEPT": "Accept",
     "DECLINE": "Decline",
     "YOUR_PRICE": "Your Price",
     "YOUR_PRICE_PLACEHOLDER": "Enter your price (EGP)",
+    "YOUR_EARNINGS": "Your Earnings",
     "USER_PAYS_PREVIEW": "Customer will pay",
+    "CUSTOMER_PAYS": "Customer Pays",
     "PLATFORM_FEE": "Includes 5% platform fee",
+    "PLATFORM_FEE_LABEL": "Platform fee (5%)",
+    "PRICING_SUB": "Set your price for this job. The customer will see the total including our 5% platform fee.",
     "SUBMIT_OFFER": "Submit Offer",
+    "SUBMITTING": "Submitting...",
+    "OFFER_SUBMITTED_TOAST": "Offer submitted! Waiting for customer response...",
     "WAITING_FOR_SELECTION": "Waiting for customer to choose...",
+    "WAITING_FOR_SELECTION_SUB": "Your offer has been submitted. We'll notify you instantly when the customer decides.",
     "YOU_WERE_CHOSEN": "Congratulations! You've been selected for this job!",
+    "YOU_WERE_CHOSEN_TOAST": "Congratulations! You've been selected!",
     "OFFER_REJECTED": "The customer chose another handyman for this request.",
+    "OFFER_REJECTED_TOAST": "The customer chose another handyman for this request.",
+    "OFFER_REJECTED_SUB": "Don't worry — new requests come in constantly. Keep browsing!",
+    "BROWSE_OTHER_REQUESTS": "Browse other requests",
+    "BROWSE_MORE_REQUESTS": "Browse More Requests",
+    "JOB_TYPE": "Job Type",
+    "JOB_NOT_FOUND": "Job not found.",
+    "JOB_COMPLETED_TITLE": "Job Completed!",
+    "JOB_IN_PROGRESS": "Job in progress",
+    "JOB_IN_PROGRESS_SUB": "Complete the work. The customer will mark it as finished and handle payment.",
+    "JOB_STARTED_BY_CUSTOMER": "The customer has marked the job as started.",
+    "JOB_FINISHED_EARNINGS_CREDITED": "Job completed! Your earnings will be credited shortly.",
+    "JOB_CANCELED_CUSTOMER_NOTIFIED": "Job canceled. The customer has been notified.",
+    "WAITING_CUSTOMER_CONFIRM_START": "Waiting for customer to confirm start",
+    "WAITING_CUSTOMER_CONFIRM_START_SUB": "The customer will mark the job as started when you arrive.",
+    "YOU_CANCELED_JOB": "You canceled this job",
+    "CUSTOMER_NOTIFIED_NO_PAYMENT": "The customer has been notified. No payment was processed.",
+    "NO_PAYMENT_PROCESSED": "No payment was processed.",
     "CANCEL_JOB": "Cancel Job",
-    "CANCEL_CONFIRM": "Are you sure you want to cancel? The customer will be notified."
+    "CANCEL_JOB_TITLE": "Cancel Job?",
+    "CANCEL_CONFIRM": "Are you sure you want to cancel? The customer will be notified.",
+    "YES_CANCEL_JOB": "Yes, Cancel Job"
   },
 
   "PROFILE": {
@@ -216,11 +280,35 @@
     "NEW_OFFER": "New offer received from {{name}}",
     "OFFER_CHOSEN": "You've been selected! Check your active job.",
     "OFFER_REJECTED": "Another handyman was chosen for this request.",
+    "OFFER_SUBMIT_FAILED": "Failed to submit offer. Please try again.",
+    "CHOOSE_OFFER_FAILED": "Failed to choose this handyman. Please try again.",
     "JOB_STARTED": "Job has been marked as started.",
-    "JOB_FINISHED": "Job completed and payment confirmed!",
+    "JOB_FINISHED": "Job completed!",
     "JOB_CANCELED_BY_USER": "The customer canceled this job.",
     "JOB_CANCELED_BY_WORKER": "The handyman canceled your job. No charge was made.",
+    "JOB_CANCELED_GENERIC": "Job was canceled.",
+    "JOB_CANCELED_NO_CHARGE": "Job canceled. No charge was made.",
+    "JOB_CANCEL_FAILED": "Failed to cancel. Please try again.",
+    "JOB_LOAD_FAILED": "Failed to load job.",
+    "JOB_UPDATE_FAILED": "Failed to update job status.",
     "NEW_REQUEST": "New matching request available!",
+    "REQUEST_LOAD_FAILED": "Failed to load request details.",
+    "REQUEST_POSTED": "Request posted! Waiting for offers...",
+    "REQUEST_POST_FAILED": "Failed to post request. Please try again.",
+    "REQUESTS_LOAD_FAILED": "Failed to load requests.",
+    "AI_SUGGEST_FAILED": "AI suggestion failed. Please try again.",
+    "PAYMENT_FAILED": "Payment failed. Please try again.",
+    "PAYMOB_REDIRECT_SANDBOX": "Redirecting to Paymob... (sandbox: skipped)",
+    "PAID_CASH_CONFIRMED": "Job marked as paid in cash!",
+    "RATING_SUBMITTED": "Rating submitted! Thank you.",
+    "RATING_SUBMIT_FAILED": "Failed to submit rating.",
+    "PROFILE_LOAD_FAILED": "Failed to load profile.",
+    "PROFILE_UPDATED": "Profile updated successfully!",
+    "PROFILE_SAVE_FAILED": "Failed to save profile. Please try again.",
+    "TRANSACTION_HISTORY_LOAD_FAILED": "Failed to load transaction history.",
+    "EARNINGS_LOAD_FAILED": "Failed to load earnings data.",
+    "PAYOUT_INITIATED_SANDBOX": "Payout initiated! (sandbox mode)",
+    "WITHDRAW_FAILED": "Failed to initiate withdrawal. Please try again.",
     "PAYMENT_CONFIRMED": "Payment of {{amount}} confirmed!",
     "GENERIC_ERROR": "Something went wrong. Please try again."
   },
@@ -237,6 +325,14 @@
     "OR": "or",
     "CURRENCY": "EGP",
     "STARS": "stars",
-    "RATING_OF": "out of 5"
+    "RATING_OF": "out of 5",
+    "GENERIC_ERROR": "Something went wrong. Please try again.",
+    "GO_HOME": "Go Home",
+    "TIME_AGO": {
+      "JUST_NOW": "just now",
+      "MINUTES": "{{count}}m ago",
+      "HOURS": "{{count}}h ago",
+      "DAYS": "{{count}}d ago"
+    }
   }
 }

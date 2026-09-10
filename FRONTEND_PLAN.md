@@ -293,8 +293,56 @@ src/
 
 ## 8. Phase 6 — Polish & QA
 
+### Audit Findings (2026-09-10) — Codebase-wide review before continuing polish
+
+A full audit of every component/service/style file surfaced the following concrete issues. Each is tracked individually below and fixed in this phase.
+
+#### Dead code cleanup
+- [x] Remove unused `app.html` / `app.scss` (boilerplate leftovers — `app.ts` uses an inline template, these files are never referenced)
+- [x] Fix/remove the broken `app.spec.ts` "should render title" test (asserted on stale boilerplate markup)
+- [x] Remove unused `WorkTypeLabel` (English-only map) imports/properties from `worker-home`, `request-detail`, `requests-feed` components — their templates already correctly use `'WORK_TYPE.' + x | translate`
+
+#### i18n correctness bugs
+- [x] `login.component.html` — `serverError()` rendered without the `translate` pipe (raw translation key like `AUTH.ERRORS.INVALID_CREDENTIALS` was shown to users instead of the localized message)
+- [x] `register.component.html` — same `serverError()` bug
+- [x] `register.component.html` — work-type `<option>` labels used the hardcoded English `WorkTypeLabel` map instead of `'WORK_TYPE.' + wt | translate` (Arabic users saw English work types)
+- [x] `profile.component.ts` (worker) — `workTypeLabel` computed used the hardcoded English `WorkTypeLabel` map instead of the translate pipe (worker's own work-type badge never localized to Arabic)
+
+#### Global error handling
+- [ ] Add a global HTTP error interceptor (`httpErrorInterceptor`) that maps common HTTP failures (0/network, 401, 403, 404, 5xx) to translated fallback `TOAST.*` messages via `NotificationService`, so components don't need ad-hoc fallback strings
+
+#### RTL / logical CSS properties
+Physical (`margin-left`, `text-align: left`, etc.) properties don't mirror in RTL. Replace with logical equivalents (`margin-inline-start`, `text-align: start`, etc.) in:
+- [ ] `features/user/active-job/active-job.component.scss`
+- [ ] `features/user/make-request/make-request.component.scss`
+- [ ] `features/user/live-offers/live-offers.component.scss`
+- [ ] `features/user/user-home/user-home.component.scss`
+- [ ] `features/worker/worker-home/worker-home.component.scss`
+- [ ] `features/worker/request-detail/request-detail.component.scss`
+
+#### Hardcoded English strings → translation keys
+Many components called `NotificationService` with hardcoded English literals, and several templates had hardcoded English copy (headings, descriptions, buttons) that never localizes to Arabic. `NotificationService` itself was refactored to resolve translation keys centrally (`success`/`error`/`info`/`warning` now take an i18n key + optional interpolation params, with a `showRaw` escape hatch for backend-provided messages). Component call sites updated to use keys (**code done** — the corresponding `en.json`/`ar.json` key additions are tracked separately below and are NOT yet done):
+- [x] `features/auth/login/login.component.html` (server error display)
+- [x] `features/auth/register/register.component.html` (work type options, "Worker Details" divider, verify-hint paragraph)
+- [x] `features/user/make-request/make-request.component.ts` + `.html` (notify calls, sub-header copy, min-length validation message)
+- [x] `features/user/live-offers/live-offers.component.ts` + `.html` (notify calls, banner/empty-state copy)
+- [x] `features/user/active-job/active-job.component.ts` + `.html` (notify calls, finished/rate-cta copy)
+- [x] `features/user/user-home/user-home.component.html` (hero/cta copy)
+- [x] `features/user/transaction-history/transaction-history.component.ts` (notify calls)
+- [x] `features/user/user-profile/user-profile.component.ts` (notify calls)
+- [x] `features/worker/worker-home/worker-home.component.ts` + `.html` (notify calls, hero/cta copy)
+- [x] `features/worker/requests-feed/requests-feed.component.ts` + `.html` (notify calls, sub-header, time-ago strings, CTA copy)
+- [x] `features/worker/request-detail/request-detail.component.ts` + `.html` (notify calls, back button, closed banner, photos heading)
+- [x] `features/worker/pricing/pricing.component.ts` + `.html` (notify calls, descriptive copy, preview labels)
+- [x] `features/worker/active-job/worker-active-job.component.ts` + `.html` (notify calls, banner copy, job-card labels, modal copy)
+- [x] `features/worker/earnings/earnings.component.ts` (notify calls)
+- [x] `features/worker/profile/profile.component.ts` (notify calls)
+- [x] `shared/components/otp-verification/otp-verification.component.ts` (error messages)
+- [x] `shared/components/image-upload/image-upload.component.ts` (file-too-large notify call)
+- [x] Add every new translation key referenced above to `en.json` **and** `ar.json` — added a new `HOME` section plus ~90 new keys across `AUTH`, `REQUEST`, `OFFERS`, `JOB`, `WORKER`, `TOAST`, and `COMMON` (incl. `COMMON.TIME_AGO.*` for the worker feed's relative-time labels). Verified programmatically: every translation key referenced anywhere in `.ts`/`.html` files now resolves in both `en.json` and `ar.json`, and the two files have 100% identical key sets (288 keys each). `ng build` passes clean.
+
 ### RTL / Localization
-- [ ] Complete `en.json` and `ar.json` with all strings
+- [x] Complete `en.json` and `ar.json` with all strings (added `TOAST`/`COMMON`/feature-specific keys uncovered by the audit above)
 - [ ] Test every page in RTL mode — fix layout mirroring issues
 - [ ] Ensure dropdowns, modals, toasts work correctly in RTL
 

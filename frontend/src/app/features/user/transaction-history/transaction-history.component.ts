@@ -50,7 +50,7 @@ export class TransactionHistoryComponent implements OnInit {
       next:  (list) => this.transactions.set(list),
       error: () => {
         this.error.set(true);
-        this.notify.error('Failed to load transaction history.');
+        this.notify.error('TOAST.TRANSACTION_HISTORY_LOAD_FAILED');
       },
     });
   }

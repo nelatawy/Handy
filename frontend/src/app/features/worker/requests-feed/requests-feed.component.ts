@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription, finalize } from 'rxjs';
 
 import { JobRequest } from '../../../core/models/models';
-import { WorkType, WorkTypeLabel } from '../../../core/models/enums';
+import { WorkType } from '../../../core/models/enums';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { WebSocketService } from '../../../core/services/websocket.service';
@@ -34,8 +34,6 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
   private ws         = inject(WebSocketService);
   private notify     = inject(NotificationService);
 
-  readonly WorkTypeLabel = WorkTypeLabel;
-
   readonly requests = signal<JobRequest[]>([]);
   readonly loading  = signal(true);
 
@@ -51,7 +49,7 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
         const existing = this.requests().some(r => r.id === e.request.id);
         if (!existing) {
           this.requests.update(list => [e.request, ...list]);
-          this.notify.info('New matching request available!');
+          this.notify.info('TOAST.NEW_REQUEST');
         }
       })
     );
@@ -73,7 +71,7 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
       finalize(() => this.loading.set(false)),
     ).subscribe({
       next:  (list) => this.requests.set(list),
-      error: ()     => this.notify.error('Failed to load requests.'),
+      error: ()     => this.notify.error('TOAST.REQUESTS_LOAD_FAILED'),
     });
   }
 
@@ -91,13 +89,18 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
     return map[wt] ?? '🔧';
   }
 
-  timeAgo(dateStr: string): string {
+  /**
+   * Returns a translation key + params for a relative "time ago" label.
+   * The template resolves this via the translate pipe so it localizes
+   * correctly (e.g. Arabic doesn't just prefix/suffix the same way English does).
+   */
+  timeAgo(dateStr: string): { key: string; params?: Record<string, number> } {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins  = Math.floor(diff / 60000);
-    if (mins < 1)  return 'just now';
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1)  return { key: 'COMMON.TIME_AGO.JUST_NOW' };
+    if (mins < 60) return { key: 'COMMON.TIME_AGO.MINUTES', params: { count: mins } };
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24)  return `${hrs}h ago`;
-    return `${Math.floor(hrs / 24)}d ago`;
+    if (hrs < 24)  return { key: 'COMMON.TIME_AGO.HOURS', params: { count: hrs } };
+    return { key: 'COMMON.TIME_AGO.DAYS', params: { count: Math.floor(hrs / 24) } };
   }
 }

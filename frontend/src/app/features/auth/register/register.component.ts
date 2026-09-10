@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { OtpVerificationComponent } from '../../../shared/components/otp-verification/otp-verification.component';
 import { CountryPrefixDropdownComponent } from '../../../shared/components/country-prefix-dropdown/country-prefix-dropdown.component';
-import { UserRole, WorkType, WORK_TYPES, WorkTypeLabel } from '../../../core/models/enums';
+import { UserRole, WORK_TYPES } from '../../../core/models/enums';
 import { COUNTRIES, GOVERNORATES_BY_COUNTRY, getGovernorates } from '../../../core/models/geo-data';
 
 function passwordMatch(ctrl: AbstractControl) {
@@ -28,7 +28,6 @@ function passwordMatch(ctrl: AbstractControl) {
 })
 export class RegisterComponent {
   protected UserRole = UserRole;
-  protected WorkTypeLabel = WorkTypeLabel;
   protected workTypes = WORK_TYPES;
   protected countries = COUNTRIES;
 

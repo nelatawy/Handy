@@ -59,7 +59,7 @@ export class OtpVerificationComponent {
         this.step.set('code');
       },
       error: () => {
-        this.errorMsg.set('Failed to send OTP. Please check your number.');
+        this.errorMsg.set('AUTH.ERRORS.OTP_SEND_FAILED');
         this.step.set('error');
       },
     });
@@ -76,12 +76,12 @@ export class OtpVerificationComponent {
           this.step.set('verified');
           this.verified.emit({ phone: this.e164Phone, verified: true });
         } else {
-          this.errorMsg.set('Invalid or expired code');
+          this.errorMsg.set('AUTH.ERRORS.OTP_INVALID');
           this.step.set('error');
         }
       },
       error: () => {
-        this.errorMsg.set('Invalid or expired code');
+        this.errorMsg.set('AUTH.ERRORS.OTP_INVALID');
         this.step.set('error');
       },
     });

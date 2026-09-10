@@ -63,7 +63,7 @@ export class UserProfileComponent implements OnInit {
       },
       error: () => {
         this.error.set(true);
-        this.notify.error('Failed to load profile.');
+        this.notify.error('TOAST.PROFILE_LOAD_FAILED');
       },
     });
   }
@@ -102,9 +102,9 @@ export class UserProfileComponent implements OnInit {
       next: (updated) => {
         this.user.set(updated);
         this.editMode.set(false);
-        this.notify.success('Profile updated successfully!');
+        this.notify.success('TOAST.PROFILE_UPDATED');
       },
-      error: () => this.notify.error('Failed to save profile. Please try again.'),
+      error: () => this.notify.error('TOAST.PROFILE_SAVE_FAILED'),
     });
   }
 }

@@ -82,7 +82,7 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
           setTimeout(() => this.showRatingModal.set(true), 600);
         }
       },
-      error: () => this.notify.error('Failed to load job details.'),
+      error: () => this.notify.error('TOAST.JOB_LOAD_FAILED'),
     });
   }
 
@@ -96,12 +96,12 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
         if (!j || j.id !== e.jobId) return;
         this.job.set({ ...j, status: e.status });
 
-        if (e.status === JobStatus.Started)  this.notify.info('Job has been marked as started.');
+        if (e.status === JobStatus.Started)  this.notify.info('TOAST.JOB_STARTED');
         if (e.status === JobStatus.Finished) {
-          this.notify.success('Job completed!');
+          this.notify.success('TOAST.JOB_FINISHED');
           setTimeout(() => this.showRatingModal.set(true), 600);
         }
-        if (e.status === JobStatus.Canceled) this.notify.warning('Job was canceled.');
+        if (e.status === JobStatus.Canceled) this.notify.warning('TOAST.JOB_CANCELED_GENERIC');
       })
     );
 
@@ -111,7 +111,7 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
         const j = this.job();
         if (!j || j.id !== e.jobId) return;
         this.job.set({ ...j, status: JobStatus.Canceled, canceledBy: 'worker' });
-        this.notify.warning('The handyman canceled your job. No charge was made.');
+        this.notify.warning('TOAST.JOB_CANCELED_BY_WORKER');
       })
     );
   }
@@ -140,12 +140,12 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
         next: (updated) => {
           this.job.set(updated);
           // In production this would redirect to Paymob checkout
-          this.notify.info('Redirecting to Paymob... (sandbox: skipped)');
+          this.notify.info('TOAST.PAYMOB_REDIRECT_SANDBOX');
           setTimeout(() => this.showRatingModal.set(true), 1000);
         },
         error: () => {
           this.paymentStep.set('choosingPayment');
-          this.notify.error('Payment failed. Please try again.');
+          this.notify.error('TOAST.PAYMENT_FAILED');
         },
       });
   }
@@ -159,12 +159,12 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (updated) => {
           this.job.set(updated);
-          this.notify.success('Job marked as paid in cash!');
+          this.notify.success('TOAST.PAID_CASH_CONFIRMED');
           setTimeout(() => this.showRatingModal.set(true), 600);
         },
         error: () => {
           this.paymentStep.set('choosingPayment');
-          this.notify.error('Failed to update job. Please try again.');
+          this.notify.error('TOAST.JOB_UPDATE_FAILED');
         },
       });
   }
@@ -190,9 +190,9 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (updated) => {
         this.job.set({ ...updated, canceledBy: 'user' });
-        this.notify.info('Job canceled. No charge was made.');
+        this.notify.info('TOAST.JOB_CANCELED_NO_CHARGE');
       },
-      error: () => this.notify.error('Failed to cancel. Please try again.'),
+      error: () => this.notify.error('TOAST.JOB_CANCEL_FAILED'),
     });
   }
 
@@ -214,9 +214,9 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
       next: () => {
         this.ratingSubmitted.set(true);
         this.showRatingModal.set(false);
-        this.notify.success('Rating submitted! Thank you.');
+        this.notify.success('TOAST.RATING_SUBMITTED');
       },
-      error: () => this.notify.error('Failed to submit rating.'),
+      error: () => this.notify.error('TOAST.RATING_SUBMIT_FAILED'),
     });
   }
 
@@ -237,7 +237,7 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
       finalize(() => this.actionLoading.set(false)),
     ).subscribe({
       next:  (updated) => this.job.set(updated),
-      error: () => this.notify.error('Failed to update job status.'),
+      error: () => this.notify.error('TOAST.JOB_UPDATE_FAILED'),
     });
   }
 }

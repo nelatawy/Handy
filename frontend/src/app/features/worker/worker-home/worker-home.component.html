@@ -4,9 +4,9 @@
   <div class="worker-hero">
     <div class="worker-hero__text">
       <h1 class="worker-hero__title">
-        Welcome back, <span class="worker-hero__name">{{ auth.username() ?? 'Handyman' }}</span> 👷
+        {{ 'HOME.WORKER_WELCOME' | translate }} <span class="worker-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span> 👷
       </h1>
-      <p class="worker-hero__sub">Ready to take on your next job?</p>
+      <p class="worker-hero__sub">{{ 'HOME.WORKER_SUB' | translate }}</p>
     </div>
     <div class="worker-hero__icon">🔧</div>
   </div>
@@ -22,7 +22,7 @@
       tabindex="0"
       (keydown.enter)="goActiveJob()"
     >
-      <div class="active-job-widget__label">Active Job</div>
+      <div class="active-job-widget__label">{{ 'NAV.ACTIVE_JOB' | translate }}</div>
       <div class="active-job-widget__info">
         <div class="active-job-widget__type-icon">🛠️</div>
         <div>
@@ -46,8 +46,8 @@
   >
     <span class="cta-btn__icon">🔍</span>
     <div>
-      <div class="cta-btn__title">Browse Requests</div>
-      <div class="cta-btn__sub">Find jobs matching your skill set and submit offers</div>
+      <div class="cta-btn__title">{{ 'HOME.BROWSE_REQUESTS_CTA' | translate }}</div>
+      <div class="cta-btn__sub">{{ 'HOME.BROWSE_REQUESTS_CTA_SUB' | translate }}</div>
     </div>
     <span class="cta-btn__arrow">→</span>
   </button>

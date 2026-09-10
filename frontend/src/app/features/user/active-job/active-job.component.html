@@ -87,14 +87,14 @@
         <div>
           <h2>{{ 'JOB.FINISHED_TITLE' | translate }}</h2>
           @if (!ratingSubmitted()) {
-            <p>Rate your experience to help others!</p>
+            <p>{{ 'JOB.RATE_ENCOURAGEMENT' | translate }}</p>
           } @else {
-            <p>Thanks for your rating!</p>
+            <p>{{ 'JOB.RATE_THANKS' | translate }}</p>
           }
         </div>
         @if (!ratingSubmitted()) {
           <button class="btn btn--primary" (click)="showRatingModal.set(true)">
-            ⭐ Rate
+            ⭐ {{ 'JOB.RATE_CTA' | translate }}
           </button>
         }
       </div>
@@ -178,7 +178,7 @@
           <button class="btn btn--ghost" (click)="closeCancelConfirm()">{{ 'COMMON.NO' | translate }}</button>
           <button class="btn btn--danger" (click)="confirmCancel()" [disabled]="cancelLoading()">
             @if (cancelLoading()) { <span class="spinner"></span> }
-            {{ 'COMMON.YES' | translate }}, cancel
+            {{ 'JOB.CANCEL_CONFIRM_YES' | translate }}
           </button>
         </div>
       </div>

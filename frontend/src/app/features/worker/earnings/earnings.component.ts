@@ -57,7 +57,7 @@ export class EarningsComponent implements OnInit {
       },
       error: () => {
         this.error.set(true);
-        this.notify.error('Failed to load earnings data.');
+        this.notify.error('TOAST.EARNINGS_LOAD_FAILED');
       },
     });
   }
@@ -80,13 +80,19 @@ export class EarningsComponent implements OnInit {
           // Production: redirect to Paymob payout flow
           window.location.href = res.redirectUrl;
         } else {
-          // Sandbox: show confirmation toast
-          this.notify.success(res.message || 'Payout initiated! (sandbox mode)');
+          // Sandbox: show confirmation toast. `res.message` (if present) is a backend-controlled
+          // string, not a translation key, so it's shown as-is via `showRaw`; otherwise fall back
+          // to a translated default.
+          if (res.message) {
+            this.notify.showRaw(res.message, 'success');
+          } else {
+            this.notify.success('TOAST.PAYOUT_INITIATED_SANDBOX');
+          }
           // Reset balance optimistically after a successful payout initiation
           this.balance.set(0);
         }
       },
-      error: () => this.notify.error('Failed to initiate withdrawal. Please try again.'),
+      error: () => this.notify.error('TOAST.WITHDRAW_FAILED'),
     });
   }
 

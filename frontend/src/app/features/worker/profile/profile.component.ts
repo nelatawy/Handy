@@ -14,7 +14,6 @@ import { finalize } from 'rxjs';
 import { ProfileService, UpdateWorkerProfileBody } from '../../../core/services/profile.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Worker } from '../../../core/models/models';
-import { WorkType, WorkTypeLabel } from '../../../core/models/enums';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
 
 @Component({
@@ -30,8 +29,6 @@ export class ProfileComponent implements OnInit {
   private notify     = inject(NotificationService);
   private fb         = inject(FormBuilder);
 
-  readonly WorkTypeLabel = WorkTypeLabel;
-
   readonly loading  = signal(true);
   readonly error    = signal(false);
   readonly saving   = signal(false);
@@ -44,9 +41,10 @@ export class ProfileComponent implements OnInit {
     return name.slice(0, 2).toUpperCase();
   });
 
-  readonly workTypeLabel = computed(() => {
+  /** Translation key for the worker's work type (e.g. 'WORK_TYPE.plumber') — resolved via the translate pipe in the template */
+  readonly workTypeKey = computed(() => {
     const w = this.worker();
-    return w ? (WorkTypeLabel[w.workType] ?? w.workType) : '';
+    return w ? `WORK_TYPE.${w.workType}` : '';
   });
 
   form!: FormGroup;
@@ -61,7 +59,7 @@ export class ProfileComponent implements OnInit {
       },
       error: () => {
         this.error.set(true);
-        this.notify.error('Failed to load profile.');
+        this.notify.error('TOAST.PROFILE_LOAD_FAILED');
       },
     });
   }
@@ -113,9 +111,9 @@ export class ProfileComponent implements OnInit {
       next: (updated) => {
         this.worker.set(updated);
         this.editMode.set(false);
-        this.notify.success('Profile updated successfully!');
+        this.notify.success('TOAST.PROFILE_UPDATED');
       },
-      error: () => this.notify.error('Failed to save profile. Please try again.'),
+      error: () => this.notify.error('TOAST.PROFILE_SAVE_FAILED'),
     });
   }
 }

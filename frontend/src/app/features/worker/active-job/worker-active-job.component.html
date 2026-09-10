@@ -19,8 +19,8 @@
       <div class="info-banner info-banner--pending">
         <span class="info-banner__icon">⏳</span>
         <div>
-          <strong>Waiting for customer to confirm start</strong>
-          <p>The customer will mark the job as started when you arrive.</p>
+          <strong>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START' | translate }}</strong>
+          <p>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START_SUB' | translate }}</p>
         </div>
       </div>
     }
@@ -30,8 +30,8 @@
       <div class="info-banner info-banner--started">
         <span class="info-banner__icon">🛠️</span>
         <div>
-          <strong>Job in progress</strong>
-          <p>Complete the work. The customer will mark it as finished and handle payment.</p>
+          <strong>{{ 'WORKER.JOB_IN_PROGRESS' | translate }}</strong>
+          <p>{{ 'WORKER.JOB_IN_PROGRESS_SUB' | translate }}</p>
         </div>
       </div>
     }
@@ -40,21 +40,21 @@
     @if (job()!.status === JobStatus.Finished) {
       <div class="earnings-card">
         <div class="earnings-card__icon">🎉</div>
-        <h2 class="earnings-card__title">Job Completed!</h2>
+        <h2 class="earnings-card__title">{{ 'WORKER.JOB_COMPLETED_TITLE' | translate }}</h2>
         <p class="earnings-card__sub">{{ 'JOB.EARNINGS_INFO' | translate }}</p>
         <div class="earnings-card__amount">
-          <span class="earnings-card__label">Your Earnings</span>
+          <span class="earnings-card__label">{{ 'WORKER.YOUR_EARNINGS' | translate }}</span>
           <span class="earnings-card__value">{{ earnings() | number : '1.0-2' }} EGP</span>
         </div>
         @if (job()!.paymentType) {
           <div class="payment-type-badge" [class.payment-type-badge--online]="job()!.paymentType === PaymentType.Online">
-            @if (job()!.paymentType === PaymentType.Online) { 💳 Paid Online }
-            @else { 💵 Paid in Cash }
+            @if (job()!.paymentType === PaymentType.Online) { 💳 {{ 'PAYMENT_TYPE.online' | translate }} }
+            @else { 💵 {{ 'PAYMENT_TYPE.cash' | translate }} }
           </div>
         }
         <div class="earnings-card__actions">
-          <button class="btn btn--primary" (click)="goFeed()">Browse More Requests</button>
-          <button class="btn btn--ghost" (click)="goHome()">Go Home</button>
+          <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
+          <button class="btn btn--ghost" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
         </div>
       </div>
     }
@@ -65,17 +65,17 @@
         <span class="info-banner__icon">❌</span>
         <div>
           @if (job()!.canceledBy === 'worker') {
-            <strong>You canceled this job</strong>
-            <p>The customer has been notified. No payment was processed.</p>
+            <strong>{{ 'WORKER.YOU_CANCELED_JOB' | translate }}</strong>
+            <p>{{ 'WORKER.CUSTOMER_NOTIFIED_NO_PAYMENT' | translate }}</p>
           } @else {
             <strong>{{ 'JOB.CANCELED_BY_USER' | translate }}</strong>
-            <p>No payment was processed.</p>
+            <p>{{ 'WORKER.NO_PAYMENT_PROCESSED' | translate }}</p>
           }
         </div>
       </div>
       <div class="canceled-actions">
-        <button class="btn btn--primary" (click)="goFeed()">Browse More Requests</button>
-        <button class="btn btn--ghost" (click)="goHome()">Go Home</button>
+        <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
+        <button class="btn btn--ghost" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
       </div>
     }
 
@@ -83,19 +83,19 @@
     @if (job()!.status !== JobStatus.Finished) {
       <div class="job-card">
         <div class="job-card__row">
-          <span class="job-card__label">Job Type</span>
+          <span class="job-card__label">{{ 'WORKER.JOB_TYPE' | translate }}</span>
           <span class="job-card__value">{{ 'WORK_TYPE.' + job()!.workType | translate }}</span>
         </div>
         <div class="job-card__row">
-          <span class="job-card__label">Your Price</span>
+          <span class="job-card__label">{{ 'WORKER.YOUR_PRICE' | translate }}</span>
           <span class="job-card__value job-card__value--highlight">{{ job()!.price | number : '1.0-2' }} EGP</span>
         </div>
         <div class="job-card__row">
-          <span class="job-card__label">Customer Pays</span>
+          <span class="job-card__label">{{ 'WORKER.CUSTOMER_PAYS' | translate }}</span>
           <span class="job-card__value">{{ job()!.userPrice | number : '1.0-2' }} EGP</span>
         </div>
         <div class="job-card__divider"></div>
-        <div class="job-card__desc-label">Description</div>
+        <div class="job-card__desc-label">{{ 'REQUEST.DESCRIPTION' | translate }}</div>
         <p class="job-card__desc">{{ job()!.description }}</p>
       </div>
     }
@@ -109,8 +109,8 @@
 
   } @else {
     <div class="not-found">
-      <p>Job not found.</p>
-      <button class="btn btn--primary" (click)="goHome()">Go Home</button>
+      <p>{{ 'WORKER.JOB_NOT_FOUND' | translate }}</p>
+      <button class="btn btn--primary" (click)="goHome()">{{ 'COMMON.GO_HOME' | translate }}</button>
     </div>
   }
 
@@ -119,7 +119,7 @@
     <div class="modal-overlay" (click)="closeCancelConfirm()">
       <div class="modal" (click)="$event.stopPropagation()">
         <div class="modal__icon">⚠️</div>
-        <h3 class="modal__title">Cancel Job?</h3>
+        <h3 class="modal__title">{{ 'WORKER.CANCEL_JOB_TITLE' | translate }}</h3>
         <p class="modal__body">{{ 'WORKER.CANCEL_CONFIRM' | translate }}</p>
         <div class="modal__actions">
           <button class="btn btn--ghost" (click)="closeCancelConfirm()" [disabled]="cancelLoading()">
@@ -127,7 +127,7 @@
           </button>
           <button class="btn btn--danger" (click)="confirmCancel()" [disabled]="cancelLoading()">
             @if (cancelLoading()) { <span class="spinner"></span> }
-            Yes, Cancel Job
+            {{ 'WORKER.YES_CANCEL_JOB' | translate }}
           </button>
         </div>
       </div>

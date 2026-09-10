@@ -47,7 +47,7 @@
             [placeholder]="'AUTH.OTP_CODE_PLACEHOLDER' | translate" [(ngModel)]="code"
             [class.error]="step() === 'error'" (keyup.enter)="verifyOtp()" autocomplete="one-time-code" />
         @if (step() === 'error') {
-        <span class="error-message">{{ errorMsg() }}</span>
+        <span class="error-message">{{ errorMsg() | translate }}</span>
         }
     </div>
 

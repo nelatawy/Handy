@@ -12,7 +12,7 @@
         <div class="pricing-card__hero">
           <div class="pricing-card__icon">💰</div>
           <h1 class="pricing-card__title">{{ 'WORKER.YOUR_PRICE' | translate }}</h1>
-          <p class="pricing-card__sub">Set your price for this job. The customer will see the total including our 5% platform fee.</p>
+          <p class="pricing-card__sub">{{ 'WORKER.PRICING_SUB' | translate }}</p>
         </div>
 
         <!-- Request summary -->
@@ -47,11 +47,11 @@
         @if (userPrice()) {
           <div class="price-preview">
             <div class="price-preview__row">
-              <span class="price-preview__label">Your earnings</span>
+              <span class="price-preview__label">{{ 'WORKER.YOUR_EARNINGS' | translate }}</span>
               <span class="price-preview__value">{{ priceInput() | number : '1.0-2' }} EGP</span>
             </div>
             <div class="price-preview__row">
-              <span class="price-preview__label">Platform fee (5%)</span>
+              <span class="price-preview__label">{{ 'WORKER.PLATFORM_FEE_LABEL' | translate }}</span>
               <span class="price-preview__value fee">+ {{ ((userPrice()! - priceInput()!)) | number : '1.0-2' }} EGP</span>
             </div>
             <div class="price-preview__divider"></div>
@@ -69,7 +69,7 @@
           (click)="submitOffer()"
         >
           @if (submitting()) {
-            <span class="spinner"></span> Submitting...
+            <span class="spinner"></span> {{ 'WORKER.SUBMITTING' | translate }}
           } @else {
             {{ 'WORKER.SUBMIT_OFFER' | translate }}
           }
@@ -84,18 +84,18 @@
           <div class="state-card__icon">⏳</div>
         </div>
         <h2 class="state-card__title">{{ 'WORKER.WAITING_FOR_SELECTION' | translate }}</h2>
-        <p class="state-card__sub">Your offer has been submitted. We'll notify you instantly when the customer decides.</p>
+        <p class="state-card__sub">{{ 'WORKER.WAITING_FOR_SELECTION_SUB' | translate }}</p>
         <div class="offer-summary">
           <div class="offer-summary__row">
-            <span>Your price</span>
+            <span>{{ 'WORKER.YOUR_PRICE' | translate }}</span>
             <strong>{{ priceInput() | number : '1.0-2' }} EGP</strong>
           </div>
           <div class="offer-summary__row">
-            <span>Customer pays</span>
+            <span>{{ 'WORKER.CUSTOMER_PAYS' | translate }}</span>
             <strong>{{ userPrice() | number : '1.0-2' }} EGP</strong>
           </div>
         </div>
-        <button class="btn btn--ghost" (click)="goFeed()">← Browse other requests</button>
+        <button class="btn btn--ghost" (click)="goFeed()">← {{ 'WORKER.BROWSE_OTHER_REQUESTS' | translate }}</button>
       </div>
     }
 
@@ -104,7 +104,7 @@
       <div class="state-card state-card--chosen">
         <div class="state-card__icon state-card__icon--big">🎉</div>
         <h2 class="state-card__title">{{ 'WORKER.YOU_WERE_CHOSEN' | translate }}</h2>
-        <p class="state-card__sub">Redirecting you to your active job...</p>
+        <p class="state-card__sub">{{ 'OFFERS.REDIRECTING_TO_JOB' | translate }}</p>
         <div class="spinner spinner--lg"></div>
       </div>
     }
@@ -114,8 +114,8 @@
       <div class="state-card state-card--rejected">
         <div class="state-card__icon">😔</div>
         <h2 class="state-card__title">{{ 'WORKER.OFFER_REJECTED' | translate }}</h2>
-        <p class="state-card__sub">Don't worry — new requests come in constantly. Keep browsing!</p>
-        <button class="btn btn--primary" (click)="goFeed()">Browse More Requests</button>
+        <p class="state-card__sub">{{ 'WORKER.OFFER_REJECTED_SUB' | translate }}</p>
+        <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>
       </div>
     }
 

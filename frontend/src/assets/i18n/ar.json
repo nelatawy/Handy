@@ -1,7 +1,17 @@
 {
   "APP_NAME": "Handy",
   "APP_TAGLINE": "فني موثوق، في متناول يدك",
-
+  "HOME": {
+    "GREETING": "أهلاً،",
+    "GREETING_FALLBACK_NAME": "بك",
+    "USER_SUB": "ماذا تحتاج أن تُصلح اليوم؟",
+    "MAKE_REQUEST_CTA": "طلب خدمة",
+    "MAKE_REQUEST_CTA_SUB": "صف ما تحتاج إصلاحه واحصل على عروض من الفنيين",
+    "WORKER_WELCOME": "مرحباً بعودتك،",
+    "WORKER_SUB": "هل أنت مستعد لمهمتك التالية؟",
+    "BROWSE_REQUESTS_CTA": "تصفح الطلبات",
+    "BROWSE_REQUESTS_CTA_SUB": "ابحث عن مهام تناسب مهاراتك وقدم عروضك"
+  },
   "NAV": {
     "HOME": "الرئيسية",
     "REQUESTS": "الطلبات",
@@ -11,7 +21,6 @@
     "HISTORY": "السجل",
     "LOGOUT": "تسجيل الخروج"
   },
-
   "AUTH": {
     "LOGIN": "تسجيل الدخول",
     "REGISTER": "إنشاء حساب",
@@ -56,6 +65,8 @@
     "OTP_VERIFY": "تحقق",
     "OTP_RESEND": "إعادة إرسال الرمز",
     "OTP_VERIFIED": "تم التحقق من الهاتف ✓",
+    "WORKER_DETAILS": "بيانات الفني",
+    "VERIFY_PHONE_HINT": "يرجى التحقق من رقم هاتفك قبل التسجيل.",
     "ERRORS": {
       "REQUIRED": "هذا الحقل مطلوب",
       "PHONE_FORMAT": "أدخل رقم هاتف صحيح",
@@ -63,38 +74,38 @@
       "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
       "ACCOUNT_NOT_FOUND": "الحساب غير موجود",
       "OTP_INVALID": "رمز غير صحيح أو منتهي الصلاحية",
+      "OTP_SEND_FAILED": "فشل إرسال رمز التحقق. يرجى التحقق من رقمك.",
       "GENERIC": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     }
   },
-
   "WORK_TYPE": {
     "plumber": "سباك",
     "electrician": "كهربائي",
     "carpenter": "نجار",
     "it": "تقنية معلومات"
   },
-
   "JOB_STATUS": {
     "pending": "قيد الانتظار",
     "started": "جارٍ التنفيذ",
     "finished": "مكتمل",
     "canceled": "ملغى"
   },
-
   "PAYMENT_TYPE": {
     "online": "دفع إلكتروني",
     "cash": "دفع نقدي"
   },
-
   "REQUEST": {
     "MAKE_REQUEST": "طلب خدمة",
+    "PAGE_SUB": "أخبرنا بما تحتاج إليه وسنجد لك الفني المناسب.",
     "DESCRIPTION": "وصف العمل",
     "DESCRIPTION_PLACEHOLDER": "صف ما تحتاج إليه...",
     "IMAGES": "صور (اختياري)",
     "IMAGES_HINT": "ارفع حتى 5 صور (بحد أقصى 20 ميغابايت لكل صورة)",
+    "REMOVE_IMAGE": "إزالة الصورة",
     "WORK_TYPE": "نوع الفني المطلوب",
     "AI_SUGGEST": "اقتراح بالذكاء الاصطناعي",
     "AI_SUGGEST_LOADING": "جارٍ إنشاء الاقتراح...",
+    "AI_SUGGEST_NEEDS_DESCRIPTION": "يرجى إدخال وصف أولاً للحصول على اقتراحات الذكاء الاصطناعي.",
     "AI_SUGGESTION_TITLE": "اقتراح الذكاء الاصطناعي",
     "AI_ACCEPT": "استخدم هذا",
     "AI_DISMISS": "احتفظ بوصفي",
@@ -102,26 +113,29 @@
     "CANCEL": "إلغاء",
     "ERRORS": {
       "DESCRIPTION_REQUIRED": "يرجى وصف العمل المطلوب",
+      "DESCRIPTION_MIN_LENGTH": "يرجى إضافة تفاصيل أكثر (20 حرفاً على الأقل).",
       "WORK_TYPE_REQUIRED": "يرجى اختيار نوع الفني",
       "TOO_MANY_IMAGES": "الحد الأقصى 5 صور",
-      "IMAGE_TOO_LARGE": "يجب أن يكون حجم كل صورة أقل من 20 ميغابايت"
+      "IMAGE_TOO_LARGE": "يجب أن يكون حجم كل صورة أقل من 20 ميغابايت",
+      "IMAGE_TOO_LARGE_NAMED": "{{name}} حجمها كبير جداً (الحد الأقصى 20 ميغابايت)"
     }
   },
-
   "OFFERS": {
     "TITLE": "العروض المستلمة",
     "WAITING": "بانتظار العروض...",
+    "WAITING_SUB": "الفنيون يراجعون طلبك الآن...",
     "HANDYMAN_NAME": "الفني",
     "PRICE": "السعر المعروض",
     "USER_PAYS": "ستدفع",
     "RATING": "التقييم",
+    "AVG_RATING": "متوسط التقييم",
     "COMPLETED_JOBS": "مهمة مكتملة",
     "HAS_SHOP": "لديه محل",
     "CHOOSE": "توظيف",
     "DECLINE": "رفض",
-    "CHOSEN_CONFIRM": "تم توظيف {{name}}!"
+    "CHOSEN_CONFIRM": "تم توظيف {{name}}!",
+    "REDIRECTING_TO_JOB": "جارٍ التوجيه إلى مهمتك الحالية..."
   },
-
   "JOB": {
     "TITLE": "المهمة الحالية",
     "HANDYMAN": "الفني الخاص بك",
@@ -131,6 +145,7 @@
     "MARK_FINISHED": "تأكيد اكتمال العمل",
     "CANCEL_JOB": "إلغاء المهمة",
     "CANCEL_CONFIRM": "هل أنت متأكد من إلغاء هذه المهمة؟",
+    "CANCEL_CONFIRM_YES": "نعم، إلغاء",
     "FINISH_CONFIRM": "اختر طريقة الدفع",
     "FINISH_WARNING": "سيُبدأ الدفع بمبلغ {{amount}} عند تأكيد الاكتمال",
     "PAY_ONLINE": "الدفع الإلكتروني",
@@ -148,9 +163,11 @@
     "RATE_COMMENT_PLACEHOLDER": "شاركنا تجربتك...",
     "RATE_SUBMIT": "إرسال التقييم",
     "RATE_SKIP": "تخطي",
+    "RATE_CTA": "قيّم",
+    "RATE_ENCOURAGEMENT": "قيّم تجربتك لمساعدة الآخرين!",
+    "RATE_THANKS": "شكراً على تقييمك!",
     "EARNINGS_INFO": "ستُضاف أرباحك من هذه المهمة إلى رصيدك"
   },
-
   "WORKER": {
     "FEED_TITLE": "الطلبات المتاحة",
     "FEED_EMPTY": "لا توجد طلبات متاحة الآن. تحقق لاحقاً!",
@@ -166,9 +183,45 @@
     "YOU_WERE_CHOSEN": "تهانينا! تم اختيارك لهذه المهمة!",
     "OFFER_REJECTED": "اختار العميل فنياً آخر لهذا الطلب.",
     "CANCEL_JOB": "إلغاء المهمة",
-    "CANCEL_CONFIRM": "هل أنت متأكد من الإلغاء؟ سيتم إخطار العميل."
+    "CANCEL_CONFIRM": "هل أنت متأكد من الإلغاء؟ سيتم إخطار العميل.",
+    "FEED_SUB": "طلبات مفتوحة تناسب تخصصك",
+    "LIVE_UPDATES_ON": "التحديثات المباشرة مفعّلة",
+    "VIEW_AND_SUBMIT_OFFER": "عرض وتقديم عرض سعر",
+    "BACK_TO_FEED": "العودة إلى الطلبات",
+    "REQUEST_CLOSED_WARNING": "تم إغلاق هذا الطلب — تم اختيار فني آخر.",
+    "REQUEST_NO_LONGER_AVAILABLE": "هذا الطلب لم يعد متاحاً — تم اختيار فني آخر.",
+    "POSTED_ON": "نُشر",
+    "STATUS_OPEN": "مفتوح",
+    "STATUS_CLOSED": "مغلق",
+    "PHOTOS": "الصور",
+    "YOUR_EARNINGS": "أرباحك",
+    "CUSTOMER_PAYS": "يدفع العميل",
+    "PLATFORM_FEE_LABEL": "رسوم المنصة (5٪)",
+    "PRICING_SUB": "حدد سعرك لهذه المهمة. سيرى العميل الإجمالي شاملاً رسوم المنصة 5٪.",
+    "SUBMITTING": "جارٍ الإرسال...",
+    "OFFER_SUBMITTED_TOAST": "تم إرسال العرض! بانتظار رد العميل...",
+    "WAITING_FOR_SELECTION_SUB": "تم إرسال عرضك. سنُخطرك فور اتخاذ العميل قراره.",
+    "YOU_WERE_CHOSEN_TOAST": "تهانينا! تم اختيارك!",
+    "OFFER_REJECTED_TOAST": "اختار العميل فنياً آخر لهذا الطلب.",
+    "OFFER_REJECTED_SUB": "لا تقلق — تصل طلبات جديدة باستمرار. واصل التصفح!",
+    "BROWSE_OTHER_REQUESTS": "تصفح طلبات أخرى",
+    "BROWSE_MORE_REQUESTS": "تصفح المزيد من الطلبات",
+    "JOB_TYPE": "نوع المهمة",
+    "JOB_NOT_FOUND": "المهمة غير موجودة.",
+    "JOB_COMPLETED_TITLE": "اكتملت المهمة!",
+    "JOB_IN_PROGRESS": "المهمة قيد التنفيذ",
+    "JOB_IN_PROGRESS_SUB": "أكمل العمل. سيقوم العميل بتحديد اكتماله والتعامل مع الدفع.",
+    "JOB_STARTED_BY_CUSTOMER": "قام العميل بتأكيد بدء العمل.",
+    "JOB_FINISHED_EARNINGS_CREDITED": "اكتملت المهمة! ستُضاف أرباحك قريباً.",
+    "JOB_CANCELED_CUSTOMER_NOTIFIED": "تم إلغاء المهمة. تم إخطار العميل.",
+    "WAITING_CUSTOMER_CONFIRM_START": "بانتظار تأكيد العميل لبدء العمل",
+    "WAITING_CUSTOMER_CONFIRM_START_SUB": "سيقوم العميل بتحديد بدء العمل عند وصولك.",
+    "YOU_CANCELED_JOB": "قمت بإلغاء هذه المهمة",
+    "CUSTOMER_NOTIFIED_NO_PAYMENT": "تم إخطار العميل. لم تتم معالجة أي دفعة.",
+    "NO_PAYMENT_PROCESSED": "لم تتم معالجة أي دفعة.",
+    "CANCEL_JOB_TITLE": "إلغاء المهمة؟",
+    "YES_CANCEL_JOB": "نعم، إلغاء المهمة"
   },
-
   "PROFILE": {
     "TITLE": "الملف الشخصي",
     "EDIT": "تعديل الملف",
@@ -188,7 +241,6 @@
     "NO_BIO": "لم تُضف نبذة بعد.",
     "NO_SHOP": "لا يوجد محل مدرج."
   },
-
   "PAYMENT": {
     "HISTORY_TITLE": "سجل المدفوعات",
     "HISTORY_SUBTITLE": "جميع مدفوعاتك السابقة للمهام المكتملة",
@@ -211,20 +263,42 @@
     "STATUS_PENDING": "قيد الانتظار",
     "STATUS_FAILED": "فاشل"
   },
-
   "TOAST": {
     "NEW_OFFER": "عرض جديد من {{name}}",
     "OFFER_CHOSEN": "تم اختيارك! تحقق من مهمتك الحالية.",
     "OFFER_REJECTED": "اختار العميل فنياً آخر لهذا الطلب.",
     "JOB_STARTED": "تم تأكيد بدء العمل.",
-    "JOB_FINISHED": "اكتملت المهمة وتم تأكيد الدفع!",
+    "JOB_FINISHED": "اكتملت المهمة!",
     "JOB_CANCELED_BY_USER": "قام العميل بإلغاء هذه المهمة.",
     "JOB_CANCELED_BY_WORKER": "قام الفني بإلغاء مهمتك. لم يتم خصم أي مبلغ.",
     "NEW_REQUEST": "طلب جديد متاح!",
     "PAYMENT_CONFIRMED": "تم تأكيد الدفع بمبلغ {{amount}}!",
-    "GENERIC_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    "GENERIC_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "OFFER_SUBMIT_FAILED": "فشل إرسال العرض. يرجى المحاولة مرة أخرى.",
+    "CHOOSE_OFFER_FAILED": "فشل توظيف هذا الفني. يرجى المحاولة مرة أخرى.",
+    "JOB_CANCELED_GENERIC": "تم إلغاء المهمة.",
+    "JOB_CANCELED_NO_CHARGE": "تم إلغاء المهمة. لم يتم خصم أي مبلغ.",
+    "JOB_CANCEL_FAILED": "فشل الإلغاء. يرجى المحاولة مرة أخرى.",
+    "JOB_LOAD_FAILED": "فشل تحميل المهمة.",
+    "JOB_UPDATE_FAILED": "فشل تحديث حالة المهمة.",
+    "REQUEST_LOAD_FAILED": "فشل تحميل تفاصيل الطلب.",
+    "REQUEST_POSTED": "تم نشر الطلب! بانتظار العروض...",
+    "REQUEST_POST_FAILED": "فشل نشر الطلب. يرجى المحاولة مرة أخرى.",
+    "REQUESTS_LOAD_FAILED": "فشل تحميل الطلبات.",
+    "AI_SUGGEST_FAILED": "فشل اقتراح الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.",
+    "PAYMENT_FAILED": "فشل الدفع. يرجى المحاولة مرة أخرى.",
+    "PAYMOB_REDIRECT_SANDBOX": "جارٍ التوجيه إلى Paymob... (وضع تجريبي: تم التخطي)",
+    "PAID_CASH_CONFIRMED": "تم تسجيل المهمة كمدفوعة نقداً!",
+    "RATING_SUBMITTED": "تم إرسال التقييم! شكراً لك.",
+    "RATING_SUBMIT_FAILED": "فشل إرسال التقييم.",
+    "PROFILE_LOAD_FAILED": "فشل تحميل الملف الشخصي.",
+    "PROFILE_UPDATED": "تم تحديث الملف الشخصي بنجاح!",
+    "PROFILE_SAVE_FAILED": "فشل حفظ الملف الشخصي. يرجى المحاولة مرة أخرى.",
+    "TRANSACTION_HISTORY_LOAD_FAILED": "فشل تحميل سجل المعاملات.",
+    "EARNINGS_LOAD_FAILED": "فشل تحميل بيانات الأرباح.",
+    "PAYOUT_INITIATED_SANDBOX": "تم بدء عملية السحب! (وضع تجريبي)",
+    "WITHDRAW_FAILED": "فشل بدء عملية السحب. يرجى المحاولة مرة أخرى."
   },
-
   "COMMON": {
     "LOADING": "جارٍ التحميل...",
     "SAVE": "حفظ",
@@ -237,6 +311,14 @@
     "OR": "أو",
     "CURRENCY": "جنيه",
     "STARS": "نجوم",
-    "RATING_OF": "من 5"
+    "RATING_OF": "من 5",
+    "GENERIC_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "GO_HOME": "الذهاب للرئيسية",
+    "TIME_AGO": {
+      "JUST_NOW": "الآن",
+      "MINUTES": "منذ {{count}} دقيقة",
+      "HOURS": "منذ {{count}} ساعة",
+      "DAYS": "منذ {{count}} يوم"
+    }
   }
 }

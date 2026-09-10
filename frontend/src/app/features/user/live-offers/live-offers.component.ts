@@ -68,7 +68,7 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
         this.loading.set(false);
       },
       error: () => {
-        this.notify.error('Failed to load request details.');
+        this.notify.error('TOAST.REQUEST_LOAD_FAILED');
         this.loading.set(false);
       },
     });
@@ -92,7 +92,7 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
             const exists = list.some(o => o.id === offer.id);
             return exists ? list : [...list, offer];
           });
-          this.notify.info(`New offer received from ${offer.workerName}!`);
+          this.notify.info('TOAST.NEW_OFFER', { name: offer.workerName });
         }
       })
     );
@@ -114,10 +114,10 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.chosenOfferId.set(offerId);
         const chosen = this.offers().find(o => o.id === offerId);
-        this.notify.success(`You've hired ${chosen?.workerName ?? 'the handyman'}!`);
+        this.notify.success('OFFERS.CHOSEN_CONFIRM', { name: chosen?.workerName ?? 'the handyman' });
         setTimeout(() => this.router.navigate(['/user/job', res.jobId]), 1200);
       },
-      error: () => this.notify.error('Failed to choose this handyman. Please try again.'),
+      error: () => this.notify.error('TOAST.CHOOSE_OFFER_FAILED'),
     });
   }
 

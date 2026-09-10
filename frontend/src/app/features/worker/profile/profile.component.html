@@ -29,7 +29,7 @@
         <div class="profile__avatar">{{ initials() }}</div>
         <div class="profile__identity">
           <h1 class="profile__name">{{ worker()!.username }}</h1>
-          <span class="profile__worktype-badge">{{ workTypeLabel() }}</span>
+          <span class="profile__worktype-badge">{{ workTypeKey() | translate }}</span>
         </div>
         @if (!editMode()) {
           <button class="btn-outline-sm profile__edit-btn" (click)="enterEditMode()" id="edit-profile-btn">

@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription, finalize } from 'rxjs';
 
 import { JobRequest } from '../../../core/models/models';
-import { WorkType, WorkTypeLabel } from '../../../core/models/enums';
+import { WorkType } from '../../../core/models/enums';
 import { RequestService } from '../../../core/services/request.service';
 import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -31,8 +31,6 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
   private requestSvc = inject(RequestService);
   private ws         = inject(WebSocketService);
   private notify     = inject(NotificationService);
-
-  readonly WorkTypeLabel = WorkTypeLabel;
 
   readonly request      = signal<JobRequest | null>(null);
   readonly loading      = signal(true);
@@ -53,7 +51,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       this.ws.on<{ requestId: string }>('request_closed').subscribe((e) => {
         if (e.requestId === this.requestId) {
           this.closed.set(true);
-          this.notify.warning('This request was closed — another handyman was chosen.');
+          this.notify.warning('WORKER.REQUEST_CLOSED_WARNING');
         }
       })
     );
@@ -72,7 +70,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
         if (r.status === 'closed') this.closed.set(true);
       },
       error: () => {
-        this.notify.error('Failed to load request details.');
+        this.notify.error('TOAST.REQUEST_LOAD_FAILED');
         this.router.navigate(['/worker/feed']);
       },
     });

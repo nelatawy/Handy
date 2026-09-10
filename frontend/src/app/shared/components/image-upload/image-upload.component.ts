@@ -72,7 +72,7 @@ const MAX_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
                 class="preview-item__remove"
                 (click)="remove(img)"
                 type="button"
-                aria-label="Remove image"
+                [attr.aria-label]="'REQUEST.REMOVE_IMAGE' | translate"
               >✕</button>
             </div>
           }
@@ -120,7 +120,7 @@ export class ImageUploadComponent {
 
     const toAdd = files.slice(0, remaining).filter(f => {
       if (f.size > MAX_SIZE_BYTES) {
-        this.notify.error(`${f.name} is too large (max 20 MB)`);
+        this.notify.error('REQUEST.ERRORS.IMAGE_TOO_LARGE_NAMED', { name: f.name });
         return false;
       }
       return true;

@@ -50,7 +50,7 @@
 
         <!-- Server error -->
         @if (serverError()) {
-        <div class="server-error">{{ serverError() }}</div>
+        <div class="server-error">{{ serverError() | translate }}</div>
         }
 
         <!-- Submit -->

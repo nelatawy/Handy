@@ -66,7 +66,7 @@ export class MakeRequestComponent {
   onAiSuggest(): void {
     const description = this.desc.value?.trim();
     if (!description) {
-      this.notify.warning('Please enter a description first to get AI suggestions.');
+      this.notify.warning('REQUEST.AI_SUGGEST_NEEDS_DESCRIPTION');
       return;
     }
     this.aiLoading.set(true);
@@ -75,7 +75,7 @@ export class MakeRequestComponent {
       finalize(() => this.aiLoading.set(false)),
     ).subscribe({
       next:  (res) => this.aiSuggestion.set(res),
-      error: ()    => this.notify.error('AI suggestion failed. Please try again.'),
+      error: ()    => this.notify.error('TOAST.AI_SUGGEST_FAILED'),
     });
   }
 
@@ -104,10 +104,10 @@ export class MakeRequestComponent {
       finalize(() => this.submitting.set(false)),
     ).subscribe({
       next: (res) => {
-        this.notify.success('Request posted! Waiting for offers...');
+        this.notify.success('TOAST.REQUEST_POSTED');
         this.router.navigate(['/user/request', res.requestId, 'offers']);
       },
-      error: () => this.notify.error('Failed to post request. Please try again.'),
+      error: () => this.notify.error('TOAST.REQUEST_POST_FAILED'),
     });
   }
 

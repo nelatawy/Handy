@@ -4,9 +4,9 @@
   <div class="home-hero">
     <div class="home-hero__text">
       <h1 class="home-hero__title">
-        Hello, <span class="home-hero__name">{{ auth.username() ?? 'there' }}</span> 👋
+        {{ 'HOME.GREETING' | translate }} <span class="home-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span> 👋
       </h1>
-      <p class="home-hero__sub">What do you need fixed today?</p>
+      <p class="home-hero__sub">{{ 'HOME.USER_SUB' | translate }}</p>
     </div>
     <div class="home-hero__illustration">🔧</div>
   </div>
@@ -16,7 +16,7 @@
     <div class="skeleton skeleton--card"></div>
   } @else if (activeJob()) {
     <div class="active-job-widget" (click)="goActiveJob()" role="button" tabindex="0" (keydown.enter)="goActiveJob()">
-      <div class="active-job-widget__label">Active Job</div>
+      <div class="active-job-widget__label">{{ 'NAV.ACTIVE_JOB' | translate }}</div>
       <div class="active-job-widget__worker">
         <div class="active-job-widget__avatar">{{ activeJob()!.workerName[0].toUpperCase() }}</div>
         <div>
@@ -40,8 +40,8 @@
   >
     <span class="cta-btn__icon">+</span>
     <div>
-      <div class="cta-btn__title">Make a Request</div>
-      <div class="cta-btn__sub">Describe what needs fixing and get offers from handymen</div>
+      <div class="cta-btn__title">{{ 'HOME.MAKE_REQUEST_CTA' | translate }}</div>
+      <div class="cta-btn__sub">{{ 'HOME.MAKE_REQUEST_CTA_SUB' | translate }}</div>
     </div>
     <span class="cta-btn__arrow">→</span>
   </button>

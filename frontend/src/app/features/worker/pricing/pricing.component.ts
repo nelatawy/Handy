@@ -61,7 +61,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.ws.on<{ jobId: string }>('offer_chosen').subscribe((e) => {
         this.state.set('chosen');
-        this.notify.success("Congratulations! You've been selected!");
+        this.notify.success('WORKER.YOU_WERE_CHOSEN_TOAST');
         setTimeout(() => this.router.navigate(['/worker/job', e.jobId]), 1800);
       })
     );
@@ -71,7 +71,7 @@ export class PricingComponent implements OnInit, OnDestroy {
       this.ws.on<{ requestId: string }>('offer_rejected').subscribe((e) => {
         if (e.requestId === this.requestId) {
           this.state.set('rejected');
-          this.notify.warning('The customer chose another handyman for this request.');
+          this.notify.warning('WORKER.OFFER_REJECTED_TOAST');
         }
       })
     );
@@ -96,7 +96,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     ).subscribe({
       next:  (r) => this.request.set(r),
       error: () => {
-        this.notify.error('Failed to load request.');
+        this.notify.error('TOAST.REQUEST_LOAD_FAILED');
         this.router.navigate(['/worker/feed']);
       },
     });
@@ -118,9 +118,9 @@ export class PricingComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.offerId = res.offerId;
         this.state.set('waiting');
-        this.notify.info('Offer submitted! Waiting for customer response...');
+        this.notify.info('WORKER.OFFER_SUBMITTED_TOAST');
       },
-      error: () => this.notify.error('Failed to submit offer. Please try again.'),
+      error: () => this.notify.error('TOAST.OFFER_SUBMIT_FAILED'),
     });
   }
 

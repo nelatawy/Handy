@@ -72,7 +72,7 @@ export class WorkerActiveJobComponent implements OnInit, OnDestroy {
     ).subscribe({
       next:  (j) => this.job.set(j),
       error: ()  => {
-        this.notify.error('Failed to load job.');
+        this.notify.error('TOAST.JOB_LOAD_FAILED');
         this.router.navigate(['/worker/home']);
       },
     });
@@ -87,10 +87,10 @@ export class WorkerActiveJobComponent implements OnInit, OnDestroy {
         this.job.set({ ...j, status: e.status });
 
         if (e.status === JobStatus.Started) {
-          this.notify.info('The customer has marked the job as started.');
+          this.notify.info('WORKER.JOB_STARTED_BY_CUSTOMER');
         }
         if (e.status === JobStatus.Finished) {
-          this.notify.success('Job completed! Your earnings will be credited shortly.');
+          this.notify.success('WORKER.JOB_FINISHED_EARNINGS_CREDITED');
         }
       })
     );
@@ -124,9 +124,9 @@ export class WorkerActiveJobComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (updated) => {
         this.job.set({ ...updated, canceledBy: 'worker' });
-        this.notify.info('Job canceled. The customer has been notified.');
+        this.notify.info('WORKER.JOB_CANCELED_CUSTOMER_NOTIFIED');
       },
-      error: () => this.notify.error('Failed to cancel. Please try again.'),
+      error: () => this.notify.error('TOAST.JOB_CANCEL_FAILED'),
     });
   }
 
