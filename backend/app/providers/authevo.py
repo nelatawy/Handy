@@ -14,6 +14,15 @@ from flask import current_app
 logger = logging.getLogger(__name__)
 
 
+class ChannelNotLinkedError(Exception):
+    """Raised when AuthEvo returns 409 CHANNEL_NOT_LINKED — WhatsApp can't reach the
+    number and Telegram isn't linked yet. Callers should surface telegram_bot_url."""
+
+    def __init__(self, telegram_bot_url: str, message: str = "Channel not linked"):
+        super().__init__(message)
+        self.telegram_bot_url = telegram_bot_url
+
+
 @dataclass
 class OtpSendResult:
     channel: str  # 'whatsapp' | 'telegram'

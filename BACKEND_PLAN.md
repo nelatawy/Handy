@@ -149,24 +149,25 @@ backend/
 
 ## 4. Phase 2 — Auth & OTP
 
-- [ ] `POST /api/otp/send` — normalizes phone to E.164, calls AuthEvo, persists `otp_verifications` row. On AuthEvo `409 CHANNEL_NOT_LINKED`, returns **HTTP 200** with `channel: 'telegram'` + `telegramBotUrl` (per original backend prompt's "don't treat this as a hard failure" — the frontend's OTP component branches on `channel`, not on HTTP status)
-- [ ] `POST /api/otp/verify` — verifies via AuthEvo, marks the row verified. On first-ever successful verification for a phone number, fires `link_telegram` in the background and upserts `telegram_links` (idempotent)
-- [ ] `POST /api/auth/register` — role-conditional validation (worker requires `workType`, `bio`, `hasShop`, and `shopLocation` if `hasShop`); requires a verified, unexpired OTP row for the submitted phone; validates `country`/`governorate` against `app/data/geo_data.py`; hashes password; creates `users` (+ `worker_profiles` if worker) in one transaction; **returns `{ token, role }` on success** (auto-login, per frontend's resolved decision — the response shape in the frontend's own contract table said `{ message }`, which is stale; the decision log is authoritative)
-- [ ] `POST /api/auth/login` — `identifierType` (`username`|`phone`) + `identifier` + `password`; **no OTP step** (frontend resolved this as password-only); returns `{ token, role }`
-- [ ] Rate-limit `otp/send` per phone number to prevent AuthEvo abuse
+- [x] `POST /api/otp/send` — normalizes phone to E.164, calls AuthEvo, persists `otp_verifications` row. On AuthEvo `409 CHANNEL_NOT_LINKED`, returns **HTTP 200** with `channel: 'telegram'` + `telegramBotUrl` (per original backend prompt's "don't treat this as a hard failure" — the frontend's OTP component branches on `channel`, not on HTTP status). Wired via a `ChannelNotLinkedError` the provider can raise; mock mode never raises it (always succeeds over WhatsApp), so this branch only fires once live AuthEvo integration is implemented
+- [x] `POST /api/otp/verify` — verifies via AuthEvo, marks the row verified. On first-ever successful verification for a phone number, fires `link_telegram` in the background and upserts `telegram_links` (idempotent)
+- [x] `POST /api/auth/register` — role-conditional validation (worker requires `workType`, `bio`, `hasShop`, and `shopLocation` if `hasShop`); requires a verified, unexpired OTP row for the submitted phone; validates `country`/`governorate` against `app/data/geo_data.py`; hashes password; creates `users` (+ `worker_profiles` if worker) in one transaction; **returns `{ token, role }` on success** (auto-login, per frontend's resolved decision — the response shape in the frontend's own contract table said `{ message }`, which is stale; the decision log is authoritative)
+- [x] `POST /api/auth/login` — `identifierType` (`username`|`phone`) + `identifier` + `password`; **no OTP step** (frontend resolved this as password-only); returns `{ token, role }`
+- [x] Rate-limit `otp/send` per phone number to prevent AuthEvo abuse — exponential backoff (`otp_rate_limits` table): 30s, 60s, 120s, ... doubling per send, capped at 1 day; resets to unlocked on successful verification. Returns `429` with `retryAfter` (seconds) + a `Retry-After` header while locked
 
 ---
 
 ## 5. Phase 3 — Requests & Offers (Realtime)
 
-- [ ] `POST /api/requests` — `description` (non-empty), `workType`, `images[]` (URLs already uploaded to Supabase Storage by the client, max 5 — validated server-side too, not just trusted from the frontend). Creates `requests` + `request_images` rows, status `open`. Emits `new_request` to the `worktype:{type}` room
-- [ ] `POST /api/ai-suggest` — calls Gemini, returns `{ suggestedDescription, recommendedWorkType }` (`recommendedWorkType` guaranteed to be a valid enum value — validate/clamp Gemini's output before returning it)
-- [ ] `GET /api/requests/:id/offers` — current offers for reconnect/initial load
-- [ ] `GET /api/workers/me/requests` — open requests matching the worker's `work_type`
-- [ ] `POST /api/requests/:id/offer` — worker submits `price`; server computes `price * 1.05` for display, **never trusts a client-sent total**; creates `offers` row (`pending`); emits `new_offer` to `user:{request.user_id}`. **No separate `/accept` call** — "Accept" on the frontend is a client-side navigation to the pricing screen only (see §11.4); only `/offer` and `/decline` touch the backend
-- [ ] `POST /api/requests/:id/decline` — marks this worker out of consideration for the request (so it drops from their own feed on refresh)
-- [ ] `POST /api/requests/:id/choose` — body `{ offerId }` (**not** `workerId` — see §11.2). Marks the chosen offer `chosen`, all sibling offers `rejected`, request → `offer_selected`, creates `jobs` row (`pending`). Emits `offer_chosen` to the winning worker, `offer_rejected` to the losing ones, `request_closed` to the rest of the `worktype` room. Returns `{ jobId }`
-- [ ] `POST /api/requests/:id/cancel` — only while `open` (no offer chosen yet); marks `cancelled`
+- [x] `POST /api/requests` — `description` (non-empty), `workType`, `images[]` (URLs already uploaded to Supabase Storage by the client, max 5 — validated server-side too, not just trusted from the frontend). Creates `requests` + `request_images` rows, status `open`. Emits `new_request` to the `worktype:{type}` room
+- [x] `POST /api/ai-suggest` — calls Gemini, returns `{ suggestedDescription, recommendedWorkType }` (`recommendedWorkType` guaranteed to be a valid enum value — validate/clamp Gemini's output before returning it)
+- [x] `GET /api/requests/:id/offers` — current offers for reconnect/initial load
+- [x] `GET /api/workers/me/requests` — open requests matching the worker's `work_type`
+- [x] `POST /api/requests/:id/offer` — worker submits `price`; server computes `price * 1.05` for display, **never trusts a client-sent total**; creates `offers` row (`pending`); emits `new_offer` to `user:{request.user_id}`. **No separate `/accept` call** — "Accept" on the frontend is a client-side navigation to the pricing screen only (see §11.4); only `/offer` and `/decline` touch the backend
+- [x] `POST /api/requests/:id/decline` — marks this worker out of consideration for the request (so it drops from their own feed on refresh). Implemented as a `rejected`-status `offers` row (price 0) so the `(request_id, worker_id)` unique constraint also prevents double-responding
+- [x] `POST /api/requests/:id/choose` — body `{ offerId }` (**not** `workerId` — see §11.2). Marks the chosen offer `chosen`, all sibling offers `rejected`, request → `offer_selected`, creates `jobs` row (`pending`). Emits `offer_chosen` to the winning worker, `offer_rejected` to the losing ones, `request_closed` to the rest of the `worktype` room. Returns `{ jobId }`
+- [x] `POST /api/requests/:id/cancel` — only while `open` (no offer chosen yet); marks `cancelled`
+- [x] `GET /api/requests/mine` — added alongside the above (listed in §9 but missing its own checklist line); returns the caller's own requests
 
 ---
 
@@ -300,7 +301,7 @@ Concrete conflicts found between the original backend prompt / app description a
 | 4 | Paymob return/callback URL — does it land on a frontend route or a backend route before redirecting into the app? | 🟡 Open | Assumed: a frontend route (e.g. `/payment/callback`) handles the visual redirect; actual state confirmation still comes from the **webhook**, not the redirect itself, so this is UX-only and doesn't block backend work |
 | 5 | Socket auth — JWT passed via Socket.IO `auth` payload on connect vs. a query string param? | ✅ Resolved | **`auth` payload** — confirmed by `WebSocketService` in Phase 1: `io(wsUrl, { auth: { token: jwt } })`. Backend connect handler reads `request.environ['HTTP_AUTHORIZATION']` or the Socket.IO `auth` dict accordingly |
 | 6 | Server-side enforcement of the frontend's "max 5 images / 20MB per file" rule — hard reject, or just cap what's stored? | ✅ Resolved (this plan) | Hard reject requests with more than 5 image URLs; file-size itself is a Supabase Storage bucket policy concern (client-side upload), not something this backend can inspect after the fact |
-| 7 | Rate at which OTP re-sends are throttled | 🟡 Open | Proposed default: 1 send per phone per 60s, 5 per phone per day — needs product confirmation |
+| 7 | Rate at which OTP re-sends are throttled | ✅ Resolved (this plan) | Exponential backoff per phone number instead of a flat window: 30s → 60s → 120s → ... doubling on each send, capped at 24h; resets on successful verification |
 
 ---
 

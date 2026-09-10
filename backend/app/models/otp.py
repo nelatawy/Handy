@@ -20,6 +20,25 @@ class OtpVerification(db.Model):
     )
 
 
+class OtpRateLimit(db.Model):
+    """Per-phone exponential backoff state for `POST /api/otp/send` (BACKEND_PLAN.md §12.7)."""
+
+    __tablename__ = "otp_rate_limits"
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    phone_number = db.Column(db.String(20), unique=True, nullable=False)
+
+    attempt_count = db.Column(db.Integer, default=0, nullable=False)
+    last_sent_at = db.Column(db.DateTime, nullable=True)
+    locked_until = db.Column(db.DateTime, nullable=True)
+
+    updated_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+
 class TelegramLink(db.Model):
     __tablename__ = "telegram_links"
 
