@@ -30,6 +30,7 @@
 
             <!-- Right controls -->
             <div class="navbar__actions">
+                <app-theme-switcher />
                 <app-language-switcher />
                 <button class="btn-ghost btn-sm navbar__logout" (click)="auth.logout()">
                     {{ 'NAV.LOGOUT' | translate }}

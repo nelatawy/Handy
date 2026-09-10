@@ -2,6 +2,6 @@ export const environment = {
   production: true,
   apiUrl: '/api',
   wsUrl: '',              // fill in production WebSocket URL
-  supabaseBucketUrl: '',  // fill in from Supabase project settings
-  supabaseAnonKey: '',    // fill in from Supabase project settings
+  supabaseBucketUrl: 'https://ntbbqphkhdpawlkwtsfo.supabase.co',
+  supabaseAnonKey: 'sb_publishable_G-PvsgIQr98NP5HCFvaHJg_SFup608c',
 };

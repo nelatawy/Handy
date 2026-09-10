@@ -15,17 +15,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
   border-radius: v.$radius-xl;
   padding: 2rem;
+  box-shadow: v.$shadow-sm;
 
   &__text { flex: 1; }
 
   &__title {
     font-size: 1.6rem;
     font-weight: 700;
-    color: v.$color-white;
+    color: v.$color-text-primary;
     margin: 0 0 0.5rem;
     line-height: 1.2;
   }
@@ -38,7 +39,7 @@
   }
 
   &__sub {
-    color: rgba(255, 255, 255, 0.55);
+    color: v.$color-text-secondary;
     font-size: 0.95rem;
     margin: 0;
   }
@@ -58,16 +59,20 @@
 
 // ── Active Job Widget ─────────────────────────────────────────────────────────
 .active-job-widget {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(99, 102, 241, 0.06));
-  border: 1.5px solid rgba(14, 165, 233, 0.35);
+  background: v.$color-surface-2;
+  border: 1.5px solid v.$color-primary-200;
   border-radius: v.$radius-xl;
   padding: 1.25rem 1.5rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 
+  .theme-dark & {
+    border-color: rgba(14, 165, 233, 0.35);
+  }
+
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.2);
+    box-shadow: v.$shadow-md;
   }
 
   &__label {
@@ -93,14 +98,14 @@
 
   &__type {
     font-weight: 600;
-    color: v.$color-white;
+    color: v.$color-text-primary;
     font-size: 1rem;
     margin-bottom: 0.25rem;
   }
 
   &__desc {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.55);
+    color: v.$color-text-secondary;
   }
 
   &__footer {
@@ -117,7 +122,7 @@
   }
 
   &__arrow {
-    color: rgba(255, 255, 255, 0.4);
+    color: v.$color-text-muted;
     font-size: 1.2rem;
   }
 }
@@ -131,7 +136,7 @@
   border: none;
   border-radius: v.$radius-xl;
   padding: 1.25rem 1.5rem;
-  color: v.$color-white;
+  color: v.$color-white; // Keep CTA text white since background is always vibrant blue/indigo
   cursor: pointer;
   text-align: left;
   width: 100%;
@@ -161,7 +166,7 @@
 
   &__sub {
     font-size: 0.8rem;
-    opacity: 0.75;
+    opacity: 0.9;
     margin-top: 0.2rem;
   }
 
@@ -188,22 +193,23 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
   border-radius: v.$radius-lg;
   padding: 1rem 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: v.$color-text-secondary;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: v.$color-surface-2;
+    border-color: v.$color-primary-300;
     transform: translateY(-1px);
+    color: v.$color-primary-600;
   }
 
   &:disabled {
-    opacity: 0.35;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
@@ -221,9 +227,9 @@
 .skeleton {
   border-radius: v.$radius-xl;
   background: linear-gradient(90deg,
-    rgba(255,255,255,0.04) 25%,
-    rgba(255,255,255,0.08) 50%,
-    rgba(255,255,255,0.04) 75%
+    v.$color-surface-2 25%,
+    v.$color-border 50%,
+    v.$color-surface-2 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

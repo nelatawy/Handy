@@ -44,20 +44,20 @@ $color-online:      $color-primary-600;
 $color-online-light: $color-primary-100;
 
 // --- Background ---
-$color-bg:          $color-gray-50;
-$color-surface:     $color-white;
-$color-surface-2:   $color-gray-100;
+$color-bg:          var(--color-bg);
+$color-surface:     var(--color-surface);
+$color-surface-2:   var(--color-surface-2);
 
 // --- Text ---
-$color-text-primary:   $color-gray-900;
-$color-text-secondary: $color-gray-600;
-$color-text-muted:     $color-gray-400;
-$color-text-inverse:   $color-white;
-$color-text-link:      $color-primary-600;
+$color-text-primary:   var(--color-text-primary);
+$color-text-secondary: var(--color-text-secondary);
+$color-text-muted:     var(--color-text-muted);
+$color-text-inverse:   var(--color-text-inverse);
+$color-text-link:      var(--color-text-link);
 
 // --- Border ---
-$color-border:      $color-gray-200;
-$color-border-focus: $color-primary-500;
+$color-border:       var(--color-border);
+$color-border-focus: var(--color-border-focus);
 
 // --- Spacing scale (4px base) ---
 $space-1:  0.25rem;   //  4px

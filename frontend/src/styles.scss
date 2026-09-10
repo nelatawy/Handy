@@ -17,11 +17,36 @@
 // ============================================================
 
 :root {
-  // CSS custom properties (useful for JS integration)
+  /* Layout variables */
   --color-primary: #{v.$color-primary-500};
-  --color-bg:      #{v.$color-bg};
   --navbar-height: #{v.$navbar-height};
   --container-max: #{v.$container-max};
+
+  /* Light Theme */
+  --color-bg:            #{v.$color-gray-50};
+  --color-surface:       #{v.$color-white};
+  --color-surface-2:     #{v.$color-gray-100};
+  --color-text-primary:  #{v.$color-gray-900};
+  --color-text-secondary:#{v.$color-gray-600};
+  --color-text-muted:    #{v.$color-gray-400};
+  --color-text-inverse:  #{v.$color-white};
+  --color-text-link:     #{v.$color-primary-600};
+  --color-border:        #{v.$color-gray-200};
+  --color-border-focus:  #{v.$color-primary-500};
+}
+
+:root.theme-dark {
+  /* Dark Theme */
+  --color-bg:            #{v.$color-gray-900}; /* #0f172a */
+  --color-surface:       #{v.$color-gray-800}; /* #1e293b */
+  --color-surface-2:     #{v.$color-gray-700}; /* #334155 */
+  --color-text-primary:  #{v.$color-gray-50};  /* #f8fafc */
+  --color-text-secondary:#{v.$color-gray-300}; /* #cbd5e1 */
+  --color-text-muted:    #{v.$color-gray-500}; /* #64748b */
+  --color-text-inverse:  #{v.$color-gray-900}; /* #0f172a */
+  --color-text-link:     #{v.$color-primary-400};
+  --color-border:        rgba(255, 255, 255, 0.1);
+  --color-border-focus:  #{v.$color-primary-400};
 }
 
 // Smooth page transitions

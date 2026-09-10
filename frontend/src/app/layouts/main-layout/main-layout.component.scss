@@ -15,7 +15,7 @@
 
 // ── Navbar ─────────────────────────────────────────────────────
 .navbar {
-  background: rgba(255, 255, 255, 0.9);
+  background: v.$color-surface;
   backdrop-filter: blur(12px);
   border-bottom: 1px solid v.$color-border;
   position: sticky;
@@ -62,13 +62,13 @@
     transition: v.$transition-fast;
 
     &:hover {
-      background: v.$color-primary-50;
+      background: v.$color-surface-2;
       color: v.$color-primary-600;
       text-decoration: none;
     }
 
     &--active {
-      background: v.$color-primary-50;
+      background: v.$color-surface-2;
       color: v.$color-primary-600;
       font-weight: v.$font-weight-semibold;
     }
@@ -83,7 +83,7 @@
   &__logout {
     color: v.$color-text-secondary;
     font-size: v.$font-size-sm;
-    &:hover { color: v.$color-danger; background: v.$color-danger-light; }
+    &:hover { color: v.$color-danger; background: v.$color-surface-2; }
   }
 
   &__hamburger {
@@ -105,11 +105,11 @@
       transition: v.$transition-fast;
     }
 
-    &:hover { background: v.$color-gray-100; }
+    &:hover { background: v.$color-surface-2; }
   }
 
   &__mobile-nav {
-    background: v.$color-white;
+    background: v.$color-surface;
     border-top: 1px solid v.$color-border;
     padding: v.$space-4;
     display: flex;
@@ -137,7 +137,7 @@
     width: 100%;
     transition: v.$transition-fast;
 
-    &:hover { background: v.$color-primary-50; color: v.$color-primary-600; }
+    &:hover { background: v.$color-surface-2; color: v.$color-primary-600; }
   }
 
   &__mobile-logout {
@@ -145,6 +145,6 @@
     margin-top: v.$space-2;
     border-top: 1px solid v.$color-border;
     padding-top: v.$space-3;
-    &:hover { background: v.$color-danger-light; }
+    &:hover { background: v.$color-surface-2; }
   }
 }

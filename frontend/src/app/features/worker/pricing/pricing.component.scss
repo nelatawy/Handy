@@ -14,8 +14,8 @@
 
 // ── Main pricing card ─────────────────────────────────────────────────────────
 .pricing-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
   border-radius: v.$radius-xl;
   padding: 2rem;
   display: flex;
@@ -32,13 +32,13 @@
   &__title {
     font-size: 1.4rem;
     font-weight: 700;
-    color: v.$color-white;
+    color: v.$color-text-primary;
     margin: 0 0 0.5rem;
   }
 
   &__sub {
     font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: v.$color-text-secondary;
     margin: 0;
     line-height: 1.5;
   }
@@ -46,26 +46,32 @@
 
 // ── Request summary snippet ───────────────────────────────────────────────────
 .request-summary {
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: v.$color-surface-2;
+  border: 1px solid v.$color-border;
   border-radius: v.$radius-lg;
   padding: 0.875rem 1rem;
 
   &__type {
     display: inline-block;
-    background: rgba(14, 165, 233, 0.15);
-    color: v.$color-primary-500;
+    background: v.$color-primary-50;
+    color: v.$color-primary-600;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 0.2rem 0.55rem;
     border-radius: 999px;
-    border: 1px solid rgba(14, 165, 233, 0.3);
+    border: 1px solid v.$color-primary-200;
     margin-bottom: 0.5rem;
+
+    .theme-dark & {
+      background: rgba(14, 165, 233, 0.15);
+      border-color: rgba(14, 165, 233, 0.3);
+      color: v.$color-primary-400;
+    }
   }
 
   &__desc {
     font-size: 0.87rem;
-    color: rgba(255, 255, 255, 0.65);
+    color: v.$color-text-secondary;
     margin: 0;
     line-height: 1.5;
   }
@@ -80,21 +86,21 @@
   &__label {
     font-size: 0.82rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
+    color: v.$color-text-primary;
   }
 
   &__field {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    background: v.$color-surface;
+    border: 1.5px solid v.$color-border;
     border-radius: v.$radius-lg;
     overflow: hidden;
     transition: border-color 0.2s;
 
     &:focus-within {
       border-color: v.$color-primary-500;
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+      box-shadow: v.$shadow-glow;
     }
   }
 
@@ -106,10 +112,10 @@
     padding: 0.875rem 1rem;
     font-size: 1.2rem;
     font-weight: 600;
-    color: v.$color-white;
+    color: v.$color-text-primary;
     font-family: Inter, system-ui, sans-serif;
 
-    &::placeholder { color: rgba(255, 255, 255, 0.25); font-weight: 400; font-size: 0.9rem; }
+    &::placeholder { color: v.$color-text-muted; font-weight: 400; font-size: 0.9rem; }
 
     // Hide native number spinners
     &::-webkit-outer-spin-button,
@@ -121,8 +127,8 @@
     padding: 0 1rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.4);
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    color: v.$color-text-secondary;
+    border-left: 1px solid v.$color-border;
   }
 }
 
@@ -142,7 +148,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.65);
+    color: v.$color-text-secondary;
 
     &--total {
       font-size: 1rem;
@@ -150,24 +156,24 @@
     }
   }
 
-  &__value { font-weight: 500; color: rgba(255, 255, 255, 0.85); }
-  &__value.fee { color: rgba(255, 255, 255, 0.45); }
+  &__value { font-weight: 500; color: v.$color-text-primary; }
+  &__value.fee { color: v.$color-text-muted; }
 
   &__divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.08);
+    background: v.$color-border;
     margin: 0.25rem 0;
   }
 
   &__total {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #86efac;
+    color: v.$color-success;
   }
 
   &__hint {
     font-size: 0.72rem;
-    color: rgba(34, 197, 94, 0.6);
+    color: rgba(34, 197, 94, 0.8);
     margin: 0.25rem 0 0;
     text-align: right;
   }
@@ -214,13 +220,13 @@
   &__title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: v.$color-white;
+    color: v.$color-text-primary;
     margin: 0;
   }
 
   &__sub {
     font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: v.$color-text-secondary;
     margin: 0;
     max-width: 320px;
   }
@@ -262,8 +268,8 @@
 
 // ── Offer summary (in waiting state) ─────────────────────────────────────────
 .offer-summary {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
   border-radius: v.$radius-lg;
   padding: 0.875rem 1.25rem;
   width: 100%;
@@ -276,9 +282,9 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: v.$color-text-secondary;
 
-    strong { color: v.$color-white; }
+    strong { color: v.$color-text-primary; }
   }
 }
 
@@ -286,8 +292,8 @@
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-top-color: v.$color-white;
+  border: 2px solid v.$color-border;
+  border-top-color: v.$color-text-primary;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
@@ -307,9 +313,9 @@
 .skeleton {
   border-radius: v.$radius-xl;
   background: linear-gradient(90deg,
-    rgba(255,255,255,0.04) 25%,
-    rgba(255,255,255,0.08) 50%,
-    rgba(255,255,255,0.04) 75%
+    v.$color-surface-2 25%,
+    v.$color-border 50%,
+    v.$color-surface-2 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
