@@ -4,10 +4,20 @@
 
 /** Work type a handyman specializes in */
 export enum WorkType {
-  Plumber     = 'plumber',
-  Electrician = 'electrician',
-  Carpenter   = 'carpenter',
-  IT          = 'it',
+  Plumber         = 'plumber',
+  Electrician     = 'electrician',
+  Carpenter       = 'carpenter',
+  IT              = 'it',
+  ACTechnician    = 'ac_technician',
+  Painter         = 'painter',
+  Alumetal        = 'alumetal',
+  ApplianceRepair = 'appliance_repair',
+  Satellite       = 'satellite',
+  Tiler           = 'tiler',
+  Welder          = 'welder',
+  Cleaner         = 'cleaner',
+  PestControl     = 'pest_control',
+  CarMechanic     = 'car_mechanic',
 }
 
 /**

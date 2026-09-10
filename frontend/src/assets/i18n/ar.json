@@ -85,7 +85,17 @@
     "plumber": "سباك",
     "electrician": "كهربائي",
     "carpenter": "نجار",
-    "it": "تقنية معلومات"
+    "it": "تقنية معلومات",
+    "ac_technician": "فني تكييف",
+    "painter": "نقاش",
+    "alumetal": "فني ألوميتال",
+    "appliance_repair": "صيانة أجهزة",
+    "satellite": "فني دش",
+    "tiler": "مبلط / فني سيراميك",
+    "welder": "حداد",
+    "cleaner": "عامل نظافة",
+    "pest_control": "مكافحة حشرات",
+    "car_mechanic": "ميكانيكي سيارات"
   },
   "JOB_STATUS": {
     "pending": "قيد الانتظار",

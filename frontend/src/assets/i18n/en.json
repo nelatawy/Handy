@@ -85,7 +85,17 @@
     "plumber": "Plumber",
     "electrician": "Electrician",
     "carpenter": "Carpenter",
-    "it": "IT Technician"
+    "it": "IT Technician",
+    "ac_technician": "AC Technician",
+    "painter": "Painter",
+    "alumetal": "Alumetal Technician",
+    "appliance_repair": "Appliance Repair",
+    "satellite": "Satellite Technician",
+    "tiler": "Tiler / Flooring",
+    "welder": "Welder / Blacksmith",
+    "cleaner": "Cleaning Services",
+    "pest_control": "Pest Control",
+    "car_mechanic": "Car Mechanic / Towing"
   },
   "JOB_STATUS": {
     "pending": "Pending",

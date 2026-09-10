@@ -81,10 +81,20 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
 
   getWorkTypeEmoji(wt: WorkType): string {
     const map: Record<WorkType, string> = {
-      [WorkType.Plumber]:     '🔩',
-      [WorkType.Electrician]: '⚡',
-      [WorkType.Carpenter]:   '🪚',
-      [WorkType.IT]:          '💻',
+      [WorkType.Plumber]:         '🔩',
+      [WorkType.Electrician]:     '⚡',
+      [WorkType.Carpenter]:       '🪚',
+      [WorkType.IT]:              '💻',
+      [WorkType.ACTechnician]:    '❄️',
+      [WorkType.Painter]:         '🖌️',
+      [WorkType.Alumetal]:        '🪟',
+      [WorkType.ApplianceRepair]: '🔌',
+      [WorkType.Satellite]:       '📡',
+      [WorkType.Tiler]:           '🧱',
+      [WorkType.Welder]:          '🔥',
+      [WorkType.Cleaner]:         '🧹',
+      [WorkType.PestControl]:     '🐜',
+      [WorkType.CarMechanic]:     '🚗',
     };
     return map[wt] ?? '🔧';
   }
