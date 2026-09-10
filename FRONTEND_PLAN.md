@@ -419,16 +419,16 @@ Many components called `NotificationService` with hardcoded English literals, an
 | `job_canceled_by_worker` | Server → User | `{ jobId }` | Worker canceled the job — renders "The handyman canceled" messaging |
 | `payment_confirmed` | Server → User + Worker | `{ jobId, amount }` | Fired from Paymob webhook, immediately before `job_status_changed` → `finished` |
 
-### Service-only / unconfirmed endpoints
+### Service-only endpoints — now confirmed in backend
 
-The following endpoints are called in the frontend services but have **no matching row** in `BACKEND_PLAN.md §9`. The backend team must confirm or add them:
+The following endpoints were found in frontend services without a backend contract entry. All four have been **added to `BACKEND_PLAN.md` §7 and §9** in the same commit:
 
-| Method | Endpoint | Service | Notes |
-|--------|----------|---------|-------|
-| GET | `/api/jobs/:id` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | Single job fetch — likely needed but unlisted in backend contract |
-| GET | `/api/jobs/active` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | Current user's active job — unlisted; backend team must confirm URL and shape |
-| GET | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | Normal user self-profile — no backend endpoint defined for this |
-| PUT | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | Normal user profile edit — no backend endpoint defined for this |
+| Method | Endpoint | Service | Added to backend |
+|--------|----------|---------|-----------------|
+| GET | `/api/jobs/:id` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | ✅ Added — full `Job` response; accessible by user or worker |
+| GET | `/api/jobs/active` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | ✅ Added — role-aware; returns active job or `null` |
+| GET | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | ✅ Added — normal user's own profile; new `users/` blueprint |
+| PUT | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | ✅ Added — editable fields: `username?`, `country?`, `governorate?` |
 
 ### Service ↔ Contract discrepancy fix log (2026-09-10)
 

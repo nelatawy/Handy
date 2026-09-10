@@ -69,9 +69,10 @@ backend/
 │   │   ├── otp/                 # send, verify
 │   │   ├── requests/            # create, list offers, choose, cancel
 │   │   ├── offers/              # worker feed, accept-flow, offer, decline
-│   │   ├── jobs/                # status transitions, worker-cancel, payout
+│   │   ├── jobs/                # status transitions, worker-cancel, payout, get, active
 │   │   ├── payments/            # history, webhook
 │   │   ├── ratings/
+│   │   ├── users/               # GET/PUT /api/users/me (normal user self-profile)
 │   │   ├── workers/             # public + /me profile
 │   │   └── ai/                  # ai-suggest
 │   ├── providers/               # external-service adapters, all mockable
@@ -197,6 +198,10 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 - [ ] `GET /api/workers/:id` — public profile: name, workType, bio, shop info, `averageRating`, `ratingsCount`, `completedJobsCount`
 - [ ] `POST /api/jobs/:id/rate` — `stars` (1–5, required), `comment` (optional); only by the job's user, only once (`ratings.job_id` unique constraint), only after `status='finished'`. Recomputes `worker_profiles.average_rating`/`ratings_count` transactionally
 - [ ] `GET /api/workers/:id/ratings` — paginated ratings + summary
+- [ ] `GET /api/jobs/:id` — fetch a single job by ID. Response: full `Job` object (id, requestId, offerId, userId, workerId, workerName, workType, description, price, userPrice, status, paymentType?, canceledBy?, createdAt, updatedAt). Accessible by both the job's user and worker. **Added from reverse-audit: used by `job.service.ts` → `getJob()`**
+- [ ] `GET /api/jobs/active` — fetch the caller's currently active job (status `pending` or `started`). Response: single `Job` object or `null`. Role-aware: returns the job where `user_id=current` for users, `worker_id=current` for workers. **Added from reverse-audit: used by `job.service.ts` → `getActiveJob()`**
+- [ ] `GET /api/users/me` — authenticated normal user's own profile. Response: `{ id, username, phone, country, governorate, role, createdAt }`. **Added from reverse-audit: used by `profile.service.ts` → `getUserProfile()`**
+- [ ] `PUT /api/users/me` — update editable normal-user profile fields (`username?`, `country?`, `governorate?`). Phone changes excluded (require OTP re-verification). Response: `{ user }`. **Added from reverse-audit: used by `profile.service.ts` → `updateUserProfile()`**
 
 ---
 
@@ -230,17 +235,21 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 | POST | `/api/requests/:id/offer` | `{ price }` | `{ offerId, priceWithFee }` | Server computes the 5% fee |
 | POST | `/api/requests/:id/decline` | — | `{ success }` | |
 | POST | `/api/requests/:id/choose` | `{ offerId }` | `{ jobId }` | By offer, not worker id |
-| PATCH | `/api/jobs/:id/status` | `{ status, paymentType? }` | `{ job, paymentUrl? }` | User-only. `paymentUrl` present only for `finished`+`online` |
+| PATCH | `/api/jobs/:id/status` | `{ status: 'started'\|'finished'\|'canceled', paymentType?: 'online'\|'cash' }` | `{ job, paymentUrl? }` | User-only. `paymentType` required when `status='finished'`. `paymentUrl` present only for `finished`+`online` |
 | POST | `/api/jobs/:id/cancel` | — | `{ job }` | **Worker-only** — distinct from the PATCH above |
 | POST | `/api/webhooks/paymob` | Paymob payload | `200 OK` | HMAC-verified |
 | POST | `/api/jobs/:id/payout` | — | `{ payout }` | |
-| GET | `/api/payments/history` | — | `Transaction[]` | |
-| GET | `/api/workers/me/earnings` | — | `{ balance, transactions[] }` | |
+| GET | `/api/payments/history` | — | `Transaction[]` | Paginated; each item includes `jobId`, `amount`, `method` (`online`\|`cash`), `status` (`pending`\|`paid`\|`failed`), `createdAt` |
+| GET | `/api/workers/me/earnings` | — | `{ balance, transactions[] }` | Online jobs only; cash excluded |
+| GET | `/api/users/me` | — | `User` | Normal user's own profile. **New — reverse audit** |
+| PUT | `/api/users/me` | `{ username?, country?, governorate? }` | `{ user }` | Phone excluded (needs OTP). **New — reverse audit** |
 | GET | `/api/workers/me` | — | `Worker` | |
 | PUT | `/api/workers/me` | `{ bio?, hasShop?, shopLocation? }` | `{ worker }` | |
 | GET | `/api/workers/:id` | — | `Worker` (public) | |
-| POST | `/api/jobs/:id/rate` | `{ stars, comment? }` | `{ rating }` | Once per job |
-| GET | `/api/workers/:id/ratings` | pagination params | `{ ratings[], average, count }` | |
+| POST | `/api/jobs/:id/rate` | `{ stars, comment? }` | `{ rating }` | Once per job, user-only, after `finished` |
+| GET | `/api/workers/:id/ratings` | `page?` (query param, default 1) | `{ ratings[], average, count }` | |
+| GET | `/api/jobs/:id` | — | `Job` | Full job object. Accessible by job's user or worker. **New — reverse audit** |
+| GET | `/api/jobs/active` | — | `Job \| null` | Caller's active job (`pending` or `started`). Role-aware. **New — reverse audit** |
 
 ---
 
@@ -276,6 +285,7 @@ Concrete conflicts found between the original backend prompt / app description a
 8. **Login-time OTP.** Original backend prompt flagged this as an open decision ("could optionally be required again at login"). Frontend already resolved it: **password-only login, no OTP.** Adopted as final.
 9. **Missing endpoints entirely.** `GET/PUT /api/workers/me`, `GET /api/workers/me/earnings`, and `GET /api/payments/history` appear in the frontend's contract table but have no equivalent in the original backend prompt at all. Added in §7/§9.
 10. **JSON casing.** Neither source document addressed this head-on: the DB schema is snake_case throughout, but the frontend's entire contract table is camelCase. Without an explicit serialization layer (§1), every single endpoint would mismatch on day one. Added as a first-class architectural decision, not an afterthought.
+11. **Four endpoints missing from backend contract (reverse-audit).** A cross-check of the frontend's service layer against the backend §9 table surfaced four endpoints called in `job.service.ts` and `profile.service.ts` that had no backend entry: `GET /api/jobs/:id`, `GET /api/jobs/active`, `GET /api/users/me`, `PUT /api/users/me`. Added to §7 (Phase 5 checklist) and §9 above. The `users` blueprint must be added to the folder structure alongside the existing `workers` blueprint.
 
 ---
 
@@ -287,7 +297,7 @@ Concrete conflicts found between the original backend prompt / app description a
 | 2 | Should `country_prefix` remain a first-class column, or purely a derived/display value from `phone_number`? | ✅ Resolved (this plan) | Derived server-side from the E.164 number via `phonenumbers`; not accepted as separate client input |
 | 3 | Does the backend need to keep its own `geo_data.py` in sync with the frontend's `geo-data.ts` by hand, or should one side generate the other? | 🟡 Open | For now: manually mirrored, flagged as a future automation target (e.g. a shared JSON file both repos import) |
 | 4 | Paymob return/callback URL — does it land on a frontend route or a backend route before redirecting into the app? | 🟡 Open | Assumed: a frontend route (e.g. `/payment/callback`) handles the visual redirect; actual state confirmation still comes from the **webhook**, not the redirect itself, so this is UX-only and doesn't block backend work |
-| 5 | Socket auth — JWT passed via Socket.IO `auth` payload on connect vs. a query string param? | 🟡 Open | Recommend `auth` payload (not logged in URLs/proxies); needs a one-line confirmation from whoever wires up `socket.io-client` on the frontend to make sure both sides agree |
+| 5 | Socket auth — JWT passed via Socket.IO `auth` payload on connect vs. a query string param? | ✅ Resolved | **`auth` payload** — confirmed by `WebSocketService` in Phase 1: `io(wsUrl, { auth: { token: jwt } })`. Backend connect handler reads `request.environ['HTTP_AUTHORIZATION']` or the Socket.IO `auth` dict accordingly |
 | 6 | Server-side enforcement of the frontend's "max 5 images / 20MB per file" rule — hard reject, or just cap what's stored? | ✅ Resolved (this plan) | Hard reject requests with more than 5 image URLs; file-size itself is a Supabase Storage bucket policy concern (client-side upload), not something this backend can inspect after the fact |
 | 7 | Rate at which OTP re-sends are throttled | 🟡 Open | Proposed default: 1 send per phone per 60s, 5 per phone per day — needs product confirmation |
 
