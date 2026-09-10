@@ -13,15 +13,25 @@ def create_app(config_name: str = "development") -> Flask:
     migrate.init_app(app, db)
     jwt.init_app(app)
     bcrypt.init_app(app)
-    socketio.init_app(app, cors_allowed_origins=app.config["FRONTEND_URL"], async_mode="eventlet")
+
+    # Must run before socketio.init_app()'s *first* call: flask_socketio's @socketio.on
+    # decorator attaches straight to `self.server` if one already exists at decoration
+    # time, instead of queuing in `self.handlers` for replay on future init_app() calls
+    # (see flask_socketio.SocketIO.on). Since this module only executes once (Python
+    # caches imports), decorating before the first init_app ensures the handlers land
+    # in `self.handlers` and get correctly re-registered on every later create_app()
+    # call — e.g. once per test — not just the first one.
+    from . import sockets as _sockets  # noqa: F401 — registers Socket.IO connect/disconnect handlers
+
+    socketio.init_app(
+        app, cors_allowed_origins=app.config["FRONTEND_URL"], async_mode=app.config["SOCKETIO_ASYNC_MODE"]
+    )
     CORS(app, origins=[app.config["FRONTEND_URL"]])
 
     from app import models  # noqa: F401 — registers models with SQLAlchemy metadata
 
     register_blueprints(app)
     register_error_handlers(app)
-
-    from . import sockets as _sockets  # noqa: F401 — registers Socket.IO connect/disconnect handlers
 
     return app
 

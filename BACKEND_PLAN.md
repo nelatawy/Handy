@@ -210,12 +210,13 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 
 ## 8. Phase 6 — Docs, Testing, Seed & Deploy Readiness
 
-- [ ] `openapi.yaml` / `api-contract.md` generated from the tables in §9–10 (kept as the literal contract the frontend team codes against for Phases 3–6)
-- [ ] `scripts/seed.py`: sample normal users, sample workers per work type (some with shops), and one fully walked request → offer → choose → start → finish (one online, one cash) → rate cycle
-- [ ] Unit tests per blueprint; integration test for the full job state machine including both payment paths and both cancel paths
-- [ ] Mocked-provider test suite runs green with zero live credentials
-- [ ] Load-test the WebSocket room-broadcast path for the "nearby matching workers" fan-out
-- [ ] Deployment checklist: `eventlet`/`gevent` worker for SocketIO under gunicorn, sticky sessions or a Redis message queue (`flask-socketio` `message_queue=`) if scaling beyond one instance, CORS origin locked to the deployed frontend URL, all provider modes flipped from `mock`/`sandbox` to `live` deliberately (never by default)
+- [x] `api-contract.md` generated from the tables in §9–10 (chose `api-contract.md` over `openapi.yaml` — the prompt allows either; a hand-written contract doc was faster to keep accurate than a generated OpenAPI spec for a backend this size). Lives at `backend/api-contract.md`
+- [x] `scripts/seed.py`: sample normal users, sample workers per work type (some with shops), and two fully walked request → offer → choose → start → finish → rate cycles (one online, one cash), plus one open unclaimed request for live-feed testing. Refuses to run against a non-empty DB
+- [x] Unit tests per blueprint (`tests/test_auth.py`, `test_requests.py`, `test_jobs.py`, `test_payments.py`); integration coverage for the full job state machine including both payment paths (cash sync, online async+webhook, webhook replay/failure) and both cancel paths
+- [x] Mocked-provider test suite runs green with zero live credentials — 47/47 passing with no env vars set at all
+- [x] Load-test the WebSocket room-broadcast path — `tests/test_sockets.py` verifies N concurrent matching-worker sockets all receive a broadcast and non-matching workers/rooms are excluded. This is fan-out **correctness** at unit-test scale, not a true load test against a running server under network conditions (would need e.g. Locust with a Socket.IO client against a deployed instance) — documented as out of scope for this suite, not silently skipped
+- [x] Deployment checklist — `backend/DEPLOYMENT.md`: `eventlet`/`gevent` worker for SocketIO under gunicorn, sticky sessions or a Redis message queue (`flask-socketio` `message_queue=`) if scaling beyond one instance, CORS origin locked to the deployed frontend URL, all provider modes flipped from `mock`/`sandbox` to `live` deliberately (never by default)
+- **Bug fixed along the way:** `flask_socketio`'s `@socketio.on` decorator attaches directly to `self.server` if one already exists at decoration time, instead of queuing in `self.handlers` for replay on future `init_app()` calls. `create_app()` called `socketio.init_app()` before importing the sockets module, so every app instance *after the first* silently had no `connect`/`disconnect` handlers at all — invisible in production (one process, one app), but broke every test using more than one `app` fixture instance. Fixed by importing `app.sockets` before the first `socketio.init_app()` call; also added a `SOCKETIO_ASYNC_MODE` config (defaults `eventlet`, `threading` in `TestConfig`) so the Socket.IO test client behaves deterministically
 
 ---
 

@@ -10,6 +10,11 @@ class BaseConfig:
 
     FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
 
+    # 'eventlet' in dev/prod for real async I/O; 'threading' in tests so
+    # Socket.IO emits are delivered synchronously and deterministically
+    # against flask_socketio's test client (see tests/test_sockets.py).
+    SOCKETIO_ASYNC_MODE = os.environ.get("SOCKETIO_ASYNC_MODE", "eventlet")
+
     AUTHEVO_API_KEY = os.environ.get("AUTHEVO_API_KEY")
     AUTHEVO_MODE = os.environ.get("AUTHEVO_MODE", "mock")
 
@@ -28,6 +33,7 @@ class DevConfig(BaseConfig):
 class TestConfig(BaseConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL", "sqlite:///:memory:")
+    SOCKETIO_ASYNC_MODE = "threading"
 
 
 class ProdConfig(BaseConfig):

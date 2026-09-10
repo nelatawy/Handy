@@ -18,12 +18,12 @@ def _extract_token(auth):
 def handle_connect(auth=None):
     token = _extract_token(auth)
     if not token:
-        return False  # reject unauthenticated connections
+        raise ConnectionRefusedError("Authentication required")  # reject unauthenticated connections
 
     try:
         decoded = decode_token(token)
     except Exception:
-        return False
+        raise ConnectionRefusedError("Invalid or expired token")
 
     user_id = decoded.get("sub")
     role = decoded.get("role")
