@@ -108,7 +108,9 @@ def start_job(job_id: str, user_id: str) -> Job:
     return job
 
 
-def finish_job(job_id: str, user_id: str, payment_type: str) -> tuple[Job, str | None]:
+def finish_job(
+    job_id: str, user_id: str, payment_type: str, wallet_phone: str | None = None
+) -> tuple[Job, str | None]:
     job = get_job_or_404(job_id)
     if job.user_id != user_id:
         raise JobServiceError("Not your job", code="forbidden", status_code=403)
@@ -120,7 +122,7 @@ def finish_job(job_id: str, user_id: str, payment_type: str) -> tuple[Job, str |
 
     if method == PaymentMethod.CASH:
         return _finish_with_cash(job, total_charged)
-    return _finish_with_online_checkout(job, total_charged)
+    return _finish_with_online_checkout(job, total_charged, wallet_phone=wallet_phone)
 
 
 def _finish_with_cash(job: Job, total_charged: Decimal) -> tuple[Job, None]:
@@ -143,8 +145,21 @@ def _finish_with_cash(job: Job, total_charged: Decimal) -> tuple[Job, None]:
     return job, None
 
 
-def _finish_with_online_checkout(job: Job, total_charged: Decimal) -> tuple[Job, str]:
-    checkout = paymob.create_checkout(job.id, float(total_charged))
+def _finish_with_online_checkout(
+    job: Job, total_charged: Decimal, wallet_phone: str | None = None
+) -> tuple[Job, str]:
+    from app.models.user import User
+    customer = User.query.get(job.user_id)
+    cust_phone = customer.phone_number if customer else None
+    cust_name = customer.username if customer else None
+
+    checkout = paymob.create_checkout(
+        job.id,
+        float(total_charged),
+        customer_phone=cust_phone,
+        customer_name=cust_name,
+        wallet_phone=wallet_phone,
+    )
 
     payment = Payment(
         job_id=job.id,
@@ -201,17 +216,40 @@ def handle_paymob_webhook(payload: dict, hmac_signature: str) -> None:
     if not paymob.verify_webhook_signature(payload, hmac_signature):
         raise JobServiceError("Invalid webhook signature", code="invalid_signature", status_code=400)
 
-    order_id = payload.get("orderId")
+    # Real Paymob payload shape:
+    #   { "type": "TRANSACTION", "obj": { "id": ..., "success": true, "order": { "id": ... }, ... } }
+    # Mock/legacy shape (backward compat):
+    #   { "orderId": ..., "success": true, "transactionId": ... }
+    obj = payload.get("obj", {})
+    if obj:
+        order_id = str(obj.get("order", {}).get("id", ""))
+        success = obj.get("success", False)
+        transaction_id = str(obj.get("id", ""))
+    else:
+        order_id = payload.get("orderId", "")
+        success = bool(payload.get("success"))
+        transaction_id = payload.get("transactionId", "")
+
     payment = Payment.query.filter_by(paymob_order_id=order_id, status=PaymentStatus.PENDING).first()
+    if payment is None and transaction_id:
+        payment = Payment.query.filter_by(paymob_order_id=transaction_id, status=PaymentStatus.PENDING).first()
+    if payment is None:
+        extra_job_id = (
+            obj.get("extra", {}).get("job_id")
+            or obj.get("order", {}).get("merchant_order_id")
+            or payload.get("job_id")
+        )
+        if extra_job_id:
+            payment = Payment.query.filter_by(job_id=extra_job_id, status=PaymentStatus.PENDING).first()
+
     if payment is None:
         raise JobServiceError("No matching pending payment", code="not_found", status_code=404)
 
     job = get_job_or_404(payment.job_id)
-    success = bool(payload.get("success"))
 
     if success:
         payment.status = PaymentStatus.PAID
-        payment.paymob_transaction_id = payload.get("transactionId")
+        payment.paymob_transaction_id = transaction_id
 
         job.status = JobStatus.FINISHED
         job.finished_at = datetime.utcnow()
@@ -226,3 +264,4 @@ def handle_paymob_webhook(payload: dict, hmac_signature: str) -> None:
         db.session.commit()
 
         emit_payment_failed(job.user_id, job.id)
+

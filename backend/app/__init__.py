@@ -23,10 +23,19 @@ def create_app(config_name: str = "development") -> Flask:
     # call — e.g. once per test — not just the first one.
     from . import sockets as _sockets  # noqa: F401 — registers Socket.IO connect/disconnect handlers
 
+    configured_frontend = app.config.get("FRONTEND_URL", "http://localhost:4200")
+    allowed_origins = list(dict.fromkeys([
+        configured_frontend,
+        "http://localhost:4200",
+        "http://localhost:5173",
+        "http://127.0.0.1:4200",
+        "http://127.0.0.1:5173",
+    ]))
+
     socketio.init_app(
-        app, cors_allowed_origins=app.config["FRONTEND_URL"], async_mode=app.config["SOCKETIO_ASYNC_MODE"]
+        app, cors_allowed_origins=allowed_origins, async_mode=app.config["SOCKETIO_ASYNC_MODE"]
     )
-    CORS(app, origins=[app.config["FRONTEND_URL"]])
+    CORS(app, origins=allowed_origins, supports_credentials=True)
 
     from app import models  # noqa: F401 — registers models with SQLAlchemy metadata
 

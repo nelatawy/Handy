@@ -94,7 +94,7 @@
     "canceled": "ملغى"
   },
   "PAYMENT_TYPE": {
-    "online": "دفع إلكتروني",
+    "online": "فودافون كاش",
     "cash": "دفع نقدي"
   },
   "REQUEST": {
@@ -151,8 +151,12 @@
     "CANCEL_CONFIRM_YES": "نعم، إلغاء",
     "FINISH_CONFIRM": "اختر طريقة الدفع",
     "FINISH_WARNING": "سيُبدأ الدفع بمبلغ {{amount}} عند تأكيد الاكتمال",
-    "PAY_ONLINE": "الدفع الإلكتروني",
-    "PAY_ONLINE_DESC": "ادفع بأمان عبر البطاقة أو المحفظة الإلكترونية",
+    "PAY_ONLINE": "فودافون كاش",
+    "PAY_ONLINE_DESC": "ادفع بأمان عبر محفظة فودافون كاش أو محفظتك الإلكترونية",
+    "PAY_WALLET": "فودافون كاش / محفظة إلكترونية",
+    "PAY_WALLET_DESC": "ادفع بأمان عبر محفظة فودافون كاش أو أي محفظة إلكترونية مصرية",
+    "WALLET_PHONE_LABEL": "رقم محفظة فودافون كاش (أو محفظتك):",
+    "WALLET_PHONE_PLACEHOLDER": "010xxxxxxxx",
     "PAY_CASH": "دفعت نقداً",
     "PAY_CASH_DESC": "لقد دفعت للفني نقداً بالفعل",
     "FINISHED_TITLE": "اكتملت المهمة!",
@@ -302,6 +306,19 @@
     "PAYOUT_INITIATED_SANDBOX": "تم بدء عملية السحب! (وضع تجريبي)",
     "WITHDRAW_FAILED": "فشل بدء عملية السحب. يرجى المحاولة مرة أخرى."
   },
+
+  "PAYMENT_CALLBACK": {
+    "TITLE_PROCESSING": "...جارٍ معالجة الدفع",
+    "TITLE_SUCCESS": "!تم الدفع بنجاح",
+    "TITLE_FAILED": "فشل الدفع",
+    "SUBTITLE_PROCESSING": ".يرجى الانتظار بينما نتحقق من الدفع مع Paymob",
+    "SUBTITLE_SUCCESS": ".تم تأكيد الدفع. المهمة مكتملة الآن",
+    "SUBTITLE_FAILED": ".حدث خطأ أثناء الدفع. يرجى المحاولة مرة أخرى",
+    "VIEW_JOB": "عرض المهمة",
+    "RETRY": "حاول مرة أخرى",
+    "GO_HOME": "الذهاب للرئيسية"
+  },
+
   "COMMON": {
     "LOADING": "جارٍ التحميل...",
     "SAVE": "حفظ",

@@ -47,6 +47,7 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
 
   // Payment modal
   paymentStep      = signal<PaymentStep>('idle');
+  walletPhone      = signal<string>('');
 
   // Rating modal
   showRatingModal  = signal(false);
@@ -115,6 +116,26 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
         this.notify.warning('TOAST.JOB_CANCELED_BY_WORKER');
       })
     );
+
+    // Payment confirmed via Paymob webhook
+    this.subs.add(
+      this.ws.on<{ jobId: string; amount: number }>('payment_confirmed').subscribe((e) => {
+        const j = this.job();
+        if (!j || j.id !== e.jobId) return;
+        this.job.set({ ...j, status: JobStatus.Finished });
+        this.notify.success('TOAST.PAYMENT_CONFIRMED');
+        setTimeout(() => this.showRatingModal.set(true), 600);
+      })
+    );
+
+    // Payment failed via Paymob webhook
+    this.subs.add(
+      this.ws.on<{ jobId: string }>('payment_failed').subscribe((e) => {
+        const j = this.job();
+        if (!j || j.id !== e.jobId) return;
+        this.notify.error('TOAST.PAYMENT_FAILED');
+      })
+    );
   }
 
   // ── Pending → Started ──────────────────────────────────────────────────────
@@ -135,14 +156,25 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     const j = this.job();
     if (!j) return;
     this.paymentStep.set('confirming');
-    this.jobSvc.updateStatus(j.id, { status: JobStatus.Finished, paymentType: PaymentType.Online })
+    const phone = this.walletPhone().trim();
+    this.jobSvc.updateStatus(j.id, {
+      status: JobStatus.Finished,
+      paymentType: PaymentType.Online,
+      walletPhone: phone || undefined,
+    })
       .pipe(finalize(() => this.paymentStep.set('done')))
       .subscribe({
         next: (res) => {
           this.job.set(res.job);
-          // In production this would redirect to Paymob checkout
-          this.notify.info('TOAST.PAYMOB_REDIRECT_SANDBOX');
-          setTimeout(() => this.showRatingModal.set(true), 1000);
+          if (res.paymentUrl) {
+            // Redirect the browser to Paymob's hosted checkout page.
+            // The user will return via the redirection_url configured in the intention.
+            window.location.href = res.paymentUrl;
+          } else {
+            // Fallback: no URL returned (mock mode or error)
+            this.notify.info('TOAST.PAYMOB_REDIRECT_SANDBOX');
+            setTimeout(() => this.showRatingModal.set(true), 1000);
+          }
         },
         error: () => {
           this.paymentStep.set('choosingPayment');

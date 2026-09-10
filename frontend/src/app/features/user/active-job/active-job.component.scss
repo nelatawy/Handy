@@ -322,10 +322,12 @@
     color: v.$color-text-muted;
   }
 
+  &--wallet,
   &--online {
+    border-color: rgba(230, 0, 0, 0.25);
     &:hover:not(:disabled) {
-      border-color: v.$color-primary-400;
-      background: v.$color-primary-50;
+      border-color: #e60000;
+      background: rgba(230, 0, 0, 0.04);
       box-shadow: v.$shadow-md;
     }
   }
@@ -341,6 +343,57 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+.payment-option-card {
+  border: 2px solid rgba(230, 0, 0, 0.2);
+  border-radius: v.$radius-xl;
+  padding: v.$space-2;
+  background: rgba(230, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  transition: v.$transition-base;
+
+  &:focus-within {
+    border-color: #e60000;
+  }
+
+  .payment-option--wallet {
+    border: none;
+    background: transparent;
+    padding: v.$space-3 v.$space-3;
+  }
+}
+
+.wallet-input-group {
+  padding: 0 v.$space-3 v.$space-2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-input-label {
+  font-size: 0.75rem;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-secondary;
+}
+
+.wallet-input {
+  width: 100%;
+  padding: v.$space-2 v.$space-3;
+  border-radius: v.$radius-lg;
+  border: 1.5px solid v.$color-border;
+  background: v.$color-surface;
+  font-size: v.$font-size-sm;
+  outline: none;
+  transition: v.$transition-base;
+  direction: ltr;
+
+  &:focus {
+    border-color: #e60000;
+    box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
   }
 }
 

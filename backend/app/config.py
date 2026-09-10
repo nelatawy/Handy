@@ -21,9 +21,19 @@ class BaseConfig:
     GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
     PAYMOB_API_KEY = os.environ.get("PAYMOB_API_KEY")
+    PAYMOB_SECRET_KEY = os.environ.get("PAYMOB_SECRET_KEY")
+    PAYMOB_PUBLIC_KEY = os.environ.get("PAYMOB_PUBLIC_KEY")
     PAYMOB_INTEGRATION_ID = os.environ.get("PAYMOB_INTEGRATION_ID")
+    PAYMOB_WALLET_INTEGRATION_ID = os.environ.get("PAYMOB_WALLET_INTEGRATION_ID")
     PAYMOB_HMAC_SECRET = os.environ.get("PAYMOB_HMAC_SECRET")
+    PAYMOB_IFRAME_ID = os.environ.get("PAYMOB_IFRAME_ID", "989687")
+    PAYMOB_PAYOUT_CLIENT_ID = os.environ.get("PAYMOB_PAYOUT_CLIENT_ID")
+    PAYMOB_PAYOUT_CLIENT_SECRET = os.environ.get("PAYMOB_PAYOUT_CLIENT_SECRET")
+    PAYMOB_PAYOUT_TOKEN = os.environ.get("PAYMOB_PAYOUT_TOKEN")
+    PAYMOB_PAYOUT_BASE_URL = os.environ.get("PAYMOB_PAYOUT_BASE_URL", "https://payouts.paymobsolutions.com")
     PAYMOB_MODE = os.environ.get("PAYMOB_MODE", "mock")
+
+    BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:5000")
 
 
 class DevConfig(BaseConfig):

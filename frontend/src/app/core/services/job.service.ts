@@ -7,6 +7,7 @@ import { JobStatus, PaymentType } from '../models/enums';
 export interface UpdateJobStatusBody {
   status: JobStatus;
   paymentType?: PaymentType;
+  walletPhone?: string;
 }
 
 /**

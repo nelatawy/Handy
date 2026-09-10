@@ -11,6 +11,7 @@ class JobStatusUpdateSchema(Schema):
     payment_type = fields.String(
         data_key="paymentType", load_default=None, validate=validate.OneOf([m.value for m in PaymentMethod])
     )
+    wallet_phone = fields.String(data_key="walletPhone", load_default=None)
 
     @validates_schema
     def require_payment_type_when_finishing(self, data, **kwargs):

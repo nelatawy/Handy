@@ -106,7 +106,20 @@ def request_payout(job_id: str, worker_id: str) -> Payout:
     if balance <= 0:
         raise PaymentServiceError("No payable balance to withdraw", code="no_balance")
 
-    reference = paymob.create_payout(worker_id, float(balance))
+    from app.models.user import User
+    worker = User.query.get(worker_id)
+    worker_phone = worker.phone_number if worker else None
+    worker_name = worker.username if worker else None
+
+    try:
+        reference = paymob.create_payout(
+            worker_id=worker_id,
+            amount=float(balance),
+            worker_phone=worker_phone,
+            worker_name=worker_name,
+        )
+    except RuntimeError as exc:
+        raise PaymentServiceError(str(exc), code="payout_failed", status_code=502)
 
     payout = Payout(
         worker_id=worker_id,
