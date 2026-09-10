@@ -175,18 +175,18 @@ backend/
 
 Two distinct endpoints, matching what the frontend plan actually describes on each side (see §11.3 for why these aren't unified into one):
 
-- [ ] `PATCH /api/jobs/:id/status` — **user-only**. Body `{ status: 'started'|'finished'|'canceled', paymentType?: 'online'|'cash' }`
+- [x] `PATCH /api/jobs/:id/status` — **user-only**. Body `{ status: 'started'|'finished'|'canceled', paymentType?: 'online'|'cash' }`
   - `pending → started`: sets `started_at`; emits `job_status_changed`; no money
   - `started → finished`: **the single point payment logic runs** (see below); `paymentType` required
-  - `pending/started → canceled`: `canceled_by='user'`; emits `job_status_changed`; no money ever moved, so nothing to reverse
-- [ ] `POST /api/jobs/:id/cancel` — **worker-only**, allowed from `pending`/`started`. `canceled_by='worker'`. Emits `job_canceled_by_worker` to the user (distinct event so the frontend can render "the handyman canceled" messaging, per its own plan)
+  - `pending/started → canceled`: `canceled_by='user'`; emits `job_status_changed` **and** `job_canceled_by_user` (to the worker, for distinct messaging, mirroring the worker-cancel side); no money ever moved, so nothing to reverse. Added a `jobs.canceled_at` column (missing from the Phase 1 model) since the state machine needs it
+- [x] `POST /api/jobs/:id/cancel` — **worker-only**, allowed from `pending`/`started`. `canceled_by='worker'`. Emits `job_canceled_by_worker` to the user (distinct event so the frontend can render "the handyman canceled" messaging, per its own plan)
 
 ### Finish + Payment logic (the critical path)
-- [ ] Recompute `total_charged = agreed_price * 1.05` server-side from the stored **offer** price — never from client input
-- [ ] `paymentType: 'online'` → create a `payments` row (`status='pending'`, `method='online'`), call `paymob.create_checkout(...)`, **return the job (still `started`) plus `paymentUrl`** — job only flips to `finished` once the webhook confirms (async, hosted-checkout flow, per frontend's resolved decision — this is *not* a synchronous charge-and-flip like the original backend prompt sketched)
-- [ ] `paymentType: 'cash'` → **new path, not in the original backend prompt** — no Paymob call. Synchronously create a `payments` row (`status='paid'`, `method='cash'`), set job → `finished`, `finished_at=now`. Emit `job_status_changed` immediately (this is the trigger the frontend uses to pop the rating modal)
-- [ ] **Hard invariant, enforced in code:** no `payments` row and no Paymob API call ever exists before `finish` is invoked, for either payment type. No other route may create a `payments` row
-- [ ] `POST /api/webhooks/paymob` — verifies HMAC signature, matches the pending `payments` row via `paymob_order_id`, on success: `payments.status='paid'`, `jobs.status='finished'`, credit worker's payable balance with `agreed_price` (fee is additive, never deducted from the worker), emit `payment_confirmed` then `job_status_changed` to both parties. On failure: `payments.status='failed'`, job stays `started`, emit an error-capable event so the frontend can offer retry
+- [x] Recompute `total_charged = agreed_price * 1.05` server-side from the stored **offer** price — never from client input
+- [x] `paymentType: 'online'` → create a `payments` row (`status='pending'`, `method='online'`), call `paymob.create_checkout(...)`, **return the job (still `started`) plus `paymentUrl`** — job only flips to `finished` once the webhook confirms (async, hosted-checkout flow, per frontend's resolved decision — this is *not* a synchronous charge-and-flip like the original backend prompt sketched)
+- [x] `paymentType: 'cash'` → **new path, not in the original backend prompt** — no Paymob call. Synchronously create a `payments` row (`status='paid'`, `method='cash'`), set job → `finished`, `finished_at=now`. Emit `job_status_changed` immediately (this is the trigger the frontend uses to pop the rating modal)
+- [x] **Hard invariant, enforced in code:** no `payments` row and no Paymob API call ever exists before `finish` is invoked, for either payment type. No other route may create a `payments` row — `finish_job`/`_finish_with_cash`/`_finish_with_online_checkout` in `job_service.py` are the only code paths that construct a `Payment`
+- [x] `POST /api/webhooks/paymob` — verifies HMAC signature, matches the pending `payments` row via `paymob_order_id`, on success: `payments.status='paid'`, `jobs.status='finished'`, credits the worker's completion count (the payable-balance figure itself is a derived sum in Phase 5's `GET /api/workers/me/earnings`, not a stored balance column), emit `payment_confirmed` then `job_status_changed` to both parties. On failure: `payments.status='failed'`, job stays `started`, emits a new `payment_failed` event to the user (not in the original §10 table — added here since §6 explicitly calls for "an error-capable event", and only the user can retry `finish`). **Registered at `/api/webhooks/paymob` via a dedicated `webhooks_bp`**, not nested under `/api/payments`, to match the literal path in §9
 
 ---
 
@@ -270,6 +270,7 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 | `job_canceled_by_user` | Server → Worker | `{ jobId }` | User canceled the job |
 | `job_canceled_by_worker` | Server → User | `{ jobId }` | Worker canceled the job — distinct from the above so the frontend can render different copy |
 | `payment_confirmed` | Server → User + Worker | `{ jobId, amount }` | Fired from the Paymob webhook, right before `job_status_changed` → `finished` |
+| `payment_failed` | Server → User | `{ jobId }` | **New — Phase 4.** Fired from the Paymob webhook on a failed charge; job stays `started` so the frontend can offer retry |
 
 ---
 

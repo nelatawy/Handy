@@ -45,3 +45,10 @@ def emit_payment_confirmed(user_id: str, worker_id: str, job_id: str, amount: fl
     payload = {"jobId": job_id, "amount": amount}
     socketio.emit("payment_confirmed", payload, room=f"user:{user_id}")
     socketio.emit("payment_confirmed", payload, room=f"user:{worker_id}")
+
+
+def emit_payment_failed(user_id: str, job_id: str):
+    """Not in BACKEND_PLAN.md §10's original event table — added per §6's instruction
+    that the Paymob webhook failure path needs "an error-capable event so the frontend
+    can offer retry". Sent only to the user, since only they can retry `finish`."""
+    socketio.emit("payment_failed", {"jobId": job_id}, room=f"user:{user_id}")

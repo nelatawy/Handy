@@ -33,6 +33,7 @@ def register_blueprints(app: Flask) -> None:
     from app.blueprints.offers import offers_bp
     from app.blueprints.otp import otp_bp
     from app.blueprints.payments import payments_bp
+    from app.blueprints.payments.routes import webhooks_bp
     from app.blueprints.ratings import ratings_bp
     from app.blueprints.requests import requests_bp
     from app.blueprints.users import users_bp
@@ -44,6 +45,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(offers_bp, url_prefix="/api/offers")
     app.register_blueprint(jobs_bp, url_prefix="/api/jobs")
     app.register_blueprint(payments_bp, url_prefix="/api/payments")
+    app.register_blueprint(webhooks_bp, url_prefix="/api/webhooks")
     app.register_blueprint(ratings_bp, url_prefix="/api/ratings")
     app.register_blueprint(users_bp, url_prefix="/api/users")
     app.register_blueprint(workers_bp, url_prefix="/api/workers")
