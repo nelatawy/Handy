@@ -90,8 +90,8 @@ export class ImageUploadComponent {
   protected MAX_FILES = MAX_FILES;
 
   private notify = inject(NotificationService);
-  private supabase: SupabaseClient | null = environment.supabaseBucketUrl
-    ? createClient(environment.supabaseBucketUrl, environment.supabaseAnonKey)
+  private supabase: SupabaseClient | null = environment.supabaseUrl
+    ? createClient(environment.supabaseUrl, environment.supabaseAnonKey)
     : null;
 
   onDragOver(e: DragEvent): void {
@@ -146,7 +146,7 @@ export class ImageUploadComponent {
 
     const path = `requests/${Date.now()}_${entry.file.name}`;
     const { data, error } = await this.supabase.storage
-      .from('handy-images')
+      .from('request_img')
       .upload(path, entry.file, { upsert: false });
 
     if (error || !data) {
@@ -157,7 +157,7 @@ export class ImageUploadComponent {
     }
 
     const { data: urlData } = this.supabase.storage
-      .from('handy-images')
+      .from('request_img')
       .getPublicUrl(data.path);
 
     entry.publicUrl = urlData.publicUrl;
