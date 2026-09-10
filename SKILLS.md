@@ -10,7 +10,9 @@
 - Keep commits atomic and messages descriptive (what changed and why, not just what).
 - No dead code, no commented-out blocks left behind, no leftover debug prints/console.logs in committed code.
 - Prefer explicit over implicit: avoid hidden side effects, global mutable state, and "magic" behavior that isn't obvious from the call site.
-
+- The plan is your main source of truth when working on an update/feature, follow it step by step and don't skip anything.
+- always ask for clarification before making any assumptions, if something is not clear ask!
+- always keep me in the loop for any changes, always summarize the plan, your progress and get approval before making any changes.
 ---
 
 ## Backend Skills
