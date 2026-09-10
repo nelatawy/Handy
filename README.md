@@ -29,6 +29,16 @@
 | **اللغات** | عربي (بتخطيط من اليمين لليسار) وإنجليزي، قابلين للتبديل داخل التطبيق |
 | **الألوان** | أزرق سماوي وأبيض، مع لمسات أخضر/أحمر للحالات |
 
+## لقطات الشاشة
+
+![Screenshot 1](screenshots/screenshot-1.png)
+![Screenshot 2](screenshots/screenshot-2.png)
+![Screenshot 3](screenshots/screenshot-3.png)
+![Screenshot 4](screenshots/screenshot-4.png)
+![Screenshot 5](screenshots/screenshot-5.png)
+![Screenshot 6](screenshots/screenshot-6.png)
+![Screenshot 7](screenshots/screenshot-7.png)
+
 ## ليه هاندي
 
 سوق الخدمات المنزلية التقليدي شغّال على الكلام والتخمين: أسعار مش واضحة، فنيين مش موثوقين، ملهاش تقييمات حقيقية، وغالبًا بيتم طلب الدفع قبل ما حد يتأكد إن الشغل اتعمل صح. هاندي بيستبدل كل ده بمسار منظم — السعر يبان واضح من الأول، التقييمات حقيقية، والدفع ما بيتحصّلش غير بعد ما المستخدم يأكد إن المهمة خلصت.
@@ -123,6 +133,16 @@ Handy connects people who need repair or installation work done with verified, n
 | **Handymen** | Have a fixed trade (Plumber, Electrician, Carpenter, IT) → see matching requests in real time → quote a price → get selected → get paid on completion → build a public rating |
 | **Languages** | Arabic (RTL) and English, switchable in-app |
 | **Theme** | Sky-blue & white, with green/red semantic accents |
+
+### Screenshots
+
+![Screenshot 1](screenshots/screenshot-1.png)
+![Screenshot 2](screenshots/screenshot-2.png)
+![Screenshot 3](screenshots/screenshot-3.png)
+![Screenshot 4](screenshots/screenshot-4.png)
+![Screenshot 5](screenshots/screenshot-5.png)
+![Screenshot 6](screenshots/screenshot-6.png)
+![Screenshot 7](screenshots/screenshot-7.png)
 
 ### Why Handy
 
