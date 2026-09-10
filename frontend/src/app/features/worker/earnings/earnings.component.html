@@ -20,7 +20,7 @@
   <!-- Error state -->
   @if (error()) {
     <div class="earnings__empty">
-      <div class="earnings__empty-icon">⚠️</div>
+      <div class="earnings__empty-icon"><svg lucideAlertTriangle [size]="44"></svg></div>
       <p class="earnings__empty-text">{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
     </div>
   }
@@ -45,7 +45,8 @@
           <span class="spinner"></span>
           {{ 'COMMON.LOADING' | translate }}
         } @else {
-          💸 {{ 'PAYMENT.WITHDRAW' | translate }}
+          <svg lucideArrowUpRight [size]="18"></svg>
+          <span>{{ 'PAYMENT.WITHDRAW' | translate }}</span>
         }
       </button>
       <p class="earnings__payout-note">{{ 'PAYMENT.PAYOUT_VIA' | translate }}</p>
@@ -54,7 +55,7 @@
     <!-- Empty earnings state -->
     @if (isEmpty()) {
       <div class="earnings__empty">
-        <div class="earnings__empty-icon">📭</div>
+        <div class="earnings__empty-icon"><svg lucideInbox [size]="44"></svg></div>
         <h2 class="earnings__empty-title">{{ 'PAYMENT.PAYOUT_HISTORY' | translate }}</h2>
         <p class="earnings__empty-text">{{ 'PAYMENT.HISTORY_EMPTY' | translate }}</p>
         <a class="btn-outline" routerLink="/worker/feed">{{ 'WORKER.FEED_TITLE' | translate }}</a>
@@ -69,7 +70,7 @@
           <div class="tx-card tx-card--confirmed">
 
             <div class="tx-card__left">
-              <div class="tx-card__icon tx-card__icon--online">💰</div>
+              <div class="tx-card__icon tx-card__icon--online"><svg lucideCoins [size]="20"></svg></div>
               <div class="tx-card__info">
                 <span class="tx-card__job-id">{{ 'PAYMENT.TRANSACTION_ID' | translate }} #{{ tx.jobId.slice(0,8) }}</span>
                 <span class="tx-card__date">{{ formatDate(tx.finishedAt) }}</span>

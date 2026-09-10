@@ -15,12 +15,13 @@ import { ProfileService, UpdateWorkerProfileBody } from '../../../core/services/
 import { NotificationService } from '../../../core/services/notification.service';
 import { Worker } from '../../../core/models/models';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
+import { LucideAlertTriangle, LucidePencil, LucideStore } from '@lucide/angular';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, StarRatingComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, StarRatingComponent, LucideAlertTriangle, LucidePencil, LucideStore],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

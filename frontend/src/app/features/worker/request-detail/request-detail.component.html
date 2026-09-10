@@ -2,7 +2,8 @@
 
   <!-- Back button -->
   <button class="btn btn--ghost btn--sm back-btn" (click)="goBack()">
-    ← {{ 'WORKER.BACK_TO_FEED' | translate }}
+    <svg lucideArrowLeft [size]="16"></svg>
+    <span>{{ 'WORKER.BACK_TO_FEED' | translate }}</span>
   </button>
 
   @if (loading()) {
@@ -16,7 +17,7 @@
     <!-- Closed banner -->
     @if (closed()) {
       <div class="closed-banner">
-        <span class="closed-banner__icon">🔒</span>
+        <span class="closed-banner__icon"><svg lucideLock [size]="18"></svg></span>
         <span>{{ 'WORKER.REQUEST_NO_LONGER_AVAILABLE' | translate }}</span>
       </div>
     }
@@ -26,7 +27,9 @@
 
       <!-- Header -->
       <div class="detail-card__header">
-        <div class="detail-card__emoji">{{ getWorkTypeEmoji(request()!.workType) }}</div>
+        <div class="detail-card__emoji">
+          <app-work-type-icon [type]="request()!.workType" [size]="24" />
+        </div>
         <div>
           <span class="detail-card__type-badge">{{ 'WORK_TYPE.' + request()!.workType | translate }}</span>
           <p class="detail-card__meta">{{ 'WORKER.POSTED_ON' | translate }} {{ request()!.createdAt | date : 'medium' }}</p>
@@ -62,15 +65,20 @@
       @if (!closed()) {
         <div class="detail-card__actions">
           <button class="btn btn--danger-outline" (click)="decline()">
-            ✕ {{ 'WORKER.DECLINE' | translate }}
+            <svg lucideX [size]="16"></svg>
+            <span>{{ 'WORKER.DECLINE' | translate }}</span>
           </button>
           <button class="btn btn--primary" (click)="accept()">
-            ✓ {{ 'WORKER.ACCEPT' | translate }}
+            <svg lucideCheck [size]="16"></svg>
+            <span>{{ 'WORKER.ACCEPT' | translate }}</span>
           </button>
         </div>
       } @else {
         <div class="detail-card__actions">
-          <button class="btn btn--ghost" (click)="goBack()">← {{ 'WORKER.BACK_TO_FEED' | translate }}</button>
+          <button class="btn btn--ghost" (click)="goBack()">
+            <svg lucideArrowLeft [size]="16"></svg>
+            <span>{{ 'WORKER.BACK_TO_FEED' | translate }}</span>
+          </button>
         </div>
       }
 
@@ -82,13 +90,13 @@
   @if (lightboxUrl()) {
     <div class="lightbox" (click)="closeLightbox()">
       <div class="lightbox__inner" (click)="$event.stopPropagation()">
-        <button class="lightbox__close" (click)="closeLightbox()">✕</button>
+        <button class="lightbox__close" (click)="closeLightbox()"><svg lucideX [size]="20"></svg></button>
         @if ((request()?.images?.length ?? 0) > 1) {
-          <button class="lightbox__nav lightbox__nav--prev" (click)="prevImage()">‹</button>
+          <button class="lightbox__nav lightbox__nav--prev" (click)="prevImage()"><svg lucideChevronLeft [size]="24"></svg></button>
         }
         <img [src]="lightboxUrl()!" alt="full size" class="lightbox__img" />
         @if ((request()?.images?.length ?? 0) > 1) {
-          <button class="lightbox__nav lightbox__nav--next" (click)="nextImage()">›</button>
+          <button class="lightbox__nav lightbox__nav--next" (click)="nextImage()"><svg lucideChevronRight [size]="24"></svg></button>
           <div class="lightbox__counter">{{ lightboxIdx() + 1 }} / {{ request()!.images.length }}</div>
         }
       </div>

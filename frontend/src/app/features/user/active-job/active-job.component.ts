@@ -20,6 +20,18 @@ import { NotificationService } from '../../../core/services/notification.service
 import { WebSocketService } from '../../../core/services/websocket.service';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
 import { JobStatusBadgeComponent } from '../../../shared/components/job-status-badge/job-status-badge.component';
+import {
+  LucideCreditCard,
+  LucideBanknote,
+  LucidePlay,
+  LucideCheckCircle,
+  LucideAward,
+  LucideStar,
+  LucideXCircle,
+  LucidePlus,
+  LucideSmartphone,
+  LucideArrowRight,
+} from '@lucide/angular';
 
 type PaymentStep = 'idle' | 'choosingPayment' | 'confirming' | 'done';
 
@@ -27,7 +39,24 @@ type PaymentStep = 'idle' | 'choosingPayment' | 'confirming' | 'done';
   selector: 'app-active-job',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule, FormsModule, StarRatingComponent, JobStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    RouterModule,
+    FormsModule,
+    StarRatingComponent,
+    JobStatusBadgeComponent,
+    LucideCreditCard,
+    LucideBanknote,
+    LucidePlay,
+    LucideCheckCircle,
+    LucideAward,
+    LucideStar,
+    LucideXCircle,
+    LucidePlus,
+    LucideSmartphone,
+    LucideArrowRight,
+  ],
   templateUrl: './active-job.component.html',
   styleUrl: './active-job.component.scss',
 })

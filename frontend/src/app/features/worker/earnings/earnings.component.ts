@@ -15,12 +15,13 @@ import { PaymentService } from '../../../core/services/payment.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EarningsEntry } from '../../../core/models/models';
 import { PaymentType } from '../../../core/models/enums';
+import { LucideAlertTriangle, LucideArrowUpRight, LucideInbox, LucideCoins } from '@lucide/angular';
 
 @Component({
   selector: 'app-earnings',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule],
+  imports: [CommonModule, TranslatePipe, RouterModule, LucideAlertTriangle, LucideArrowUpRight, LucideInbox, LucideCoins],
   templateUrl: './earnings.component.html',
   styleUrl: './earnings.component.scss',
 })

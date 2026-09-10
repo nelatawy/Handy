@@ -17,7 +17,7 @@
     <!-- ── PENDING ────────────────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Pending) {
       <div class="info-banner info-banner--pending">
-        <span class="info-banner__icon">⏳</span>
+        <span class="info-banner__icon"><svg lucideClock [size]="20"></svg></span>
         <div>
           <strong>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START' | translate }}</strong>
           <p>{{ 'WORKER.WAITING_CUSTOMER_CONFIRM_START_SUB' | translate }}</p>
@@ -28,7 +28,7 @@
     <!-- ── STARTED ────────────────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Started) {
       <div class="info-banner info-banner--started">
-        <span class="info-banner__icon">🛠️</span>
+        <span class="info-banner__icon"><svg lucideWrench [size]="20"></svg></span>
         <div>
           <strong>{{ 'WORKER.JOB_IN_PROGRESS' | translate }}</strong>
           <p>{{ 'WORKER.JOB_IN_PROGRESS_SUB' | translate }}</p>
@@ -39,7 +39,7 @@
     <!-- ── FINISHED ───────────────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Finished) {
       <div class="earnings-card">
-        <div class="earnings-card__icon">🎉</div>
+        <div class="earnings-card__icon"><svg lucideAward [size]="40"></svg></div>
         <h2 class="earnings-card__title">{{ 'WORKER.JOB_COMPLETED_TITLE' | translate }}</h2>
         <p class="earnings-card__sub">{{ 'JOB.EARNINGS_INFO' | translate }}</p>
         <div class="earnings-card__amount">
@@ -48,8 +48,13 @@
         </div>
         @if (job()!.paymentType) {
           <div class="payment-type-badge" [class.payment-type-badge--online]="job()!.paymentType === PaymentType.Online">
-            @if (job()!.paymentType === PaymentType.Online) { 💳 {{ 'PAYMENT_TYPE.online' | translate }} }
-            @else { 💵 {{ 'PAYMENT_TYPE.cash' | translate }} }
+            @if (job()!.paymentType === PaymentType.Online) {
+              <svg lucideCreditCard [size]="15"></svg>
+              <span>{{ 'PAYMENT_TYPE.online' | translate }}</span>
+            } @else {
+              <svg lucideBanknote [size]="15"></svg>
+              <span>{{ 'PAYMENT_TYPE.cash' | translate }}</span>
+            }
           </div>
         }
         <div class="earnings-card__actions">
@@ -62,7 +67,7 @@
     <!-- ── CANCELED ───────────────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Canceled) {
       <div class="info-banner info-banner--canceled">
-        <span class="info-banner__icon">❌</span>
+        <span class="info-banner__icon"><svg lucideXCircle [size]="20"></svg></span>
         <div>
           @if (job()!.canceledBy === 'worker') {
             <strong>{{ 'WORKER.YOU_CANCELED_JOB' | translate }}</strong>
@@ -118,7 +123,7 @@
   @if (showCancelConfirm()) {
     <div class="modal-overlay" (click)="closeCancelConfirm()">
       <div class="modal" (click)="$event.stopPropagation()">
-        <div class="modal__icon">⚠️</div>
+        <div class="modal__icon"><svg lucideAlertTriangle [size]="36"></svg></div>
         <h3 class="modal__title">{{ 'WORKER.CANCEL_JOB_TITLE' | translate }}</h3>
         <p class="modal__body">{{ 'WORKER.CANCEL_CONFIRM' | translate }}</p>
         <div class="modal__actions">

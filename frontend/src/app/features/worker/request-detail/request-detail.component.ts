@@ -14,14 +14,27 @@ import { Subscription, finalize } from 'rxjs';
 import { JobRequest } from '../../../core/models/models';
 import { WorkType } from '../../../core/models/enums';
 import { RequestService } from '../../../core/services/request.service';
-import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { WebSocketService } from '../../../core/services/websocket.service';
+import { WorkTypeIconComponent } from '../../../shared/components/work-type-icon/work-type-icon.component';
+import { LucideLock, LucideX, LucideCheck, LucideChevronLeft, LucideChevronRight, LucideArrowLeft } from '@lucide/angular';
 
 @Component({
   selector: 'app-request-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    RouterModule,
+    WorkTypeIconComponent,
+    LucideLock,
+    LucideX,
+    LucideCheck,
+    LucideChevronLeft,
+    LucideChevronRight,
+    LucideArrowLeft,
+  ],
   templateUrl: './request-detail.component.html',
   styleUrl: './request-detail.component.scss',
 })
@@ -111,25 +124,5 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
     const newIdx = (this.lightboxIdx() + 1) % imgs.length;
     this.lightboxIdx.set(newIdx);
     this.lightboxUrl.set(imgs[newIdx]);
-  }
-
-  getWorkTypeEmoji(wt: WorkType): string {
-    const map: Record<WorkType, string> = {
-      [WorkType.Plumber]:         '🔩',
-      [WorkType.Electrician]:     '⚡',
-      [WorkType.Carpenter]:       '🪚',
-      [WorkType.IT]:              '💻',
-      [WorkType.ACTechnician]:    '❄️',
-      [WorkType.Painter]:         '🖌️',
-      [WorkType.Alumetal]:        '🪟',
-      [WorkType.ApplianceRepair]: '🔌',
-      [WorkType.Satellite]:       '📡',
-      [WorkType.Tiler]:           '🧱',
-      [WorkType.Welder]:          '🔥',
-      [WorkType.Cleaner]:         '🧹',
-      [WorkType.PestControl]:     '🐜',
-      [WorkType.CarMechanic]:     '🚗',
-    };
-    return map[wt] ?? '🔧';
   }
 }

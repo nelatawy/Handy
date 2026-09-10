@@ -4,11 +4,13 @@
   <div class="worker-hero">
     <div class="worker-hero__text">
       <h1 class="worker-hero__title">
-        {{ 'HOME.WORKER_WELCOME' | translate }} <span class="worker-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span> 👷
+        {{ 'HOME.WORKER_WELCOME' | translate }} <span class="worker-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span>
       </h1>
       <p class="worker-hero__sub">{{ 'HOME.WORKER_SUB' | translate }}</p>
     </div>
-    <div class="worker-hero__icon">🔧</div>
+    <div class="worker-hero__icon">
+      <svg lucideWrench [size]="28"></svg>
+    </div>
   </div>
 
   <!-- Active job widget -->
@@ -24,7 +26,9 @@
     >
       <div class="active-job-widget__label">{{ 'NAV.ACTIVE_JOB' | translate }}</div>
       <div class="active-job-widget__info">
-        <div class="active-job-widget__type-icon">🛠️</div>
+        <div class="active-job-widget__type-icon">
+          <app-work-type-icon [type]="activeJob()!.workType" [size]="22" />
+        </div>
         <div>
           <div class="active-job-widget__type">{{ 'WORK_TYPE.' + activeJob()!.workType | translate }}</div>
           <div class="active-job-widget__desc">{{ activeJob()!.description | slice:0:60 }}{{ activeJob()!.description.length > 60 ? '…' : '' }}</div>
@@ -33,7 +37,7 @@
       <div class="active-job-widget__footer">
         <app-job-status-badge [status]="activeJob()!.status" />
         <span class="active-job-widget__price">{{ activeJob()!.price | number : '1.0-0' }} EGP</span>
-        <span class="active-job-widget__arrow">→</span>
+        <span class="active-job-widget__arrow"><svg lucideArrowRight [size]="16"></svg></span>
       </div>
     </div>
   }
@@ -44,30 +48,30 @@
     (click)="goFeed()"
     [class.cta-btn--muted]="activeJob()?.status === JobStatus.Pending || activeJob()?.status === JobStatus.Started"
   >
-    <span class="cta-btn__icon">🔍</span>
+    <span class="cta-btn__icon"><svg lucideSearch [size]="22"></svg></span>
     <div>
       <div class="cta-btn__title">{{ 'HOME.BROWSE_REQUESTS_CTA' | translate }}</div>
       <div class="cta-btn__sub">{{ 'HOME.BROWSE_REQUESTS_CTA_SUB' | translate }}</div>
     </div>
-    <span class="cta-btn__arrow">→</span>
+    <span class="cta-btn__arrow"><svg lucideArrowRight [size]="18"></svg></span>
   </button>
 
   <!-- Quick actions -->
   <div class="quick-actions">
     <button class="quick-action" (click)="goFeed()">
-      <span class="quick-action__icon">📋</span>
+      <span class="quick-action__icon"><svg lucideClipboardList [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.REQUESTS' | translate }}</span>
     </button>
     <button class="quick-action" [disabled]="!activeJob()" (click)="goActiveJob()">
-      <span class="quick-action__icon">⚡</span>
+      <span class="quick-action__icon"><svg lucideZap [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.ACTIVE_JOB' | translate }}</span>
     </button>
     <button class="quick-action" routerLink="/worker/earnings">
-      <span class="quick-action__icon">💰</span>
+      <span class="quick-action__icon"><svg lucideCoins [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.EARNINGS' | translate }}</span>
     </button>
     <button class="quick-action" routerLink="/worker/profile">
-      <span class="quick-action__icon">👤</span>
+      <span class="quick-action__icon"><svg lucideUser [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.PROFILE' | translate }}</span>
     </button>
   </div>

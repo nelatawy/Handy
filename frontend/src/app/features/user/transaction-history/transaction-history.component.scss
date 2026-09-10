@@ -118,9 +118,12 @@
     justify-content: center;
     font-size: 1.25rem;
     flex-shrink: 0;
+    color: v.$color-text-primary;
 
-    &--cash   { background: v.$color-cash-light; }
-    &--online { background: v.$color-online-light; }
+    // Alpha tints survive both themes — the tint colour mixes against
+    // whatever surface sits beneath it (white in light, ink in dark).
+    &--cash   { background: rgba(v.$color-cash,   0.15); color: v.$color-cash; }
+    &--online { background: rgba(v.$color-primary-500, 0.15); color: var(--color-accent); }
   }
 
   &__info {
@@ -180,6 +183,8 @@
 }
 
 // ── Badge overrides ───────────────────────────────────────────────────────────
+// Alpha tints instead of opaque pastels so they read correctly on both
+// the white card surface (light) and the ink-800 card surface (dark).
 .badge {
   display: inline-flex;
   align-items: center;
@@ -189,16 +194,16 @@
   font-weight: v.$font-weight-semibold;
   white-space: nowrap;
 
-  &--cash    { background: v.$color-cash-light;    color: v.$color-cash; }
-  &--online  { background: v.$color-online-light;  color: v.$color-online; }
-  &--success { background: v.$color-success-light; color: #16a34a; }
-  &--warning { background: v.$color-warning-light; color: #b45309; }
-  &--danger  { background: v.$color-danger-light;  color: v.$color-danger; }
+  &--cash    { background: rgba(v.$color-cash,            0.15); color: v.$color-success-text; }
+  &--online  { background: rgba(v.$color-primary-500,     0.15); color: var(--color-accent-text); }
+  &--success { background: rgba(v.$color-success,         0.15); color: v.$color-success-text; }
+  &--warning { background: rgba(v.$color-warning,         0.15); color: v.$color-warning-text; }
+  &--danger  { background: rgba(v.$color-danger,          0.15); color: v.$color-danger-text; }
 }
 
 // ── Skeleton helpers ──────────────────────────────────────────────────────────
 .skeleton {
-  background: linear-gradient(90deg, v.$color-gray-100 25%, v.$color-gray-200 50%, v.$color-gray-100 75%);
+  background: linear-gradient(90deg, v.$color-surface-2 25%, v.$color-surface-3 50%, v.$color-surface-2 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: v.$radius-sm;

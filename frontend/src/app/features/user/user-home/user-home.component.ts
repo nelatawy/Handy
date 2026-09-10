@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
@@ -16,12 +16,26 @@ import { JobService } from '../../../core/services/job.service';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { JobStatusBadgeComponent } from '../../../shared/components/job-status-badge/job-status-badge.component';
+import { WorkTypeIconComponent } from '../../../shared/components/work-type-icon/work-type-icon.component';
+import { LucideWrench, LucidePlus, LucideReceipt, LucideZap, LucideArrowRight } from '@lucide/angular';
 
 @Component({
   selector: 'app-user-home',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule, JobStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterLink,
+    TranslatePipe,
+    JobStatusBadgeComponent,
+    WorkTypeIconComponent,
+    LucideWrench,
+    LucidePlus,
+    LucideReceipt,
+    LucideZap,
+    LucideArrowRight,
+  ],
   templateUrl: './user-home.component.html',
   styleUrl: './user-home.component.scss',
 })
@@ -38,17 +52,6 @@ export class UserHomeComponent implements OnInit {
 
   readonly JobStatus = JobStatus;
   readonly WorkType  = WorkType;
-
-  /** Work-type emoji map for request cards */
-  readonly workTypeEmoji: Record<string, string | undefined> = {
-    plumber:      '🔧',
-    electrician:  '⚡',
-    carpenter:    '🪵',
-    painter:      '🎨',
-    cleaner:      '🧹',
-    ac_technician:'❄️',
-    other:        '🛠️',
-  };
 
   ngOnInit(): void {
     // Load active job (already-started/pending job)

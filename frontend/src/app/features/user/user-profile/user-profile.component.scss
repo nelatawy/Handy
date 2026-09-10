@@ -23,7 +23,9 @@
     align-items: center;
     gap: v.$space-4;
     padding: v.$space-6;
-    background: linear-gradient(135deg, v.$color-primary-50, v.$color-white);
+    // Use surface-2 instead of a hardcoded white gradient so the header
+    // is visible in dark mode (ink-700 → ink-800 instead of white → primary-50).
+    background: linear-gradient(135deg, v.$color-surface-2, v.$color-surface);
     border-bottom: 1px solid v.$color-border;
     flex-wrap: wrap;
   }
@@ -64,8 +66,9 @@
     display: inline-flex;
     align-items: center;
     padding: v.$space-1 v.$space-3;
-    background: v.$color-primary-100;
-    color: v.$color-primary-700;
+    // Alpha tint works on both white and ink surfaces.
+    background: rgba(v.$color-primary-500, 0.14);
+    color: var(--color-accent-text);
     border-radius: v.$radius-full;
     font-size: v.$font-size-xs;
     font-weight: v.$font-weight-semibold;
@@ -206,7 +209,7 @@
 
 // ── Shared skeleton base ──────────────────────────────────────────────────────
 .skeleton {
-  background: linear-gradient(90deg, v.$color-gray-100 25%, v.$color-gray-200 50%, v.$color-gray-100 75%);
+  background: linear-gradient(90deg, v.$color-surface-2 25%, v.$color-surface-3 50%, v.$color-surface-2 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: v.$radius-sm;

@@ -16,12 +16,13 @@ import { RequestService } from '../../../core/services/request.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { WebSocketService } from '../../../core/services/websocket.service';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
+import { LucidePartyPopper, LucideStore, LucideCheck } from '@lucide/angular';
 
 @Component({
   selector: 'app-live-offers',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, StarRatingComponent],
+  imports: [CommonModule, TranslatePipe, StarRatingComponent, LucidePartyPopper, LucideStore, LucideCheck],
   templateUrl: './live-offers.component.html',
   styleUrl: './live-offers.component.scss',
 })

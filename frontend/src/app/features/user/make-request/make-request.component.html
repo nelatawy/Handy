@@ -37,7 +37,7 @@
           @if (aiLoading()) {
             <span class="spinner"></span>
           } @else {
-            <span class="ai-btn__icon">✨</span>
+            <span class="ai-btn__icon"><svg lucideSparkles [size]="15"></svg></span>
           }
           {{ aiLoading() ? ('REQUEST.AI_SUGGEST_LOADING' | translate) : ('REQUEST.AI_SUGGEST' | translate) }}
         </button>
@@ -54,7 +54,7 @@
     @if (aiSuggestion()) {
       <div class="ai-card animate-fade-in-up">
         <div class="ai-card__header">
-          <span class="ai-card__icon">✨</span>
+          <span class="ai-card__icon"><svg lucideSparkles [size]="16"></svg></span>
           <span class="ai-card__title">{{ 'REQUEST.AI_SUGGESTION_TITLE' | translate }}</span>
         </div>
         <p class="ai-card__description">{{ aiSuggestion()!.suggestedDescription }}</p>
@@ -63,7 +63,8 @@
         </div>
         <div class="ai-card__actions">
           <button type="button" class="btn btn--primary btn--sm" (click)="acceptAiSuggestion()">
-            ✓ {{ 'REQUEST.AI_ACCEPT' | translate }}
+            <svg lucideCheck [size]="15"></svg>
+            <span>{{ 'REQUEST.AI_ACCEPT' | translate }}</span>
           </button>
           <button type="button" class="btn btn--ghost btn--sm" (click)="dismissAiSuggestion()">
             {{ 'REQUEST.AI_DISMISS' | translate }}

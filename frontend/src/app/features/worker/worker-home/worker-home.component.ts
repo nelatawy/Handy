@@ -18,12 +18,35 @@ import { AuthService } from '../../../core/services/auth.service';
 import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { JobStatusBadgeComponent } from '../../../shared/components/job-status-badge/job-status-badge.component';
+import { WorkTypeIconComponent } from '../../../shared/components/work-type-icon/work-type-icon.component';
+import {
+  LucideWrench,
+  LucideSearch,
+  LucideClipboardList,
+  LucideZap,
+  LucideCoins,
+  LucideUser,
+  LucideArrowRight,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-worker-home',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule, JobStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    RouterModule,
+    JobStatusBadgeComponent,
+    WorkTypeIconComponent,
+    LucideWrench,
+    LucideSearch,
+    LucideClipboardList,
+    LucideZap,
+    LucideCoins,
+    LucideUser,
+    LucideArrowRight,
+  ],
   templateUrl: './worker-home.component.html',
   styleUrl: './worker-home.component.scss',
 })

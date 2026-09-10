@@ -16,14 +16,16 @@ import { JobRequest } from '../../../core/models/models';
 import { WorkType } from '../../../core/models/enums';
 import { RequestService } from '../../../core/services/request.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { WebSocketService } from '../../../core/services/websocket.service';
+import { WorkTypeIconComponent } from '../../../shared/components/work-type-icon/work-type-icon.component';
+import { LucideInbox } from '@lucide/angular';
 
 @Component({
   selector: 'app-requests-feed',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule],
+  imports: [CommonModule, TranslatePipe, RouterModule, WorkTypeIconComponent, LucideInbox],
   templateUrl: './requests-feed.component.html',
   styleUrl: './requests-feed.component.scss',
 })
@@ -77,26 +79,6 @@ export class RequestsFeedComponent implements OnInit, OnDestroy {
 
   openRequest(r: JobRequest): void {
     this.router.navigate(['/worker/request', r.id]);
-  }
-
-  getWorkTypeEmoji(wt: WorkType): string {
-    const map: Record<WorkType, string> = {
-      [WorkType.Plumber]:         '🔩',
-      [WorkType.Electrician]:     '⚡',
-      [WorkType.Carpenter]:       '🪚',
-      [WorkType.IT]:              '💻',
-      [WorkType.ACTechnician]:    '❄️',
-      [WorkType.Painter]:         '🖌️',
-      [WorkType.Alumetal]:        '🪟',
-      [WorkType.ApplianceRepair]: '🔌',
-      [WorkType.Satellite]:       '📡',
-      [WorkType.Tiler]:           '🧱',
-      [WorkType.Welder]:          '🔥',
-      [WorkType.Cleaner]:         '🧹',
-      [WorkType.PestControl]:     '🐜',
-      [WorkType.CarMechanic]:     '🚗',
-    };
-    return map[wt] ?? '🔧';
   }
 
   /**

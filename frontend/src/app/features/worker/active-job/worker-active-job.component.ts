@@ -15,15 +15,36 @@ import { Subscription, finalize } from 'rxjs';
 import { Job } from '../../../core/models/models';
 import { JobStatus, PaymentType } from '../../../core/models/enums';
 import { JobService } from '../../../core/services/job.service';
-import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { WebSocketService } from '../../../core/services/websocket.service';
 import { JobStatusBadgeComponent } from '../../../shared/components/job-status-badge/job-status-badge.component';
+import {
+  LucideClock,
+  LucideWrench,
+  LucideAward,
+  LucideCreditCard,
+  LucideBanknote,
+  LucideXCircle,
+  LucideAlertTriangle,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-worker-active-job',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule, JobStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    RouterModule,
+    JobStatusBadgeComponent,
+    LucideClock,
+    LucideWrench,
+    LucideAward,
+    LucideCreditCard,
+    LucideBanknote,
+    LucideXCircle,
+    LucideAlertTriangle,
+  ],
   templateUrl: './worker-active-job.component.html',
   styleUrl: './worker-active-job.component.scss',
 })

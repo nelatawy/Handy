@@ -29,21 +29,27 @@
   }
 
   &__brand {
-    @include m.flex-center;
-    gap: v.$space-2;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
     flex-shrink: 0;
 
     &:hover { text-decoration: none; }
   }
 
-  &__logo { font-size: 1.6rem; line-height: 1; }
+  &__brand-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid v.$color-border;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    transition: transform v.$transition-fast, box-shadow v.$transition-fast;
 
-  &__name {
-    font-size: v.$font-size-xl;
-    font-weight: v.$font-weight-bold;
-    color: v.$color-primary-600;
-    letter-spacing: -0.02em;
+    &:hover {
+      transform: scale(1.04);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
   }
 
   &__nav {

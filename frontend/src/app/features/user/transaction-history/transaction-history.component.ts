@@ -15,12 +15,13 @@ import { PaymentService } from '../../../core/services/payment.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Transaction } from '../../../core/models/models';
 import { PaymentType } from '../../../core/models/enums';
+import { LucideAlertTriangle, LucideCreditCard, LucideBanknote } from '@lucide/angular';
 
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, TranslatePipe, RouterModule],
+  imports: [CommonModule, TranslatePipe, RouterModule, LucideAlertTriangle, LucideCreditCard, LucideBanknote],
   templateUrl: './transaction-history.component.html',
   styleUrl: './transaction-history.component.scss',
 })

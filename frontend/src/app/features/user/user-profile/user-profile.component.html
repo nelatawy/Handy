@@ -13,7 +13,7 @@
   <!-- Error -->
   @if (error()) {
     <div class="user-profile__empty">
-      <span class="user-profile__empty-icon">⚠️</span>
+      <span class="user-profile__empty-icon"><svg lucideAlertTriangle [size]="32"></svg></span>
       <p>{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
     </div>
   }
@@ -30,7 +30,8 @@
         </div>
         @if (!editMode()) {
           <button class="btn-outline-sm user-profile__edit-btn" (click)="enterEditMode()" id="edit-user-profile-btn">
-            ✏️ {{ 'PROFILE.EDIT' | translate }}
+            <svg lucidePencil [size]="14"></svg>
+            <span>{{ 'PROFILE.EDIT' | translate }}</span>
           </button>
         }
       </div>

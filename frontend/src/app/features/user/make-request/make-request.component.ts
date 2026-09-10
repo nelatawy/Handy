@@ -23,12 +23,13 @@ import { AiSuggestResponse } from '../../../core/models/models';
 import { RequestService } from '../../../core/services/request.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
+import { LucideSparkles, LucideCheck } from '@lucide/angular';
 
 @Component({
   selector: 'app-make-request',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, ImageUploadComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, ImageUploadComponent, LucideSparkles, LucideCheck],
   templateUrl: './make-request.component.html',
   styleUrl: './make-request.component.scss',
 })

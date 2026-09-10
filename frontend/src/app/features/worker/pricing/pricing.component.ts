@@ -19,13 +19,15 @@ import { WebSocketService } from '../../../core/services/websocket.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { JobStatus } from '../../../core/models/enums';
 
+import { LucideCoins, LucideClock, LucideAward, LucideXCircle } from '@lucide/angular';
+
 type PricingState = 'form' | 'waiting' | 'chosen' | 'rejected';
 
 @Component({
   selector: 'app-pricing',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, FormsModule, TranslatePipe, RouterModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, RouterModule, LucideCoins, LucideClock, LucideAward, LucideXCircle],
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.scss',
 })

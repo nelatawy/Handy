@@ -10,7 +10,7 @@
 
       <div class="pricing-card">
         <div class="pricing-card__hero">
-          <div class="pricing-card__icon">💰</div>
+          <div class="pricing-card__icon"><svg lucideCoins [size]="36"></svg></div>
           <h1 class="pricing-card__title">{{ 'WORKER.YOUR_PRICE' | translate }}</h1>
           <p class="pricing-card__sub">{{ 'WORKER.PRICING_SUB' | translate }}</p>
         </div>
@@ -81,7 +81,7 @@
     @if (state() === 'waiting') {
       <div class="state-card state-card--waiting">
         <div class="state-card__pulse-ring">
-          <div class="state-card__icon">⏳</div>
+          <div class="state-card__icon"><svg lucideClock [size]="36"></svg></div>
         </div>
         <h2 class="state-card__title">{{ 'WORKER.WAITING_FOR_SELECTION' | translate }}</h2>
         <p class="state-card__sub">{{ 'WORKER.WAITING_FOR_SELECTION_SUB' | translate }}</p>
@@ -102,7 +102,7 @@
     <!-- ── CHOSEN state ───────────────────────────────────────────────────── -->
     @if (state() === 'chosen') {
       <div class="state-card state-card--chosen">
-        <div class="state-card__icon state-card__icon--big">🎉</div>
+        <div class="state-card__icon state-card__icon--big"><svg lucideAward [size]="48"></svg></div>
         <h2 class="state-card__title">{{ 'WORKER.YOU_WERE_CHOSEN' | translate }}</h2>
         <p class="state-card__sub">{{ 'OFFERS.REDIRECTING_TO_JOB' | translate }}</p>
         <div class="spinner spinner--lg"></div>
@@ -112,7 +112,7 @@
     <!-- ── REJECTED state ─────────────────────────────────────────────────── -->
     @if (state() === 'rejected') {
       <div class="state-card state-card--rejected">
-        <div class="state-card__icon">😔</div>
+        <div class="state-card__icon"><svg lucideXCircle [size]="36"></svg></div>
         <h2 class="state-card__title">{{ 'WORKER.OFFER_REJECTED' | translate }}</h2>
         <p class="state-card__sub">{{ 'WORKER.OFFER_REJECTED_SUB' | translate }}</p>
         <button class="btn btn--primary" (click)="goFeed()">{{ 'WORKER.BROWSE_MORE_REQUESTS' | translate }}</button>

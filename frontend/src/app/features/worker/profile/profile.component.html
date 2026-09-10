@@ -15,7 +15,7 @@
   <!-- Error -->
   @if (error()) {
     <div class="profile__empty">
-      <span class="profile__empty-icon">⚠️</span>
+      <span class="profile__empty-icon"><svg lucideAlertTriangle [size]="32"></svg></span>
       <p>{{ 'COMMON.GENERIC_ERROR' | translate }}</p>
     </div>
   }
@@ -33,7 +33,8 @@
         </div>
         @if (!editMode()) {
           <button class="btn-outline-sm profile__edit-btn" (click)="enterEditMode()" id="edit-profile-btn">
-            ✏️ {{ 'PROFILE.EDIT' | translate }}
+            <svg lucidePencil [size]="14"></svg>
+            <span>{{ 'PROFILE.EDIT' | translate }}</span>
           </button>
         }
       </div>
@@ -72,7 +73,7 @@
           <h2 class="profile__section-title">{{ 'PROFILE.SHOP' | translate }}</h2>
           @if (worker()!.hasShop) {
             <div class="profile__shop-info">
-              <span class="profile__shop-icon">🏪</span>
+              <span class="profile__shop-icon"><svg lucideStore [size]="18"></svg></span>
               <span>{{ worker()!.shopLocation || ('PROFILE.SHOP_LOCATION' | translate) }}</span>
             </div>
           } @else {

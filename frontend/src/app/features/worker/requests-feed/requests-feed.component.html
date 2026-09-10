@@ -16,7 +16,9 @@
     </div>
   } @else if (requests().length === 0) {
     <div class="feed-empty">
-      <div class="feed-empty__icon">📭</div>
+      <div class="feed-empty__icon">
+        <svg lucideInbox [size]="48"></svg>
+      </div>
       <p class="feed-empty__text">{{ 'WORKER.FEED_EMPTY' | translate }}</p>
     </div>
   } @else {
@@ -30,7 +32,9 @@
           (keydown.enter)="openRequest(req)"
         >
           <div class="request-card__header">
-            <span class="request-card__emoji">{{ getWorkTypeEmoji(req.workType) }}</span>
+            <span class="request-card__emoji">
+              <app-work-type-icon [type]="req.workType" [size]="20" />
+            </span>
             <div>
               <span class="request-card__type-badge">{{ 'WORK_TYPE.' + req.workType | translate }}</span>
               <span class="request-card__time">{{ timeAgo(req.createdAt).key | translate : timeAgo(req.createdAt).params }}</span>

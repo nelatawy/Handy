@@ -4,11 +4,13 @@
   <div class="home-hero">
     <div class="home-hero__text">
       <h1 class="home-hero__title">
-        {{ 'HOME.GREETING' | translate }} <span class="home-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span> 👋
+        {{ 'HOME.GREETING' | translate }} <span class="home-hero__name">{{ auth.username() ?? ('HOME.GREETING_FALLBACK_NAME' | translate) }}</span>
       </h1>
       <p class="home-hero__sub">{{ 'HOME.USER_SUB' | translate }}</p>
     </div>
-    <div class="home-hero__illustration">🔧</div>
+    <div class="home-hero__illustration">
+      <svg lucideWrench [size]="28"></svg>
+    </div>
   </div>
 
   <!-- Active job widget (if there's one) -->
@@ -27,7 +29,7 @@
       <div class="active-job-widget__footer">
         <app-job-status-badge [status]="activeJob()!.status" />
         <span class="active-job-widget__price">{{ activeJob()!.userPrice | number : '1.0-0' }} EGP</span>
-        <span class="active-job-widget__arrow">→</span>
+        <span class="active-job-widget__arrow"><svg lucideArrowRight [size]="16"></svg></span>
       </div>
     </div>
   }
@@ -45,13 +47,15 @@
             (click)="goToRequest(req.id)"
             type="button"
           >
-            <span class="pending-req-card__emoji">{{ workTypeEmoji[req.workType] ?? '🛠️' }}</span>
+            <span class="pending-req-card__emoji">
+              <app-work-type-icon [type]="req.workType" [size]="22" />
+            </span>
             <div class="pending-req-card__body">
               <div class="pending-req-card__type">{{ 'WORK_TYPE.' + req.workType | translate }}</div>
               <div class="pending-req-card__desc">{{ req.description }}</div>
             </div>
             <span class="pending-req-card__badge">{{ 'HOME.WAITING_OFFERS' | translate }}</span>
-            <span class="pending-req-card__arrow">→</span>
+            <span class="pending-req-card__arrow"><svg lucideArrowRight [size]="16"></svg></span>
           </button>
         }
       </div>
@@ -64,22 +68,22 @@
     (click)="goMakeRequest()"
     [disabled]="activeJob()?.status === JobStatus.Pending || activeJob()?.status === JobStatus.Started"
   >
-    <span class="cta-btn__icon">+</span>
+    <span class="cta-btn__icon"><svg lucidePlus [size]="22"></svg></span>
     <div>
       <div class="cta-btn__title">{{ 'HOME.MAKE_REQUEST_CTA' | translate }}</div>
       <div class="cta-btn__sub">{{ 'HOME.MAKE_REQUEST_CTA_SUB' | translate }}</div>
     </div>
-    <span class="cta-btn__arrow">→</span>
+    <span class="cta-btn__arrow"><svg lucideArrowRight [size]="18"></svg></span>
   </button>
 
   <!-- Quick actions grid -->
   <div class="quick-actions">
     <button class="quick-action" routerLink="/user/history">
-      <span class="quick-action__icon">🧾</span>
+      <span class="quick-action__icon"><svg lucideReceipt [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.HISTORY' | translate }}</span>
     </button>
     <button class="quick-action" [disabled]="!activeJob()" (click)="goActiveJob()">
-      <span class="quick-action__icon">⚡</span>
+      <span class="quick-action__icon"><svg lucideZap [size]="20"></svg></span>
       <span class="quick-action__label">{{ 'NAV.ACTIVE_JOB' | translate }}</span>
     </button>
   </div>

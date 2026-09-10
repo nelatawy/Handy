@@ -44,7 +44,11 @@
              [class.payment-indicator--online]="job()!.paymentType === PaymentType.Online"
              [class.payment-indicator--cash]="job()!.paymentType === PaymentType.Cash">
           <span class="payment-indicator__icon">
-            {{ job()!.paymentType === PaymentType.Online ? '💳' : '💵' }}
+            @if (job()!.paymentType === PaymentType.Online) {
+              <svg lucideCreditCard [size]="18"></svg>
+            } @else {
+              <svg lucideBanknote [size]="18"></svg>
+            }
           </span>
           <span>{{ 'PAYMENT_TYPE.' + job()!.paymentType | translate }}</span>
         </div>
@@ -60,7 +64,8 @@
       <div class="job-actions">
         <button class="btn btn--primary btn--lg" (click)="markStarted()" [disabled]="actionLoading()">
           @if (actionLoading()) { <span class="spinner"></span> }
-          🚀 {{ 'JOB.MARK_STARTED' | translate }}
+          <svg lucidePlay [size]="18"></svg>
+          <span>{{ 'JOB.MARK_STARTED' | translate }}</span>
         </button>
         <button class="btn btn--danger-outline btn--lg" (click)="openCancelConfirm()">
           {{ 'JOB.CANCEL_JOB' | translate }}
@@ -72,7 +77,8 @@
     @if (job()!.status === JobStatus.Started) {
       <div class="job-actions">
         <button class="btn btn--success btn--lg" (click)="openPaymentChoice()">
-          ✓ {{ 'JOB.MARK_FINISHED' | translate }}
+          <svg lucideCheckCircle [size]="18"></svg>
+          <span>{{ 'JOB.MARK_FINISHED' | translate }}</span>
         </button>
         <button class="btn btn--danger-outline btn--lg" (click)="openCancelConfirm()">
           {{ 'JOB.CANCEL_JOB' | translate }}
@@ -83,7 +89,7 @@
     <!-- ── STATE: FINISHED ────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Finished) {
       <div class="job-finished-banner">
-        <span class="job-finished-banner__icon">🎉</span>
+        <span class="job-finished-banner__icon"><svg lucideAward [size]="28"></svg></span>
         <div>
           <h2>{{ 'JOB.FINISHED_TITLE' | translate }}</h2>
           @if (!ratingSubmitted()) {
@@ -94,7 +100,8 @@
         </div>
         @if (!ratingSubmitted()) {
           <button class="btn btn--primary" (click)="showRatingModal.set(true)">
-            ⭐ {{ 'JOB.RATE_CTA' | translate }}
+            <svg lucideStar [size]="16"></svg>
+            <span>{{ 'JOB.RATE_CTA' | translate }}</span>
           </button>
         }
       </div>
@@ -103,13 +110,14 @@
     <!-- ── STATE: CANCELED ────────────────────────────────────────── -->
     @if (job()!.status === JobStatus.Canceled) {
       <div class="job-canceled-banner">
-        <span class="job-canceled-banner__icon">✕</span>
+        <span class="job-canceled-banner__icon"><svg lucideXCircle [size]="28"></svg></span>
         <div>
           <h2>{{ 'JOB.CANCELED_TITLE' | translate }}</h2>
           @if (job()!.canceledBy === 'worker') {
             <p>{{ 'JOB.CANCELED_BY_WORKER' | translate }}</p>
             <button class="btn btn--primary btn--sm mt-3" (click)="makeNewRequest()">
-              + {{ 'JOB.MAKE_NEW_REQUEST' | translate }}
+              <svg lucidePlus [size]="16"></svg>
+              <span>{{ 'JOB.MAKE_NEW_REQUEST' | translate }}</span>
             </button>
           } @else {
             <p>{{ 'JOB.CANCELED_BY_USER' | translate }}</p>
@@ -139,12 +147,12 @@
               (click)="confirmPayOnline()"
               [disabled]="paymentStep() === 'confirming'"
             >
-              <span class="payment-option__icon">📱</span>
+              <span class="payment-option__icon"><svg lucideSmartphone [size]="24"></svg></span>
               <div>
                 <div class="payment-option__title">{{ 'JOB.PAY_WALLET' | translate }}</div>
                 <div class="payment-option__desc">{{ 'JOB.PAY_WALLET_DESC' | translate }}</div>
               </div>
-              <span class="payment-option__arrow">→</span>
+              <span class="payment-option__arrow"><svg lucideArrowRight [size]="18"></svg></span>
             </button>
             <div class="wallet-input-group">
               <label class="wallet-input-label">{{ 'JOB.WALLET_PHONE_LABEL' | translate }}</label>
@@ -164,12 +172,12 @@
             (click)="confirmPayCash()"
             [disabled]="paymentStep() === 'confirming'"
           >
-            <span class="payment-option__icon">💵</span>
+            <span class="payment-option__icon"><svg lucideBanknote [size]="24"></svg></span>
             <div>
               <div class="payment-option__title">{{ 'JOB.PAY_CASH' | translate }}</div>
               <div class="payment-option__desc">{{ 'JOB.PAY_CASH_DESC' | translate }}</div>
             </div>
-            <span class="payment-option__arrow">→</span>
+            <span class="payment-option__arrow"><svg lucideArrowRight [size]="18"></svg></span>
           </button>
         </div>
 

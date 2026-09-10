@@ -15,12 +15,13 @@ import { ProfileService, UpdateUserProfileBody } from '../../../core/services/pr
 import { NotificationService } from '../../../core/services/notification.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/models';
+import { LucideAlertTriangle, LucidePencil } from '@lucide/angular';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, LucideAlertTriangle, LucidePencil],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })

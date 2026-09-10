@@ -260,8 +260,12 @@
     color: v.$color-white;
     font-size: v.$font-size-xs;
     font-weight: v.$font-weight-bold;
-    padding: 2px v.$space-2;
+    padding: 3px 8px;
     border-radius: v.$radius-full;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: v.$shadow-sm;
   }
 }
 

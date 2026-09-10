@@ -2,9 +2,8 @@
     <header class="navbar">
         <div class="navbar__inner container">
             <!-- Brand -->
-            <a class="navbar__brand" [routerLink]="auth.getHomeRoute()">
-                <span class="navbar__logo">🔧</span>
-                <span class="navbar__name">{{ 'APP_NAME' | translate }}</span>
+            <a class="navbar__brand" [routerLink]="auth.getHomeRoute()" [title]="'APP_NAME' | translate" aria-label="Handy">
+                <img src="/favicon.ico" class="navbar__brand-logo" [alt]="'APP_NAME' | translate" />
             </a>
 
             <!-- Desktop Nav -->
