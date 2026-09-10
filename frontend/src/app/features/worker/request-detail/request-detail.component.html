@@ -1,0 +1,98 @@
+<div class="detail-page">
+
+  <!-- Back button -->
+  <button class="btn btn--ghost btn--sm back-btn" (click)="goBack()">
+    ← Back to Feed
+  </button>
+
+  @if (loading()) {
+    <div class="detail-skeleton">
+      <div class="skeleton skeleton--title"></div>
+      <div class="skeleton skeleton--desc"></div>
+      <div class="skeleton skeleton--images"></div>
+    </div>
+  } @else if (request()) {
+
+    <!-- Closed banner -->
+    @if (closed()) {
+      <div class="closed-banner">
+        <span class="closed-banner__icon">🔒</span>
+        <span>This request is no longer available — another handyman has been selected.</span>
+      </div>
+    }
+
+    <!-- Request card -->
+    <div class="detail-card">
+
+      <!-- Header -->
+      <div class="detail-card__header">
+        <div class="detail-card__emoji">{{ getWorkTypeEmoji(request()!.workType) }}</div>
+        <div>
+          <span class="detail-card__type-badge">{{ 'WORK_TYPE.' + request()!.workType | translate }}</span>
+          <p class="detail-card__meta">Posted {{ request()!.createdAt | date : 'medium' }}</p>
+        </div>
+        @if (request()!.status === 'open') {
+          <span class="status-pill status-pill--open">Open</span>
+        } @else {
+          <span class="status-pill status-pill--closed">Closed</span>
+        }
+      </div>
+
+      <!-- Description -->
+      <div class="detail-card__section">
+        <h2 class="detail-card__section-title">{{ 'WORKER.REQUEST_DETAIL' | translate }}</h2>
+        <p class="detail-card__desc">{{ request()!.description }}</p>
+      </div>
+
+      <!-- Image gallery -->
+      @if (request()!.imageUrls.length) {
+        <div class="detail-card__section">
+          <h2 class="detail-card__section-title">Photos</h2>
+          <div class="image-gallery">
+            @for (url of request()!.imageUrls; track url; let i = $index) {
+              <button class="image-gallery__item" (click)="openLightbox(url, i)">
+                <img [src]="url" alt="job photo {{ i + 1 }}" />
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Action buttons (only if request is still open) -->
+      @if (!closed()) {
+        <div class="detail-card__actions">
+          <button class="btn btn--danger-outline" (click)="decline()">
+            ✕ {{ 'WORKER.DECLINE' | translate }}
+          </button>
+          <button class="btn btn--primary" (click)="accept()">
+            ✓ {{ 'WORKER.ACCEPT' | translate }}
+          </button>
+        </div>
+      } @else {
+        <div class="detail-card__actions">
+          <button class="btn btn--ghost" (click)="goBack()">← Back to Feed</button>
+        </div>
+      }
+
+    </div>
+
+  }
+
+  <!-- Lightbox overlay -->
+  @if (lightboxUrl()) {
+    <div class="lightbox" (click)="closeLightbox()">
+      <div class="lightbox__inner" (click)="$event.stopPropagation()">
+        <button class="lightbox__close" (click)="closeLightbox()">✕</button>
+        @if ((request()?.imageUrls?.length ?? 0) > 1) {
+          <button class="lightbox__nav lightbox__nav--prev" (click)="prevImage()">‹</button>
+        }
+        <img [src]="lightboxUrl()!" alt="full size" class="lightbox__img" />
+        @if ((request()?.imageUrls?.length ?? 0) > 1) {
+          <button class="lightbox__nav lightbox__nav--next" (click)="nextImage()">›</button>
+          <div class="lightbox__counter">{{ lightboxIdx() + 1 }} / {{ request()!.imageUrls.length }}</div>
+        }
+      </div>
+    </div>
+  }
+
+</div>

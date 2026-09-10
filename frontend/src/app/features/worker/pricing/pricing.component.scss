@@ -1,0 +1,327 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.pricing-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.back-btn { align-self: flex-start; }
+
+// ── Main pricing card ─────────────────────────────────────────────────────────
+.pricing-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: v.$radius-xl;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__hero {
+    text-align: center;
+    padding-bottom: 0.5rem;
+  }
+
+  &__icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: v.$color-white;
+    margin: 0 0 0.5rem;
+  }
+
+  &__sub {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+// ── Request summary snippet ───────────────────────────────────────────────────
+.request-summary {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: v.$radius-lg;
+  padding: 0.875rem 1rem;
+
+  &__type {
+    display: inline-block;
+    background: rgba(14, 165, 233, 0.15);
+    color: v.$color-primary-500;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    margin-bottom: 0.5rem;
+  }
+
+  &__desc {
+    font-size: 0.87rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+// ── Price input ───────────────────────────────────────────────────────────────
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: v.$radius-lg;
+    overflow: hidden;
+    transition: border-color 0.2s;
+
+    &:focus-within {
+      border-color: v.$color-primary-500;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
+  }
+
+  &__input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0.875rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: v.$color-white;
+    font-family: Inter, system-ui, sans-serif;
+
+    &::placeholder { color: rgba(255, 255, 255, 0.25); font-weight: 400; font-size: 0.9rem; }
+
+    // Hide native number spinners
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    -moz-appearance: textfield;
+  }
+
+  &__currency {
+    padding: 0 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+// ── Price preview breakdown ───────────────────────────────────────────────────
+.price-preview {
+  background: rgba(34, 197, 94, 0.06);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: v.$radius-lg;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: slide-in 0.2s ease;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.65);
+
+    &--total {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
+
+  &__value { font-weight: 500; color: rgba(255, 255, 255, 0.85); }
+  &__value.fee { color: rgba(255, 255, 255, 0.45); }
+
+  &__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0.25rem 0;
+  }
+
+  &__total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #86efac;
+  }
+
+  &__hint {
+    font-size: 0.72rem;
+    color: rgba(34, 197, 94, 0.6);
+    margin: 0.25rem 0 0;
+    text-align: right;
+  }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Submit button ─────────────────────────────────────────────────────────────
+.submit-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+// ── State cards (waiting / chosen / rejected) ─────────────────────────────────
+.state-card {
+  border-radius: v.$radius-xl;
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: fade-in 0.35s ease;
+
+  &--waiting {
+    background: rgba(14, 165, 233, 0.08);
+    border: 1.5px solid rgba(14, 165, 233, 0.2);
+  }
+
+  &--chosen {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1.5px solid rgba(34, 197, 94, 0.3);
+  }
+
+  &--rejected {
+    background: rgba(239, 68, 68, 0.07);
+    border: 1.5px solid rgba(239, 68, 68, 0.2);
+  }
+
+  &__title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: v.$color-white;
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    max-width: 320px;
+  }
+
+  &__icon {
+    font-size: 3.5rem;
+
+    &--big { font-size: 5rem; }
+  }
+
+  // Pulsing ring for waiting state
+  &__pulse-ring {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(14, 165, 233, 0.5);
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    &::after { animation-delay: 1s; }
+
+    .state-card__icon { position: relative; z-index: 1; font-size: 2rem; }
+  }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+// ── Offer summary (in waiting state) ─────────────────────────────────────────
+.offer-summary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: v.$radius-lg;
+  padding: 0.875rem 1.25rem;
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+
+    strong { color: v.$color-white; }
+  }
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────────────
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: v.$color-white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+
+  &--lg {
+    width: 36px;
+    height: 36px;
+    border-width: 3px;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+.skeleton {
+  border-radius: v.$radius-xl;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  &--card { height: 480px; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}

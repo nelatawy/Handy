@@ -236,28 +236,35 @@ src/
 
 ## 6. Phase 4 — Core Flow (Handyman Side)
 
+### Worker Home
+- [x] Hero greeting with handyman's name
+- [x] Active job widget (click → worker active job) with status badge, work type, short description
+- [x] CTA button to browse requests feed
+- [x] Quick actions grid: Requests, Active Job, Earnings, Profile
+- [x] WebSocket: toast on `new_request`, update active job on `job_status_changed`
+
 ### Requests Feed
-- [ ] List/grid of open requests matching this handyman's work type
-- [ ] Live updates via WebSocket (new requests appear, closed requests disappear)
-- [ ] Each item clickable → navigates to request detail
+- [x] List/grid of open requests matching this handyman's work type
+- [x] Live updates via WebSocket (new requests appear, closed requests disappear)
+- [x] Each item clickable → navigates to request detail
 
 ### Request Detail
-- [ ] Description, images (gallery/lightbox), location info
-- [ ] **Accept** + **Decline** buttons
-- [ ] Accept → navigate to pricing screen
+- [x] Description, images (gallery/lightbox), location info
+- [x] **Accept** + **Decline** buttons
+- [x] Accept → navigate to pricing screen
 
 ### Pricing Screen
-- [ ] Input for worker's price
-- [ ] Live computed preview: "User will pay: [price + 5%]"
-- [ ] Submit → `POST /api/requests/{id}/offer` → navigate to pending state (waiting for selection)
-- [ ] WebSocket notification when chosen → navigate to active job
-- [ ] WebSocket notification when request closed by another handyman being chosen → toast + return to feed
+- [x] Input for worker's price
+- [x] Live computed preview: "User will pay: [price + 5%]"
+- [x] Submit → `POST /api/requests/{id}/offer` → navigate to pending state (waiting for selection)
+- [x] WebSocket notification when chosen → navigate to active job
+- [x] WebSocket notification when request closed by another handyman being chosen → toast + return to feed
 
 ### Active Job Screen (Handyman)
-- [ ] Mirror of user's active job screen, but **read-only for state transitions** (user drives Pending → Started → Finished)
-- [ ] Handyman's own **Cancel Job** button (available before Finished) → `POST /api/jobs/{id}/cancel` → notifies user in real time
-- [ ] State updates received live via WebSocket
-- [ ] Finished state shows earnings info
+- [x] Mirror of user's active job screen, but **read-only for state transitions** (user drives Pending → Started → Finished)
+- [x] Handyman's own **Cancel Job** button (available before Finished) → `POST /api/jobs/{id}/cancel` → notifies user in real time
+- [x] State updates received live via WebSocket
+- [x] Finished state shows earnings info
 
 ---
 
@@ -369,4 +376,4 @@ src/
 
 ---
 
-*Last updated: 2026-09-10 (v5 — Phase 1+2+3 complete: Auth, Make Request, Live Offers, Active Job with payment choice modal, User Home)*
+*Last updated: 2026-09-10 (v6 — Phase 1+2+3+4 complete: Auth, Make Request, Live Offers, Active Job, User Home; Worker Home, Requests Feed, Request Detail, Pricing, Worker Active Job)*

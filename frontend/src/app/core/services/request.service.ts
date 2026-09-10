@@ -48,6 +48,16 @@ export class RequestService {
     return this.http.post<ChooseOfferResponse>(`/api/requests/${requestId}/choose`, { offerId });
   }
 
+  /** GET /api/requests/open — fetch open requests visible to the current worker */
+  getOpenRequests(): Observable<JobRequest[]> {
+    return this.http.get<JobRequest[]>('/api/requests/open');
+  }
+
+  /** POST /api/requests/:id/offer — worker submits an offer */
+  submitOffer(requestId: string, price: number): Observable<{ offerId: string }> {
+    return this.http.post<{ offerId: string }>(`/api/requests/${requestId}/offer`, { price });
+  }
+
   /** POST /api/ai-suggest — Gemini Flash description enhancement */
   aiSuggest(description: string): Observable<AiSuggestResponse> {
     return this.http.post<AiSuggestResponse>('/api/ai-suggest', { description });

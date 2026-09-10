@@ -1,0 +1,262 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.detail-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// ── Back button ───────────────────────────────────────────────────────────────
+.back-btn {
+  align-self: flex-start;
+}
+
+// ── Closed banner ─────────────────────────────────────────────────────────────
+.closed-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: v.$radius-lg;
+  padding: 0.875rem 1rem;
+  color: #fca5a5;
+  font-size: 0.9rem;
+
+  &__icon { font-size: 1.2rem; }
+}
+
+// ── Main card ─────────────────────────────────────────────────────────────────
+.detail-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: v.$radius-xl;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  &__emoji { font-size: 2.5rem; flex-shrink: 0; }
+
+  &__type-badge {
+    display: inline-block;
+    background: rgba(14, 165, 233, 0.15);
+    color: v.$color-primary-500;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    margin-bottom: 0.35rem;
+  }
+
+  &__meta {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0;
+  }
+
+  &__section {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    &:last-of-type { border-bottom: none; }
+  }
+
+  &__section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 0.75rem;
+  }
+
+  &__desc {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.65;
+    font-size: 0.95rem;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    .btn { flex: 1; justify-content: center; }
+  }
+}
+
+// ── Status pills ──────────────────────────────────────────────────────────────
+.status-pill {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+
+  &--open {
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  &--closed {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+  }
+}
+
+// ── Image gallery ─────────────────────────────────────────────────────────────
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  &__item {
+    width: 80px;
+    height: 80px;
+    border-radius: v.$radius-md;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    cursor: pointer;
+    background: none;
+    transition: transform 0.15s, border-color 0.15s;
+
+    &:hover {
+      transform: scale(1.05);
+      border-color: v.$color-primary-500;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+// ── Lightbox ──────────────────────────────────────────────────────────────────
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.2s ease;
+
+  &__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  &__img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: v.$radius-lg;
+    object-fit: contain;
+  }
+
+  &__close {
+    position: absolute;
+    top: -2.5rem;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: v.$color-white;
+    font-size: 1.2rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover { background: rgba(255, 255, 255, 0.2); }
+  }
+
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: v.$color-white;
+    font-size: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+
+    &:hover { background: rgba(255, 255, 255, 0.25); }
+
+    &--prev { left: -3.5rem; }
+    &--next { right: -3.5rem; }
+  }
+
+  &__counter {
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ── Skeletons ─────────────────────────────────────────────────────────────────
+.detail-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton {
+  border-radius: v.$radius-lg;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+
+  &--title  { height: 32px; width: 50%; }
+  &--desc   { height: 120px; }
+  &--images { height: 90px; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
