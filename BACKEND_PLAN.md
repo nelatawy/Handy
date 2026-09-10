@@ -1,6 +1,6 @@
 # Handy — Backend Development Plan
 
-> **Stack:** Python · Flask (blueprints) · `flask-socketio` (Socket.IO, matches frontend's `socket.io-client`) · PostgreSQL via Supabase (SQLAlchemy + Alembic, direct connection) · `flask-jwt-extended` · Paymob (sandbox, hosted-checkout redirect) · AuthEvo (WhatsApp OTP + Telegram fallback) · Gemini Flash
+> **Stack:** Python · Flask (blueprints) · `flask-socketio` (Socket.IO, matches frontend's `socket.io-client`) · PostgreSQL via Supabase (Supabase REST Client) · `flask-jwt-extended` · Paymob (sandbox, hosted-checkout redirect) · AuthEvo (WhatsApp OTP + Telegram fallback) · Gemini Flash
 > **This file is the single source of truth for backend progress and is reconciled against `FRONTEND_PLAN.md`, which is already partway built (Phases 1–2 done). Where the original `BACKEND_PROMPT.md` conflicted with what the frontend already committed to, the frontend's contract wins — see §11.**
 
 ---
@@ -27,10 +27,10 @@
 | Concern | Decision |
 |---|---|
 | **Web framework** | Flask, organized as blueprints: `auth`, `otp`, `requests`, `offers`, `jobs`, `payments`, `ratings`, `workers`, `ai`, `webhooks` |
-| **DB access** | **SQLAlchemy + Alembic**, connecting directly to the Supabase Postgres connection string (not the Supabase REST/Python client). Gives full control over Postgres enums, joins, and transactional integrity around money-moving code. Supabase is used purely as managed Postgres + Storage here — **Storage uploads happen client-side** (see below), so the backend never touches the Supabase Storage SDK for the request-creation flow |
+| **DB access** | **Supabase REST Client**, connecting via  the Supabase REST/Python client. Gives an easier approach for DB integration — **Storage uploads happen client-side** (see below), so the backend never touches the Supabase Storage SDK for the request-creation flow |
 | **Auth** | `flask-jwt-extended`, `bcrypt` password hashing. JWT payload: `{ sub: user_id, role: 'user'\|'worker' }`. No refresh-token flow for v1 (long-lived access token; revisit if needed) |
 | **Realtime** | `flask-socketio` with `eventlet` (or `gevent`) worker. Socket auth: client connects with the JWT (as an `auth` payload or query param on connect); server verifies and joins the socket to a `user:{id}` room, plus `worktype:{type}` room if role=worker. **Event names match what the frontend's `WebSocketService` already expects — see §10, not the dot-notation originally drafted in `BACKEND_PROMPT.md`** |
-| **AI Suggestion** | Gemini Flash via REST (`google-generativeai` or plain `requests`), wrapped in a `providers/gemini.py` module so it's mockable offline |
+| **AI Suggestion** | Gemini Flash via REST (`google-genai` or plain `requests`), wrapped in a `providers/gemini.py` module so it's mockable offline |
 | **Payments** | Paymob sandbox, **hosted-checkout redirect** (not iframe) — confirmed by frontend decision log. Charge is a two-step async flow: backend creates a Paymob order + payment key and returns a checkout URL; the actual charge is confirmed later via the `POST /api/webhooks/paymob` webhook, not synchronously in the `finish` call. **New:** a `cash` payment path is also supported (see §11.1) — this did not exist in the original backend prompt |
 | **OTP** | AuthEvo, wrapped behind `providers/authevo.py` (`send_otp`, `verify_otp`, `link_telegram`), with a `sandbox`/`mock` mode driven by `AUTHEVO_MODE` env var so the rest of the system works without live credentials |
 | **`work_type` enum** | Postgres enum (`plumber`, `electrician`, `carpenter`, `it`) mirrored exactly by a Python `enum.Enum`, matching the frontend's TS enum values byte-for-byte |
@@ -82,6 +82,7 @@ backend/
 │   │   ├── __init__.py          # connect/disconnect handlers, room join logic
 │   │   └── emitters.py          # typed helper functions: emit_new_request(), emit_job_status_changed(), etc.
 │   ├── services/                # business logic, kept out of route handlers
+│   │   ├── auth_service.py
 │   │   ├── request_service.py
 │   │   ├── job_service.py
 │   │   ├── payment_service.py
@@ -109,10 +110,9 @@ backend/
 
 ## 2. Project Scaffolding
 
-- [ ] `flask`, `flask-socketio[eventlet]`, `flask-jwt-extended`, `flask-cors`, `flask-sqlalchemy`, `alembic`, `bcrypt`, `marshmallow`, `phonenumbers`, `python-dotenv`, `requests`, `google-generativeai`
+- [ ] `flask`, `flask-socketio[eventlet]`, `flask-jwt-extended`, `flask-cors`, `supabase` , `bcrypt`, `marshmallow`, `phonenumbers`, `python-dotenv`, `requests`, `google-generativeai`
 - [ ] App factory pattern (`create_app(config_name)`) with `SocketIO(app, cors_allowed_origins=..., async_mode='eventlet')`
 - [ ] `.env.example` documenting every required var: `DATABASE_URL`, `JWT_SECRET_KEY`, `AUTHEVO_API_KEY`, `AUTHEVO_MODE` (`sandbox`/`live`/`mock`), `GEMINI_API_KEY`, `PAYMOB_API_KEY`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, `PAYMOB_MODE`, `FRONTEND_URL` (for Paymob return-URL + CORS)
-- [ ] Alembic set up against the Supabase connection string; first migration creates all Postgres enums + tables
 - [ ] `providers/*` stubbed with a `mock` mode that returns deterministic fake data so the rest of the team can build against it without live keys
 - [ ] `requirements.txt` pinned
 
@@ -189,11 +189,11 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 
 ## 7. Phase 5 — Payments, Payouts, Ratings & Profiles
 
-- [ ] `GET /api/payments/history` — **new, not in original backend prompt**, needed by the frontend's Transaction History screen. Paginated list of the user's payments with job summary, amount, status, `method`
-- [ ] `GET /api/workers/me/earnings` — **new**. `{ balance, transactions[] }` — balance = sum of `agreed_price` on `finished` jobs with `payment_type='online'` minus prior payouts (cash jobs are excluded — the worker already has that cash in hand; see §12.1 for the fee-collection gap this opens)
+- [ ] `GET /api/payments/history` — needed by the frontend's Transaction History screen. Paginated list of the user's payments with job summary, amount, status, `method`
+- [ ] `GET /api/workers/me/earnings` — `{ balance, transactions[] }` — balance = sum of `agreed_price` on `finished` jobs with `payment_type='online'` minus prior payouts (cash jobs are excluded — the worker already has that cash in hand; see §12.1 for the fee-collection gap this opens)
 - [ ] `POST /api/jobs/:id/payout` — worker requests payout of their balance via `paymob.create_payout(...)`; creates a `payouts` row
-- [ ] `GET /api/workers/me` — **new**, self profile (backend prompt only specified the public `GET /api/workers/:id`)
-- [ ] `PUT /api/workers/me` — **new**. Edits `bio`, `hasShop`, `shopLocation`
+- [ ] `GET /api/workers/me` — self profile (backend prompt only specified the public `GET /api/workers/:id`)
+- [ ] `PUT /api/workers/me` — Edits `bio`, `hasShop`, `shopLocation`
 - [ ] `GET /api/workers/:id` — public profile: name, workType, bio, shop info, `averageRating`, `ratingsCount`, `completedJobsCount`
 - [ ] `POST /api/jobs/:id/rate` — `stars` (1–5, required), `comment` (optional); only by the job's user, only once (`ratings.job_id` unique constraint), only after `status='finished'`. Recomputes `worker_profiles.average_rating`/`ratings_count` transactionally
 - [ ] `GET /api/workers/:id/ratings` — paginated ratings + summary
