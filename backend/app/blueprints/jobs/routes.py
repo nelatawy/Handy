@@ -1,13 +1,16 @@
 from flask import jsonify, request as flask_request
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from marshmallow import ValidationError
 
 from app.blueprints.jobs import jobs_bp
 from app.decorators import user_required, worker_required
 from app.models.enums import JobStatus
 from app.schemas.job_schemas import JobStatusUpdateSchema
-from app.services import job_service
+from app.schemas.rating_schemas import RateJobSchema
+from app.services import job_service, payment_service, rating_service
 from app.services.job_service import JobServiceError
+from app.services.payment_service import PaymentServiceError
+from app.services.rating_service import RatingServiceError
 
 
 def _job_dict(job, payment_url=None):
@@ -70,3 +73,82 @@ def worker_cancel(job_id):
     except JobServiceError as exc:
         return _error(exc)
     return jsonify(_job_dict(job)), 200
+
+
+@jobs_bp.route("/active", methods=["GET"])
+@jwt_required()
+def get_active_job():
+    requester_id = get_jwt_identity()
+    role = get_jwt().get("role")
+    job = job_service.get_active_job(requester_id, role)
+    if job is None:
+        return jsonify(None), 200
+    return jsonify(job_service.serialize_job_full(job)), 200
+
+
+@jobs_bp.route("/<job_id>", methods=["GET"])
+@jwt_required()
+def get_job(job_id):
+    requester_id = get_jwt_identity()
+    try:
+        job = job_service.get_job_for_participant(job_id, requester_id)
+    except JobServiceError as exc:
+        return _error(exc)
+    return jsonify(job_service.serialize_job_full(job)), 200
+
+
+@jobs_bp.route("/<job_id>/rate", methods=["POST"])
+@user_required
+def rate_job(job_id):
+    try:
+        data = RateJobSchema().load(flask_request.get_json(silent=True) or {})
+    except ValidationError as exc:
+        return jsonify({"error": {"code": "validation_error", "message": exc.messages}}), 400
+
+    user_id = get_jwt_identity()
+    try:
+        rating = rating_service.rate_job(job_id, user_id, data["stars"], data.get("comment"))
+    except RatingServiceError as exc:
+        return jsonify({"error": {"code": exc.code, "message": exc.message}}), exc.status_code
+
+    return (
+        jsonify(
+            {
+                "rating": {
+                    "id": rating.id,
+                    "jobId": rating.job_id,
+                    "stars": rating.stars,
+                    "comment": rating.comment,
+                    "createdAt": rating.created_at.isoformat() if rating.created_at else None,
+                }
+            }
+        ),
+        201,
+    )
+
+
+@jobs_bp.route("/<job_id>/payout", methods=["POST"])
+@worker_required
+def payout(job_id):
+    worker_id = get_jwt_identity()
+    try:
+        result = payment_service.request_payout(job_id, worker_id)
+    except PaymentServiceError as exc:
+        return jsonify({"error": {"code": exc.code, "message": exc.message}}), exc.status_code
+
+    return (
+        jsonify(
+            {
+                "payout": {
+                    "id": result.id,
+                    "workerId": result.worker_id,
+                    "jobId": result.job_id,
+                    "amount": float(result.amount),
+                    "status": result.status.value,
+                    "paymobReference": result.paymob_reference,
+                    "createdAt": result.created_at.isoformat() if result.created_at else None,
+                }
+            }
+        ),
+        201,
+    )

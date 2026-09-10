@@ -192,18 +192,19 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 
 ## 7. Phase 5 — Payments, Payouts, Ratings & Profiles
 
-- [ ] `GET /api/payments/history` — needed by the frontend's Transaction History screen. Paginated list of the user's payments with job summary, amount, status, `method`
-- [ ] `GET /api/workers/me/earnings` — `{ balance, transactions[] }` — balance = sum of `agreed_price` on `finished` jobs with `payment_type='online'` minus prior payouts (cash jobs are excluded — the worker already has that cash in hand; see §12.1 for the fee-collection gap this opens)
-- [ ] `POST /api/jobs/:id/payout` — worker requests payout of their balance via `paymob.create_payout(...)`; creates a `payouts` row
-- [ ] `GET /api/workers/me` — self profile (backend prompt only specified the public `GET /api/workers/:id`)
-- [ ] `PUT /api/workers/me` — Edits `bio`, `hasShop`, `shopLocation`
-- [ ] `GET /api/workers/:id` — public profile: name, workType, bio, shop info, `averageRating`, `ratingsCount`, `completedJobsCount`
-- [ ] `POST /api/jobs/:id/rate` — `stars` (1–5, required), `comment` (optional); only by the job's user, only once (`ratings.job_id` unique constraint), only after `status='finished'`. Recomputes `worker_profiles.average_rating`/`ratings_count` transactionally
-- [ ] `GET /api/workers/:id/ratings` — paginated ratings + summary
-- [ ] `GET /api/jobs/:id` — fetch a single job by ID. Response: full `Job` object (id, requestId, offerId, userId, workerId, workerName, workType, description, price, userPrice, status, paymentType?, canceledBy?, createdAt, updatedAt). Accessible by both the job's user and worker. **Added from reverse-audit: used by `job.service.ts` → `getJob()`**
-- [ ] `GET /api/jobs/active` — fetch the caller's currently active job (status `pending` or `started`). Response: single `Job` object or `null`. Role-aware: returns the job where `user_id=current` for users, `worker_id=current` for workers. **Added from reverse-audit: used by `job.service.ts` → `getActiveJob()`**
-- [ ] `GET /api/users/me` — authenticated normal user's own profile. Response: `{ id, username, phone, country, governorate, role, createdAt }`. **Added from reverse-audit: used by `profile.service.ts` → `getUserProfile()`**
-- [ ] `PUT /api/users/me` — update editable normal-user profile fields (`username?`, `country?`, `governorate?`). Phone changes excluded (require OTP re-verification). Response: `{ user }`. **Added from reverse-audit: used by `profile.service.ts` → `updateUserProfile()`**
+- [x] `GET /api/payments/history` — needed by the frontend's Transaction History screen. Paginated list of the user's payments with job summary, amount, status, `method`
+- [x] `GET /api/workers/me/earnings` — `{ balance, transactions[] }` — balance = sum of `agreed_price` on `finished` jobs with `payment_type='online'` minus prior payouts (cash jobs are excluded — the worker already has that cash in hand; see §12.1 for the fee-collection gap this opens)
+- [x] `POST /api/jobs/:id/payout` — worker requests payout of their balance via `paymob.create_payout(...)`; creates a `payouts` row. Added `job_id`/`status` columns to the `payouts` model (present in the original schema doc, missing from the Phase 1 build); mock payouts settle synchronously as `paid`
+- [x] `GET /api/workers/me` — self profile (backend prompt only specified the public `GET /api/workers/:id`)
+- [x] `PUT /api/workers/me` — Edits `bio`, `hasShop`, `shopLocation`
+- [x] `GET /api/workers/:id` — public profile: name, workType, bio, shop info, `averageRating`, `ratingsCount`, `completedJobsCount`
+- [x] `POST /api/jobs/:id/rate` — `stars` (1–5, required), `comment` (optional); only by the job's user, only once (`ratings.job_id` unique constraint), only after `status='finished'`. Recomputes `worker_profiles.average_rating`/`ratings_count` transactionally. Added `worker_id`/`user_id` columns to `ratings` (present in the original schema doc, missing from the Phase 1 build) so lookups don't need a join through `jobs`
+- [x] `GET /api/workers/:id/ratings` — paginated ratings + summary
+- [x] `GET /api/jobs/:id` — fetch a single job by ID. Response: full `Job` object (id, requestId, offerId, userId, workerId, workerName, workType, description, price, userPrice, status, paymentType?, canceledBy?, createdAt, updatedAt). Accessible by both the job's user and worker. **Added from reverse-audit: used by `job.service.ts` → `getJob()`**
+- [x] `GET /api/jobs/active` — fetch the caller's currently active job (status `pending` or `started`). Response: single `Job` object or `null`. Role-aware: returns the job where `user_id=current` for users, `worker_id=current` for workers. **Added from reverse-audit: used by `job.service.ts` → `getActiveJob()`**
+- [x] `GET /api/users/me` — authenticated normal user's own profile. Response: `{ id, username, phone, country, governorate, role, createdAt }`. **Added from reverse-audit: used by `profile.service.ts` → `getUserProfile()`**
+- [x] `PUT /api/users/me` — update editable normal-user profile fields (`username?`, `country?`, `governorate?`). Phone changes excluded (require OTP re-verification). Response: `{ user }`. **Added from reverse-audit: used by `profile.service.ts` → `updateUserProfile()`**
+- **New service modules** `worker_service.py` and `user_service.py` were added, not in the original folder listing (§1 only named auth/request/job/payment/rating services), to keep this business logic out of route handlers consistent with the rest of the codebase
 
 ---
 

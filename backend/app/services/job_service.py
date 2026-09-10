@@ -8,6 +8,8 @@ from app.models.enums import CanceledBy, JobStatus, PaymentMethod, PaymentStatus
 from app.models.job import Job
 from app.models.offer import Offer
 from app.models.payment import Payment
+from app.models.request import Request as RequestModel
+from app.models.user import User
 from app.models.worker_profile import WorkerProfile
 from app.providers import paymob
 from app.sockets.emitters import (
@@ -34,6 +36,43 @@ def get_job_or_404(job_id: str) -> Job:
     if job is None:
         raise JobServiceError("Job not found", code="not_found", status_code=404)
     return job
+
+
+def get_job_for_participant(job_id: str, requester_id: str) -> Job:
+    job = get_job_or_404(job_id)
+    if requester_id not in (job.user_id, job.worker_id):
+        raise JobServiceError("Not your job", code="forbidden", status_code=403)
+    return job
+
+
+def get_active_job(requester_id: str, role: str) -> Job | None:
+    filters = [Job.status.in_([JobStatus.PENDING, JobStatus.STARTED])]
+    filters.append(Job.user_id == requester_id if role == "user" else Job.worker_id == requester_id)
+    return Job.query.filter(*filters).order_by(Job.created_at.desc()).first()
+
+
+def serialize_job_full(job: Job) -> dict:
+    req = RequestModel.query.get(job.request_id)
+    offer = Offer.query.get(job.offer_id)
+    worker = User.query.get(job.worker_id)
+
+    return {
+        "id": job.id,
+        "requestId": job.request_id,
+        "offerId": job.offer_id,
+        "userId": job.user_id,
+        "workerId": job.worker_id,
+        "workerName": worker.username if worker else None,
+        "workType": req.work_type.value if req else None,
+        "description": req.description if req else None,
+        "price": float(offer.price) if offer else None,
+        "userPrice": float(offer.price_with_fee) if offer else None,
+        "status": job.status.value,
+        "paymentType": job.payment_type.value if job.payment_type else None,
+        "canceledBy": job.canceled_by.value if job.canceled_by else None,
+        "createdAt": job.created_at.isoformat() if job.created_at else None,
+        "updatedAt": job.updated_at.isoformat() if job.updated_at else None,
+    }
 
 
 def _agreed_price(job: Job) -> Decimal:
