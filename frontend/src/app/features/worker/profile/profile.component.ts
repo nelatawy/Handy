@@ -108,8 +108,8 @@ export class ProfileComponent implements OnInit {
     this.profileSvc.updateWorkerProfile(body).pipe(
       finalize(() => this.saving.set(false)),
     ).subscribe({
-      next: (updated) => {
-        this.worker.set(updated);
+      next: (res) => {
+        this.worker.set(res.worker);
         this.editMode.set(false);
         this.notify.success('TOAST.PROFILE_UPDATED');
       },

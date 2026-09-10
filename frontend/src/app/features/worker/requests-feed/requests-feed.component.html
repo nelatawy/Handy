@@ -39,14 +39,14 @@
 
           <p class="request-card__desc">{{ req.description }}</p>
 
-          @if (req.imageUrls.length) {
+          @if (req.images.length) {
             <div class="request-card__images">
-              @for (url of (req.imageUrls | slice:0:3); track url) {
+              @for (url of (req.images | slice:0:3); track url) {
                 <img [src]="url" alt="job photo" class="request-card__thumb" />
               }
-              @if (req.imageUrls.length > 3) {
+              @if (req.images.length > 3) {
                 <div class="request-card__thumb request-card__thumb--more">
-                  +{{ req.imageUrls.length - 3 }}
+                  +{{ req.images.length - 3 }}
                 </div>
               }
             </div>

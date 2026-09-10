@@ -30,27 +30,28 @@ export class JobService {
 
   /** GET /api/jobs/:id — fetch a single job */
   getJob(id: string): Observable<Job> {
-    return this.http.get<Job>(`/api/jobs/${id}`);
+    return this.http.get<Job>(`/jobs/${id}`);
   }
 
   /** GET /api/jobs/active — get the current user's active job (if any) */
   getActiveJob(): Observable<Job | null> {
-    return this.http.get<Job | null>('/api/jobs/active');
+    return this.http.get<Job | null>('/jobs/active');
   }
 
   /** PATCH /api/jobs/:id/status — user-only state transition (started/finished/canceled).
    *  Response includes `paymentUrl` only when finishing with paymentType='online'. */
   updateStatus(id: string, body: UpdateJobStatusBody): Observable<UpdateJobStatusResponse> {
-    return this.http.patch<UpdateJobStatusResponse>(`/api/jobs/${id}/status`, body);
+    return this.http.patch<UpdateJobStatusResponse>(`/jobs/${id}/status`, body);
   }
 
-  /** POST /api/jobs/:id/rate — submit a rating after finishing */
-  rateJob(id: string, body: RateJobBody): Observable<Rating> {
-    return this.http.post<Rating>(`/api/jobs/${id}/rate`, body);
+  /** POST /api/jobs/:id/rate — submit a rating after finishing. Backend wraps the
+   *  response as `{ rating }`. */
+  rateJob(id: string, body: RateJobBody): Observable<{ rating: Rating }> {
+    return this.http.post<{ rating: Rating }>(`/jobs/${id}/rate`, body);
   }
 
-  /** POST /api/jobs/:id/cancel — cancel a job */
-  cancelJob(id: string): Observable<Job> {
-    return this.http.post<Job>(`/api/jobs/${id}/cancel`, {});
+  /** POST /api/jobs/:id/cancel — worker-only cancel. Backend wraps the response as `{ job }`. */
+  cancelJob(id: string): Observable<{ job: Job }> {
+    return this.http.post<{ job: Job }>(`/jobs/${id}/cancel`, {});
   }
 }

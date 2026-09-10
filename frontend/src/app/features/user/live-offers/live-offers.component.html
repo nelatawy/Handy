@@ -5,9 +5,9 @@
     <div class="request-summary">
       <div class="request-summary__badge">{{ 'WORK_TYPE.' + request()!.workType | translate }}</div>
       <p class="request-summary__desc">{{ request()!.description }}</p>
-      @if (request()!.imageUrls.length > 0) {
+      @if (request()!.images.length > 0) {
         <div class="request-summary__images">
-          @for (url of request()!.imageUrls; track url) {
+          @for (url of request()!.images; track url) {
             <img [src]="url" alt="Request image" class="request-summary__img" />
           }
         </div>
@@ -29,8 +29,6 @@
       <span class="chosen-banner__icon">🎉</span>
       <span>{{ 'OFFERS.CHOSEN_CONFIRM' | translate : { name: chosenWorkerName() } }}</span>
       <span class="chosen-banner__sub">{{ 'OFFERS.REDIRECTING_TO_JOB' | translate }}</span>
-      <div class="offer-card__stat-lbl">{{ 'OFFERS.AVG_RATING' | translate }}</div>
-+       <p class="offers-empty__sub">{{ 'OFFERS.WAITING_SUB' | translate }}</p>
     </div>
   }
 
@@ -52,17 +50,17 @@
         >
           <!-- Worker Info -->
           <div class="offer-card__header">
-            <div class="offer-card__avatar">{{ offer.workerName[0].toUpperCase() }}</div>
+            <div class="offer-card__avatar">{{ offer.worker.username[0].toUpperCase() }}</div>
             <div class="offer-card__info">
-              <h3 class="offer-card__name">{{ offer.workerName }}</h3>
+              <h3 class="offer-card__name">{{ offer.worker.username }}</h3>
               <app-star-rating
-                [value]="offer.workerRating"
+                [value]="offer.worker.averageRating"
                 [count]="0"
                 [showCount]="false"
                 size="sm"
               />
             </div>
-            @if (offer.workerHasShop) {
+            @if (offer.worker.hasShop) {
               <span class="badge badge--success offer-card__shop-badge">🏪 Shop</span>
             }
           </div>
@@ -70,11 +68,11 @@
           <!-- Stats -->
           <div class="offer-card__stats">
             <div class="offer-card__stat">
-              <span class="offer-card__stat-val">{{ offer.workerCompletedJobs }}</span>
+              <span class="offer-card__stat-val">{{ offer.worker.completedJobsCount }}</span>
               <span class="offer-card__stat-lbl">{{ 'OFFERS.COMPLETED_JOBS' | translate }}</span>
             </div>
             <div class="offer-card__stat">
-              <span class="offer-card__stat-val">{{ offer.workerRating | number : '1.1-1' }}</span>
+              <span class="offer-card__stat-val">{{ offer.worker.averageRating | number : '1.1-1' }}</span>
               <span class="offer-card__stat-lbl">{{ 'OFFERS.AVG_RATING' | translate }}</span>
             </div>
           </div>
@@ -82,7 +80,7 @@
           <!-- Pricing -->
           <div class="offer-card__pricing">
             <div class="offer-card__price">
-              <span class="offer-card__price-val">{{ offer.userPrice | number : '1.0-0' }} EGP</span>
+              <span class="offer-card__price-val">{{ offer.priceWithFee | number : '1.0-0' }} EGP</span>
               <span class="offer-card__price-lbl">{{ 'OFFERS.USER_PAYS' | translate }}</span>
             </div>
             <div class="offer-card__price-breakdown">
@@ -101,7 +99,7 @@
                 @if (choosing()) {
                   <span class="spinner-sm"></span>
                 }
-                ✓ {{ 'OFFERS.CHOOSE' | translate }} {{ offer.workerName }}
+                ✓ {{ 'OFFERS.CHOOSE' | translate }} {{ offer.worker.username }}
               </button>
               <button class="btn btn--ghost btn--sm" (click)="selectOffer(offer.id)">
                 {{ 'COMMON.CANCEL' | translate }}

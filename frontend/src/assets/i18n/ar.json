@@ -75,6 +75,7 @@
       "ACCOUNT_NOT_FOUND": "الحساب غير موجود",
       "OTP_INVALID": "رمز غير صحيح أو منتهي الصلاحية",
       "OTP_SEND_FAILED": "فشل إرسال رمز التحقق. يرجى التحقق من رقمك.",
+      "OTP_RATE_LIMITED": "محاولات كثيرة جدًا. يرجى الانتظار قليلاً قبل طلب رمز آخر.",
       "GENERIC": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     }
   },
@@ -259,7 +260,7 @@
     "TRANSACTION_ID": "معاملة",
     "TOTAL_LABEL": "إجمالي المدفوع",
     "WITHDRAW_INITIATED": "تم بدء عملية السحب بنجاح!",
-    "STATUS_CONFIRMED": "مؤكد",
+    "STATUS_PAID": "مدفوع",
     "STATUS_PENDING": "قيد الانتظار",
     "STATUS_FAILED": "فاشل"
   },

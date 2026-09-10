@@ -33,8 +33,8 @@
         <p class="otp-hint otp-hint--telegram">
             ✈️ {{ 'AUTH.OTP_SENT_TELEGRAM' | translate }}
         </p>
-        @if (telegramLink()) {
-        <a [href]="telegramLink()!" target="_blank" class="btn btn-secondary btn-sm telegram-btn">
+        @if (telegramBotUrl()) {
+        <a [href]="telegramBotUrl()!" target="_blank" class="btn btn-secondary btn-sm telegram-btn">
             {{ 'AUTH.OTP_OPEN_TELEGRAM' | translate }} →
         </a>
         }

@@ -1,5 +1,5 @@
 from flask import jsonify, request as flask_request
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from marshmallow import ValidationError
 
 from app.blueprints.requests import requests_bp
@@ -41,6 +41,18 @@ def list_my_requests():
     user_id = get_jwt_identity()
     reqs = request_service.list_requests_for_user(user_id)
     return jsonify([request_service.serialize_request(r) for r in reqs]), 200
+
+
+@requests_bp.route("/<request_id>", methods=["GET"])
+@jwt_required()
+def get_request(request_id):
+    requester_id = get_jwt_identity()
+    role = get_jwt().get("role")
+    try:
+        req = request_service.get_request_for_viewer(request_id, requester_id, role)
+    except RequestServiceError as exc:
+        return _error(exc)
+    return jsonify(request_service.serialize_request(req)), 200
 
 
 @requests_bp.route("/<request_id>/offers", methods=["GET"])

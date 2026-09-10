@@ -42,7 +42,7 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
   chosenWorkerName = () => {
     const id = this.chosenOfferId();
     if (!id) return '';
-    return this.offers().find(o => o.id === id)?.workerName ?? 'the handyman';
+    return this.offers().find(o => o.id === id)?.worker.username ?? 'the handyman';
   };
 
   loading  = signal(true);
@@ -83,16 +83,16 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
   private subscribeToWebSocket(): void {
     this.ws.connect();
 
-    // New offer from a handyman
+    // New offer from a handyman — backend emits { offer: {...} }, not the offer directly
     this.subs.add(
-      this.ws.on<Offer>('new_offer').subscribe((offer) => {
+      this.ws.on<{ offer: Offer }>('new_offer').subscribe(({ offer }) => {
         // Only add if this offer is for the current request
         if (offer.requestId === this.requestId()) {
           this.offers.update(list => {
             const exists = list.some(o => o.id === offer.id);
             return exists ? list : [...list, offer];
           });
-          this.notify.info('TOAST.NEW_OFFER', { name: offer.workerName });
+          this.notify.info('TOAST.NEW_OFFER', { name: offer.worker.username });
         }
       })
     );
@@ -114,7 +114,7 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
       next: (res) => {
         this.chosenOfferId.set(offerId);
         const chosen = this.offers().find(o => o.id === offerId);
-        this.notify.success('OFFERS.CHOSEN_CONFIRM', { name: chosen?.workerName ?? 'the handyman' });
+        this.notify.success('OFFERS.CHOSEN_CONFIRM', { name: chosen?.worker.username ?? 'the handyman' });
         setTimeout(() => this.router.navigate(['/user/job', res.jobId]), 1200);
       },
       error: () => this.notify.error('TOAST.CHOOSE_OFFER_FAILED'),

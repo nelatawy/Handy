@@ -105,7 +105,8 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Handyman canceled
+    // Handyman canceled — delivered to the user's own room (event name reflects who
+    // acted, not who receives it)
     this.subs.add(
       this.ws.on<{ jobId: string }>('job_canceled_by_worker').subscribe((e) => {
         const j = this.job();
@@ -137,8 +138,8 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     this.jobSvc.updateStatus(j.id, { status: JobStatus.Finished, paymentType: PaymentType.Online })
       .pipe(finalize(() => this.paymentStep.set('done')))
       .subscribe({
-        next: (updated) => {
-          this.job.set(updated);
+        next: (res) => {
+          this.job.set(res.job);
           // In production this would redirect to Paymob checkout
           this.notify.info('TOAST.PAYMOB_REDIRECT_SANDBOX');
           setTimeout(() => this.showRatingModal.set(true), 1000);
@@ -157,8 +158,8 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     this.jobSvc.updateStatus(j.id, { status: JobStatus.Finished, paymentType: PaymentType.Cash })
       .pipe(finalize(() => this.paymentStep.set('done')))
       .subscribe({
-        next: (updated) => {
-          this.job.set(updated);
+        next: (res) => {
+          this.job.set(res.job);
           this.notify.success('TOAST.PAID_CASH_CONFIRMED');
           setTimeout(() => this.showRatingModal.set(true), 600);
         },
@@ -182,14 +183,16 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     const j = this.job();
     if (!j || this.cancelLoading()) return;
     this.cancelLoading.set(true);
-    this.jobSvc.cancelJob(j.id).pipe(
+    // User-side cancel goes through PATCH .../status (user-only on the backend) —
+    // POST /api/jobs/:id/cancel is the *worker*-only cancel endpoint, a different route.
+    this.jobSvc.updateStatus(j.id, { status: JobStatus.Canceled }).pipe(
       finalize(() => {
         this.cancelLoading.set(false);
         this.showCancelConfirm.set(false);
       }),
     ).subscribe({
-      next: (updated) => {
-        this.job.set({ ...updated, canceledBy: 'user' });
+      next: (res) => {
+        this.job.set(res.job);
         this.notify.info('TOAST.JOB_CANCELED_NO_CHARGE');
       },
       error: () => this.notify.error('TOAST.JOB_CANCEL_FAILED'),
@@ -236,7 +239,7 @@ export class ActiveJobComponent implements OnInit, OnDestroy {
     this.jobSvc.updateStatus(j.id, body).pipe(
       finalize(() => this.actionLoading.set(false)),
     ).subscribe({
-      next:  (updated) => this.job.set(updated),
+      next:  (res) => this.job.set(res.job),
       error: () => this.notify.error('TOAST.JOB_UPDATE_FAILED'),
     });
   }

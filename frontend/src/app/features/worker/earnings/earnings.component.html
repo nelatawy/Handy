@@ -65,26 +65,20 @@
     @if (transactions().length > 0) {
       <div class="earnings__section-title">{{ 'PAYMENT.PAYOUT_HISTORY' | translate }}</div>
       <div class="earnings__list">
-        @for (tx of transactions(); track tx.id) {
-          <div class="tx-card"
-               [class.tx-card--confirmed]="tx.status === 'confirmed'"
-               [class.tx-card--pending]="tx.status === 'pending'"
-               [class.tx-card--failed]="tx.status === 'failed'">
+        @for (tx of transactions(); track tx.jobId) {
+          <div class="tx-card tx-card--confirmed">
 
             <div class="tx-card__left">
               <div class="tx-card__icon tx-card__icon--online">💰</div>
               <div class="tx-card__info">
-                <span class="tx-card__job-id">{{ 'PAYMENT.TRANSACTION_ID' | translate }} #{{ tx.id.slice(0,8) }}</span>
-                <span class="tx-card__date">{{ formatDate(tx.createdAt) }}</span>
+                <span class="tx-card__job-id">{{ 'PAYMENT.TRANSACTION_ID' | translate }} #{{ tx.jobId.slice(0,8) }}</span>
+                <span class="tx-card__date">{{ formatDate(tx.finishedAt) }}</span>
               </div>
             </div>
 
             <div class="tx-card__badges">
-              <span class="badge"
-                    [class.badge--success]="tx.status === 'confirmed'"
-                    [class.badge--warning]="tx.status === 'pending'"
-                    [class.badge--danger]="tx.status === 'failed'">
-                {{ ('PAYMENT.STATUS_' + tx.status.toUpperCase()) | translate }}
+              <span class="badge badge--success">
+                {{ 'PAYMENT.STATUS_PAID' | translate }}
               </span>
             </div>
 

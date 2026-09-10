@@ -45,11 +45,11 @@
       </div>
 
       <!-- Image gallery -->
-      @if (request()!.imageUrls.length) {
+      @if (request()!.images.length) {
         <div class="detail-card__section">
           <h2 class="detail-card__section-title">{{ 'WORKER.PHOTOS' | translate }}</h2>
           <div class="image-gallery">
-            @for (url of request()!.imageUrls; track url; let i = $index) {
+            @for (url of request()!.images; track url; let i = $index) {
               <button class="image-gallery__item" (click)="openLightbox(url, i)">
                 <img [src]="url" alt="job photo {{ i + 1 }}" />
               </button>
@@ -83,13 +83,13 @@
     <div class="lightbox" (click)="closeLightbox()">
       <div class="lightbox__inner" (click)="$event.stopPropagation()">
         <button class="lightbox__close" (click)="closeLightbox()">✕</button>
-        @if ((request()?.imageUrls?.length ?? 0) > 1) {
+        @if ((request()?.images?.length ?? 0) > 1) {
           <button class="lightbox__nav lightbox__nav--prev" (click)="prevImage()">‹</button>
         }
         <img [src]="lightboxUrl()!" alt="full size" class="lightbox__img" />
-        @if ((request()?.imageUrls?.length ?? 0) > 1) {
+        @if ((request()?.images?.length ?? 0) > 1) {
           <button class="lightbox__nav lightbox__nav--next" (click)="nextImage()">›</button>
-          <div class="lightbox__counter">{{ lightboxIdx() + 1 }} / {{ request()!.imageUrls.length }}</div>
+          <div class="lightbox__counter">{{ lightboxIdx() + 1 }} / {{ request()!.images.length }}</div>
         }
       </div>
     </div>

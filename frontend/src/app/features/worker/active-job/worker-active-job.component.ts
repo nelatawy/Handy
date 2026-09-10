@@ -95,10 +95,15 @@ export class WorkerActiveJobComponent implements OnInit, OnDestroy {
       })
     );
 
-    // User canceled the job
+    // User canceled the job — backend delivers `job_canceled_by_user` to the worker's
+    // own room (event name reflects who acted, not who receives it; `job_canceled_by_worker`
+    // is delivered to the *user's* room instead, and never reaches this screen at all)
     this.subs.add(
-      this.ws.on<{ jobId: string }>('job_canceled_by_worker').subscribe((e) => {
-        // Ignored on worker side — this is the event they fire themselves
+      this.ws.on<{ jobId: string }>('job_canceled_by_user').subscribe((e) => {
+        const j = this.job();
+        if (!j || j.id !== e.jobId) return;
+        this.job.set({ ...j, status: JobStatus.Canceled, canceledBy: 'user' });
+        this.notify.warning('TOAST.JOB_CANCELED_BY_USER');
       })
     );
   }
@@ -122,8 +127,8 @@ export class WorkerActiveJobComponent implements OnInit, OnDestroy {
         this.showCancelConfirm.set(false);
       }),
     ).subscribe({
-      next: (updated) => {
-        this.job.set({ ...updated, canceledBy: 'worker' });
+      next: (res) => {
+        this.job.set(res.job);
         this.notify.info('WORKER.JOB_CANCELED_CUSTOMER_NOTIFIED');
       },
       error: () => this.notify.error('TOAST.JOB_CANCEL_FAILED'),

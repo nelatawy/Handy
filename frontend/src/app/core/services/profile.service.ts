@@ -19,6 +19,7 @@ export interface WorkerRatingsResponse {
   ratings: Rating[];
   average: number;
   count: number;
+  page: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,44 +28,40 @@ export class ProfileService {
 
   /** GET /api/workers/me — fetch the authenticated worker's full profile */
   getWorkerProfile(): Observable<Worker> {
-    return this.http.get<Worker>('/api/workers/me');
+    return this.http.get<Worker>('/workers/me');
   }
 
   /**
    * PUT /api/workers/me — update editable worker profile fields.
    * Phone/work-type changes are excluded (phone requires OTP re-verification).
+   * Backend wraps the response as `{ worker }`.
    */
-  updateWorkerProfile(body: UpdateWorkerProfileBody): Observable<Worker> {
-    return this.http.put<Worker>('/api/workers/me', body);
+  updateWorkerProfile(body: UpdateWorkerProfileBody): Observable<{ worker: Worker }> {
+    return this.http.put<{ worker: Worker }>('/workers/me', body);
   }
 
   /** GET /api/workers/:id — public worker profile (name, workType, bio, shop, rating stats) */
   getPublicWorkerProfile(workerId: string): Observable<Worker> {
-    return this.http.get<Worker>(`/api/workers/${workerId}`);
+    return this.http.get<Worker>(`/workers/${workerId}`);
   }
 
   /** GET /api/workers/:id/ratings — paginated ratings for a worker's public profile */
   getWorkerRatings(workerId: string, page = 1): Observable<WorkerRatingsResponse> {
-    return this.http.get<WorkerRatingsResponse>(`/api/workers/${workerId}/ratings`, {
+    return this.http.get<WorkerRatingsResponse>(`/workers/${workerId}/ratings`, {
       params: { page: page.toString() },
     });
   }
 
-  /**
-   * GET /api/users/me — fetch the authenticated user's profile.
-   * NOTE: This endpoint is NOT in the backend contract table (BACKEND_PLAN.md §9).
-   * Backend confirmation needed before this is used in production.
-   */
+  /** GET /api/users/me — fetch the authenticated user's profile. */
   getUserProfile(): Observable<User> {
-    return this.http.get<User>('/api/users/me');
+    return this.http.get<User>('/users/me');
   }
 
   /**
    * PUT /api/users/me — update editable user profile fields.
-   * NOTE: This endpoint is NOT in the backend contract table (BACKEND_PLAN.md §9).
-   * Backend confirmation needed before this is used in production.
+   * Backend wraps the response as `{ user }`.
    */
-  updateUserProfile(body: UpdateUserProfileBody): Observable<User> {
-    return this.http.put<User>('/api/users/me', body);
+  updateUserProfile(body: UpdateUserProfileBody): Observable<{ user: User }> {
+    return this.http.put<{ user: User }>('/users/me', body);
   }
 }

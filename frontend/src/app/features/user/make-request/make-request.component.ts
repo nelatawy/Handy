@@ -97,7 +97,7 @@ export class MakeRequestComponent {
     const body = {
       description: this.desc.value!.trim(),
       workType:    this.wt.value as WorkType,
-      imageUrls:   this.uploadedUrls(),
+      images:      this.uploadedUrls(),
     };
 
     this.requestSvc.createRequest(body).pipe(

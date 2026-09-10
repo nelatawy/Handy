@@ -18,6 +18,29 @@ def test_create_request_rejects_more_than_5_images(client, make_user, auth_heade
     assert r.status_code == 400
 
 
+def test_get_request_accessible_by_owner_and_any_worker(client, make_user, auth_header):
+    _, user_token = make_user("user")
+    _, worker_token = make_user("worker")
+    _, other_user_token = make_user("user")
+
+    r = client.post(
+        "/api/requests",
+        json={"description": "Fix sink", "workType": "plumber", "images": []},
+        headers=auth_header(user_token),
+    )
+    request_id = r.get_json()["requestId"]
+
+    r = client.get(f"/api/requests/{request_id}", headers=auth_header(user_token))
+    assert r.status_code == 200
+    assert r.get_json()["id"] == request_id
+
+    r = client.get(f"/api/requests/{request_id}", headers=auth_header(worker_token))
+    assert r.status_code == 200
+
+    r = client.get(f"/api/requests/{request_id}", headers=auth_header(other_user_token))
+    assert r.status_code == 403
+
+
 def test_worker_sees_matching_open_request(client, make_user, auth_header):
     _, user_token = make_user("user")
     _, worker_token = make_user("worker")

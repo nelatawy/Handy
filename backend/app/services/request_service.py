@@ -58,6 +58,16 @@ def get_request_or_404(request_id: str) -> Request:
     return req
 
 
+def get_request_for_viewer(request_id: str, requester_id: str, role: str) -> Request:
+    """GET /api/requests/:id — the request's own user, or any worker (open marketplace
+    visibility; matching-type requests are already filtered to workers via the feed, this
+    just lets a worker follow a link from that feed into the detail/pricing screens)."""
+    req = get_request_or_404(request_id)
+    if role == "user" and req.user_id != requester_id:
+        raise RequestServiceError("Not your request", code="forbidden", status_code=403)
+    return req
+
+
 def list_offers_for_request(request_id: str) -> list[Offer]:
     get_request_or_404(request_id)
     return (

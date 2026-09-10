@@ -13,7 +13,7 @@ import { finalize } from 'rxjs';
 
 import { PaymentService } from '../../../core/services/payment.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { Transaction } from '../../../core/models/models';
+import { EarningsEntry } from '../../../core/models/models';
 import { PaymentType } from '../../../core/models/enums';
 
 @Component({
@@ -33,18 +33,16 @@ export class EarningsComponent implements OnInit {
   readonly loading      = signal(true);
   readonly error        = signal(false);
   readonly balance      = signal(0);
-  readonly transactions = signal<Transaction[]>([]);
+  readonly transactions = signal<EarningsEntry[]>([]);
   readonly withdrawing  = signal(false);
 
   readonly isEmpty = computed(() =>
     !this.loading() && !this.error() && this.transactions().length === 0
   );
 
-  /** Total lifetime earnings (confirmed transactions only) */
+  /** Total lifetime earnings — every entry here is already a finished, paid online job */
   readonly totalEarned = computed(() =>
-    this.transactions()
-      .filter(t => t.status === 'confirmed')
-      .reduce((sum, t) => sum + t.amount, 0)
+    this.transactions().reduce((sum, t) => sum + t.amount, 0)
   );
 
   ngOnInit(): void {
@@ -63,34 +61,24 @@ export class EarningsComponent implements OnInit {
   }
 
   /**
-   * Initiate a payout via the backend.
-   * The backend calls Paymob's disbursement API (secret key stays server-side)
-   * and returns a redirect URL or confirmation.
-   * In sandbox mode the backend may return a mock message.
+   * Initiate a payout of the worker's entire current balance via the backend
+   * (POST /api/jobs/:id/payout — the job ID only verifies the caller owns that job,
+   * the payout itself isn't scoped to a single job; any of the worker's own job IDs
+   * works, so the most recent earnings entry is used as the anchor).
    */
   withdraw(): void {
     if (this.withdrawing() || this.balance() <= 0) return;
-    this.withdrawing.set(true);
+    const anchorJobId = this.transactions()[0]?.jobId;
+    if (!anchorJobId) return;
 
-    this.paymentSvc.withdraw().pipe(
+    this.withdrawing.set(true);
+    this.paymentSvc.requestPayout(anchorJobId).pipe(
       finalize(() => this.withdrawing.set(false)),
     ).subscribe({
-      next: (res) => {
-        if (res.redirectUrl) {
-          // Production: redirect to Paymob payout flow
-          window.location.href = res.redirectUrl;
-        } else {
-          // Sandbox: show confirmation toast. `res.message` (if present) is a backend-controlled
-          // string, not a translation key, so it's shown as-is via `showRaw`; otherwise fall back
-          // to a translated default.
-          if (res.message) {
-            this.notify.showRaw(res.message, 'success');
-          } else {
-            this.notify.success('TOAST.PAYOUT_INITIATED_SANDBOX');
-          }
-          // Reset balance optimistically after a successful payout initiation
-          this.balance.set(0);
-        }
+      next: () => {
+        this.notify.success('TOAST.PAYOUT_INITIATED_SANDBOX');
+        // Reset balance optimistically after a successful payout initiation
+        this.balance.set(0);
       },
       error: () => this.notify.error('TOAST.WITHDRAW_FAILED'),
     });

@@ -51,6 +51,12 @@ Emits `new_request` to `worktype:{workType}` room.
 ### `GET /api/requests/mine` — user only
 Response `200`: `Request[]`
 
+### `GET /api/requests/:id` — the request's own user, or any worker
+Response `200`: `Request` (flat, same shape as list entries). **Added post-Phase-6**, during
+frontend integration — the frontend's `getRequest()` needed a single-request lookup that
+didn't exist yet (used by live-offers, worker pricing, and worker request-detail screens).
+Errors: `403 forbidden` (a different user than the request's owner), `404 not_found`.
+
 ### `GET /api/requests/:id/offers` — user only
 Response `200`: `Offer[]` (excludes declined/`rejected` offers already filtered out for reconnect noise... actually returns all non-rejected offers: `pending` and `chosen`)
 
@@ -88,7 +94,7 @@ Response `200`: `{ suggestedDescription, recommendedWorkType }` (`recommendedWor
 
 ### `PATCH /api/jobs/:id/status` — user only
 Body: `{ status: 'started'|'finished'|'canceled', paymentType?: 'online'|'cash' }` (`paymentType` required iff `status='finished'`)
-Response `200`: `{ job: Job, paymentUrl?: string }` (`paymentUrl` present only for `finished`+`online`, while the job is still `started` pending webhook confirmation)
+Response `200`: `{ job: Job, paymentUrl?: string }` (`paymentUrl` present only for `finished`+`online`, while the job is still `started` pending webhook confirmation). `Job` here is the **same full shape** as `GET /api/jobs/:id` (unified post-Phase-6 — this endpoint used to return a narrower dict missing `workerName`/`workType`/`description`/`price`/`userPrice`, which caused a frontend/backend shape mismatch)
 - `pending → started`: sets `startedAt`. Emits `job_status_changed`.
 - `started → finished` (`cash`): synchronously creates a `paid` payment, job → `finished` immediately, worker's `completedJobsCount` incremented. Emits `job_status_changed`.
 - `started → finished` (`online`): creates a `pending` payment + Paymob checkout, job **stays `started`** until the webhook confirms.

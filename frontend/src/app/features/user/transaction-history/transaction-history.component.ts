@@ -36,10 +36,10 @@ export class TransactionHistoryComponent implements OnInit {
 
   readonly isEmpty = computed(() => !this.loading() && !this.error() && this.transactions().length === 0);
 
-  /** Sum of all confirmed transaction amounts */
+  /** Sum of all paid transaction amounts */
   readonly totalSpent = computed(() =>
     this.transactions()
-      .filter(t => t.status === 'confirmed')
+      .filter(t => t.status === 'paid')
       .reduce((sum, t) => sum + t.amount, 0)
   );
 
@@ -47,7 +47,7 @@ export class TransactionHistoryComponent implements OnInit {
     this.paymentSvc.getTransactionHistory().pipe(
       finalize(() => this.loading.set(false)),
     ).subscribe({
-      next:  (list) => this.transactions.set(list),
+      next:  (res) => this.transactions.set(res.transactions),
       error: () => {
         this.error.set(true);
         this.notify.error('TOAST.TRANSACTION_HISTORY_LOAD_FAILED');

@@ -99,8 +99,8 @@ export class UserProfileComponent implements OnInit {
     this.profileSvc.updateUserProfile(body).pipe(
       finalize(() => this.saving.set(false)),
     ).subscribe({
-      next: (updated) => {
-        this.user.set(updated);
+      next: (res) => {
+        this.user.set(res.user);
         this.editMode.set(false);
         this.notify.success('TOAST.PROFILE_UPDATED');
       },

@@ -14,21 +14,10 @@ from app.services.rating_service import RatingServiceError
 
 
 def _job_dict(job, payment_url=None):
-    result = {
-        "job": {
-            "id": job.id,
-            "requestId": job.request_id,
-            "offerId": job.offer_id,
-            "userId": job.user_id,
-            "workerId": job.worker_id,
-            "status": job.status.value,
-            "paymentType": job.payment_type.value if job.payment_type else None,
-            "canceledBy": job.canceled_by.value if job.canceled_by else None,
-            "startedAt": job.started_at.isoformat() if job.started_at else None,
-            "finishedAt": job.finished_at.isoformat() if job.finished_at else None,
-            "canceledAt": job.canceled_at.isoformat() if job.canceled_at else None,
-        }
-    }
+    # Unified with GET /api/jobs/:id and /api/jobs/active — one Job shape everywhere,
+    # rather than this endpoint's own narrower dict (previously missing workerName/
+    # workType/description/price/userPrice, which the frontend's single Job model needs).
+    result = {"job": job_service.serialize_job_full(job)}
     if payment_url is not None:
         result["paymentUrl"] = payment_url
     return result

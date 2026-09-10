@@ -70,6 +70,9 @@ def serialize_job_full(job: Job) -> dict:
         "status": job.status.value,
         "paymentType": job.payment_type.value if job.payment_type else None,
         "canceledBy": job.canceled_by.value if job.canceled_by else None,
+        "startedAt": job.started_at.isoformat() if job.started_at else None,
+        "finishedAt": job.finished_at.isoformat() if job.finished_at else None,
+        "canceledAt": job.canceled_at.isoformat() if job.canceled_at else None,
         "createdAt": job.created_at.isoformat() if job.created_at else None,
         "updatedAt": job.updated_at.isoformat() if job.updated_at else None,
     }

@@ -29,7 +29,7 @@ export class OtpVerificationComponent {
 
   step = signal<'phone' | 'sending' | 'code' | 'verifying' | 'error' | 'verified'>('phone');
   channel = signal<'whatsapp' | 'telegram'>('whatsapp');
-  telegramLink = signal<string | null>(null);
+  telegramBotUrl = signal<string | null>(null);
   errorMsg = signal('');
 
   dialCode = '+20';
@@ -49,17 +49,19 @@ export class OtpVerificationComponent {
 
   sendOtp(): void {
     this.step.set('sending');
-    this.http.post<{ channel: 'whatsapp' | 'telegram'; telegramLink?: string }>(
+    this.http.post<{ channel: 'whatsapp' | 'telegram'; telegramBotUrl?: string; expiresIn?: number }>(
       '/otp/send',
       { phone: this.e164Phone }
     ).subscribe({
       next: res => {
         this.channel.set(res.channel);
-        this.telegramLink.set(res.telegramLink ?? null);
+        this.telegramBotUrl.set(res.telegramBotUrl ?? null);
         this.step.set('code');
       },
-      error: () => {
-        this.errorMsg.set('AUTH.ERRORS.OTP_SEND_FAILED');
+      error: (err) => {
+        this.errorMsg.set(
+          err?.status === 429 ? 'AUTH.ERRORS.OTP_RATE_LIMITED' : 'AUTH.ERRORS.OTP_SEND_FAILED'
+        );
         this.step.set('error');
       },
     });
@@ -91,6 +93,6 @@ export class OtpVerificationComponent {
     this.step.set('phone');
     this.code = '';
     this.errorMsg.set('');
-    this.telegramLink.set(null);
+    this.telegramBotUrl.set(null);
   }
 }

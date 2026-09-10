@@ -465,4 +465,32 @@ All of the following were found by comparing service code to this contract table
 
 ---
 
-*Last updated: 2026-09-10 (v7 — Phase 5 complete: Transaction History, Earnings, Worker Profile, User Profile, routing + nav + i18n additions)*
+## 11. Frontend ↔ Backend Merge Fixes (2026-09-10)
+
+A full audit comparing the actual frontend source against the actual (already-implemented)
+backend surfaced that this plan's §9 contract table didn't match reality in several places,
+and that the frontend had never actually had a clean `ng build` — several of these were
+pre-existing type errors, not just contract drift. All are now fixed; the full list (19
+issues, blocking and minor) is tracked in `../mergePlan.md` at the repo root, not duplicated
+here. Highlights:
+
+- Every service except `auth.service.ts` was double-prefixing `/api/`, 404ing on nearly
+  every call.
+- `GET /api/requests/:id` didn't exist on the backend at all — added it.
+- Several response-shape mismatches where the backend wraps a resource (`{ job }`,
+  `{ worker }`, `{ user }`, `{ transactions, page, total }`) but the frontend typed/consumed
+  it unwrapped — this was actually breaking `ng build`, not just a runtime bug.
+- The user's own job-cancel button was calling the **worker-only** `POST /api/jobs/:id/cancel`
+  endpoint — would have 403'd every time. Fixed to use `PATCH .../status` instead.
+- Two WebSocket bugs: `new_offer`'s payload wasn't unwrapped (`{ offer }` vs bare `Offer`),
+  and the worker's active-job screen listened for the wrong cancel event
+  (`job_canceled_by_worker` instead of `job_canceled_by_user` — the event name reflects who
+  acted, not who receives it).
+- `Offer.worker` is a nested object on the backend, not flat `workerName`/`workerRating`/etc.
+  fields on `Offer` itself.
+
+`ng build` (both dev and prod configurations) passes clean as of this fix pass.
+
+---
+
+*Last updated: 2026-09-10 (v8 — frontend↔backend merge fixes; see §11 and `../mergePlan.md`)*

@@ -67,7 +67,9 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
     ).subscribe({
       next:  (r) => {
         this.request.set(r);
-        if (r.status === 'closed') this.closed.set(true);
+        // Backend statuses are 'open' | 'offer_selected' | 'cancelled' — anything but
+        // 'open' means this request is no longer accepting offers.
+        if (r.status !== 'open') this.closed.set(true);
       },
       error: () => {
         this.notify.error('TOAST.REQUEST_LOAD_FAILED');
@@ -98,14 +100,14 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
   }
 
   prevImage(): void {
-    const imgs = this.request()?.imageUrls ?? [];
+    const imgs = this.request()?.images ?? [];
     const newIdx = (this.lightboxIdx() - 1 + imgs.length) % imgs.length;
     this.lightboxIdx.set(newIdx);
     this.lightboxUrl.set(imgs[newIdx]);
   }
 
   nextImage(): void {
-    const imgs = this.request()?.imageUrls ?? [];
+    const imgs = this.request()?.images ?? [];
     const newIdx = (this.lightboxIdx() + 1) % imgs.length;
     this.lightboxIdx.set(newIdx);
     this.lightboxUrl.set(imgs[newIdx]);

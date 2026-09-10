@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Transaction } from '../models/models';
+import { EarningsEntry, Transaction } from '../models/models';
 
 export interface EarningsResponse {
   balance: number;
+  transactions: EarningsEntry[];
+}
+
+/** Response from GET /api/payments/history */
+export interface PaymentHistoryResponse {
   transactions: Transaction[];
+  page: number;
+  total: number;
 }
 
 /** Response from POST /api/jobs/:id/payout */
@@ -25,11 +32,13 @@ export class PaymentService {
   constructor(private http: HttpClient) {}
 
   /**
-   * GET /api/payments/history
-   * Returns the current user's payment transaction history (finished jobs).
+   * GET /api/payments/history?page=N
+   * Returns the current user's paginated payment transaction history.
    */
-  getTransactionHistory(): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>('/api/payments/history');
+  getTransactionHistory(page = 1): Observable<PaymentHistoryResponse> {
+    return this.http.get<PaymentHistoryResponse>('/payments/history', {
+      params: { page: page.toString() },
+    });
   }
 
   /**
@@ -38,15 +47,15 @@ export class PaymentService {
    * Only online-paid jobs are included — cash jobs are excluded (worker holds cash).
    */
   getEarnings(): Observable<EarningsResponse> {
-    return this.http.get<EarningsResponse>('/api/workers/me/earnings');
+    return this.http.get<EarningsResponse>('/workers/me/earnings');
   }
 
   /**
    * POST /api/jobs/:id/payout
-   * Worker requests payout of earnings for a specific finished job via Paymob.
-   * This is per-job, not a global withdrawal — the job ID is required.
+   * Worker requests payout of their *entire* current balance via Paymob — the job ID in
+   * the path is only used to verify the caller owns that job, this is not a per-job payout.
    */
   requestPayout(jobId: string): Observable<PayoutResponse> {
-    return this.http.post<PayoutResponse>(`/api/jobs/${jobId}/payout`, {});
+    return this.http.post<PayoutResponse>(`/jobs/${jobId}/payout`, {});
   }
 }

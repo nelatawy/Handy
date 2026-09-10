@@ -233,6 +233,7 @@ Two distinct endpoints, matching what the frontend plan actually describes on ea
 | POST | `/api/ai-suggest` | `{ description }` | `{ suggestedDescription, recommendedWorkType }` | |
 | POST | `/api/requests` | `{ description, workType, images[] }` | `{ requestId }` | `images[]` are already-uploaded Supabase Storage URLs, max 5 |
 | GET | `/api/requests/mine` | — | `Request[]` | |
+| GET | `/api/requests/:id` | — | `Request` | **New — found missing during frontend integration.** Accessible by the request's own user or any worker |
 | GET | `/api/requests/:id/offers` | — | `Offer[]` | Reconnect/initial-load fallback for the live feed |
 | POST | `/api/requests/:id/cancel` | — | `{ request }` | Only while `open` |
 | GET | `/api/workers/me/requests` | — | `Request[]` | Matches worker's `work_type` |

@@ -32,10 +32,22 @@ export interface JobRequest {
   userId: string;
   description: string;
   workType: WorkType;
-  imageUrls: string[];   // public Supabase Storage URLs
+  images: string[];   // public Supabase Storage URLs — matches backend's `images` field
   /** Backend statuses: open → offer_selected → cancelled */
   status: 'open' | 'offer_selected' | 'cancelled';
   createdAt: string;
+}
+
+/** Worker info nested inside an Offer — matches backend's `offer.worker` shape exactly */
+export interface OfferWorker {
+  id: string;
+  username: string;
+  workType: WorkType;
+  averageRating: number;
+  ratingsCount: number;
+  completedJobsCount: number;
+  hasShop: boolean;
+  shopLocation?: string;
 }
 
 /** An offer submitted by a handyman on a request */
@@ -43,13 +55,10 @@ export interface Offer {
   id: string;
   requestId: string;
   workerId: string;
-  workerName: string;
-  workerRating: number;
-  workerCompletedJobs: number;
-  workerHasShop: boolean;
-  workerShopLocation?: string;
+  worker: OfferWorker;
   price: number;         // worker's quoted price (excl. platform fee)
-  userPrice: number;     // price + 5% (what user pays)
+  priceWithFee: number;  // price + 5% (what the user pays) — matches backend field name
+  status: 'pending' | 'chosen' | 'rejected';
   createdAt: string;
 }
 
@@ -68,6 +77,9 @@ export interface Job {
   status: import('./enums').JobStatus;
   paymentType?: import('./enums').PaymentType;
   canceledBy?: 'user' | 'worker';
+  startedAt?: string;
+  finishedAt?: string;
+  canceledAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -81,6 +93,16 @@ export interface Rating {
   stars: number;         // 1-5
   comment?: string;
   createdAt: string;
+}
+
+/** A single entry in a worker's earnings breakdown — GET /api/workers/me/earnings.
+ *  Deliberately not a full Transaction: the backend only returns { jobId, amount,
+ *  finishedAt } for this endpoint (only finished online jobs are ever included, so
+ *  there's no status to show — everything here is, by construction, already paid). */
+export interface EarningsEntry {
+  jobId: string;
+  amount: number;
+  finishedAt: string;
 }
 
 /** A payment transaction record */
