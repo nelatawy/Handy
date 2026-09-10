@@ -10,5 +10,7 @@ marshmallow
 phonenumbers
 python-dotenv
 requests
-google-generativeai
+google-genai
 psycopg2-binary
+gevent
+gevent-websocket

@@ -36,7 +36,7 @@ def make_user(app):
             username=f"testuser{n}",
             phone_number=f"+2010{n:08d}",
             country_prefix="+20",
-            country="Egypt",
+            country="EG",
             governorate="Cairo",
             password_hash=bcrypt.generate_password_hash("password123").decode(),
             role=role,

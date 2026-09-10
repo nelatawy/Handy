@@ -1,4 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -9,6 +10,7 @@ import { OtpVerificationComponent } from '../../../shared/components/otp-verific
 import { CountryPrefixDropdownComponent } from '../../../shared/components/country-prefix-dropdown/country-prefix-dropdown.component';
 import { UserRole, WORK_TYPES } from '../../../core/models/enums';
 import { COUNTRIES, GOVERNORATES_BY_COUNTRY, getGovernorates } from '../../../core/models/geo-data';
+import { LanguageService } from '../../../core/services/language.service';
 
 function passwordMatch(ctrl: AbstractControl) {
   const pw = ctrl.get('password')?.value;
@@ -43,6 +45,7 @@ export class RegisterComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private notify = inject(NotificationService);
+  protected lang = inject(LanguageService);
 
   form = this.fb.group({
     username: ['', Validators.required],
@@ -58,12 +61,13 @@ export class RegisterComponent {
     shopLocation: [''],
   }, { validators: passwordMatch });
 
-  selectedCountry = computed(() => this.form.get('country')?.value as string);
+  selectedCountry = toSignal(this.form.get('country')!.valueChanges, { initialValue: '' });
 
-  governorates = computed(() => getGovernorates(this.selectedCountry()));
+  governorates = computed(() => getGovernorates(this.selectedCountry() as string));
 
+  phoneValue = toSignal(this.form.get('phone')!.valueChanges, { initialValue: '' });
   e164Phone = computed(() => {
-    const digits = (this.form.get('phone')?.value ?? '').replace(/\D/g, '');
+    const digits = (this.phoneValue() ?? '').replace(/\D/g, '');
     return `${this.dialCode}${digits}`;
   });
 

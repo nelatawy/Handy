@@ -2,7 +2,7 @@ def _register_payload(**overrides):
     payload = {
         "username": "alice",
         "phone": "+201111111111",
-        "country": "Egypt",
+        "country": "EG",
         "governorate": "Cairo",
         "password": "secretpw",
         "role": "user",

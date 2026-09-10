@@ -13,7 +13,7 @@
     }
 
     @if (step() === 'phone' || step() === 'sending') {
-    <button class="btn btn-primary w-full" [disabled]="!localPhone || step() === 'sending'" (click)="sendOtp()">
+    <button class="btn btn-primary w-full" [disabled]="(!phoneFixed && !localPhone) || step() === 'sending'" (click)="sendOtp()">
         @if (step() === 'sending') {
         <span class="spinner"></span>
         }

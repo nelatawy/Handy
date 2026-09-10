@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, signal, computed } from '@angul
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { COUNTRIES, Country } from '../../../core/models/geo-data';
+import { LanguageService } from '../../../core/services/language.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-country-prefix-dropdown',
@@ -11,6 +13,8 @@ import { COUNTRIES, Country } from '../../../core/models/geo-data';
   styleUrl: './country-prefix-dropdown.component.scss',
 })
 export class CountryPrefixDropdownComponent {
+  protected lang = inject(LanguageService);
+
   @Input() selectedCode = '+20';
   @Output() selectedCodeChange = new EventEmitter<string>();
 

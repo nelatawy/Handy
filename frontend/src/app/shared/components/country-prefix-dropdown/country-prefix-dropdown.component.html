@@ -16,7 +16,7 @@
             <li class="prefix-item" [class.prefix-item--active]="country.dialCode === selectedCode"
                 (click)="select(country)" role="option" [attr.aria-selected]="country.dialCode === selectedCode">
                 <span class="prefix-item__flag">{{ country.flag }}</span>
-                <span class="prefix-item__name">{{ country.name }}</span>
+                <span class="prefix-item__name">{{ lang.currentLang() === 'ar' ? country.nameAr : country.name }}</span>
                 <span class="prefix-item__code">{{ country.dialCode }}</span>
             </li>
             }

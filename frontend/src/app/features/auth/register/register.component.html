@@ -56,7 +56,7 @@
             <select class="form-control" [class.error]="invalid('country')" formControlName="country">
                 <option value="">{{ 'AUTH.COUNTRY_PLACEHOLDER' | translate }}</option>
                 @for (c of countries; track c.code) {
-                <option [value]="c.code">{{ c.flag }} {{ c.name }}</option>
+                <option [value]="c.code">{{ c.flag }} {{ lang.currentLang() === 'ar' ? c.nameAr : c.name }}</option>
                 }
             </select>
             @if (invalid('country')) {
@@ -71,7 +71,7 @@
                 [disabled]="!selectedCountry()">
                 <option value="">{{ 'AUTH.GOVERNORATE_PLACEHOLDER' | translate }}</option>
                 @for (g of governorates(); track g.name) {
-                <option [value]="g.name">{{ g.name }}</option>
+                <option [value]="g.name">{{ lang.currentLang() === 'ar' ? g.nameAr : g.name }}</option>
                 }
             </select>
             @if (invalid('governorate')) {

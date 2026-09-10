@@ -52,24 +52,24 @@ def _make_worker_profile(user, work_type, bio, has_shop=False, shop_location=Non
 
 def seed():
     print("Seeding sample users...")
-    alice = _make_user("alice", "+201000000001", "Egypt", "Cairo", "user")
-    bob = _make_user("bob_user", "+201000000002", "Egypt", "Giza", "user")
+    alice = _make_user("alice", "+201000000001", "EG", "Cairo", "user")
+    bob = _make_user("bob_user", "+201000000002", "EG", "Giza", "user")
 
     print("Seeding sample workers (one per work type, some with shops)...")
-    plumber = _make_user("sayed_plumber", "+201000000010", "Egypt", "Cairo", "worker")
+    plumber = _make_user("sayed_plumber", "+201000000010", "EG", "Cairo", "worker")
     _make_worker_profile(
         plumber, WorkType.PLUMBER, "15 years fixing pipes and leaks.", has_shop=True, shop_location="Downtown Cairo"
     )
 
-    electrician = _make_user("mona_electrician", "+201000000011", "Egypt", "Giza", "worker")
+    electrician = _make_user("mona_electrician", "+201000000011", "EG", "Giza", "worker")
     _make_worker_profile(electrician, WorkType.ELECTRICIAN, "Licensed electrician, residential & commercial.")
 
-    carpenter = _make_user("hassan_carpenter", "+201000000012", "Egypt", "Alexandria", "worker")
+    carpenter = _make_user("hassan_carpenter", "+201000000012", "EG", "Alexandria", "worker")
     _make_worker_profile(
         carpenter, WorkType.CARPENTER, "Custom furniture and repairs.", has_shop=True, shop_location="Alexandria Corniche"
     )
 
-    it_worker = _make_user("laila_it", "+201000000013", "Egypt", "Cairo", "worker")
+    it_worker = _make_user("laila_it", "+201000000013", "EG", "Cairo", "worker")
     _make_worker_profile(it_worker, WorkType.IT, "PC repair, networking, smart home setup.")
 
     print("Walking a full cycle #1 (online payment)...")
