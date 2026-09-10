@@ -1,6 +1,6 @@
 # Handy — Backend Development Plan
 
-> **Stack:** Python · Flask (blueprints) · `flask-socketio` (Socket.IO, matches frontend's `socket.io-client`) · PostgreSQL via Supabase (Supabase REST Client) · `flask-jwt-extended` · Paymob (sandbox, hosted-checkout redirect) · AuthEvo (WhatsApp OTP + Telegram fallback) · Gemini Flash
+> **Stack:** Python · Flask (blueprints) · `flask-socketio` (Socket.IO, matches frontend's `socket.io-client`) · PostgreSQL (Supabase-hosted, accessed directly via SQLAlchemy ORM + Alembic — **not** the Supabase REST client, see §1 amendment) · `flask-jwt-extended` · Paymob (sandbox, hosted-checkout redirect) · AuthEvo (WhatsApp OTP + Telegram fallback) · Gemini Flash
 > **This file is the single source of truth for backend progress and is reconciled against `FRONTEND_PLAN.md`, which is already partway built (Phases 1–2 done). Where the original `BACKEND_PROMPT.md` conflicted with what the frontend already committed to, the frontend's contract wins — see §11.**
 
 ---
@@ -27,7 +27,7 @@
 | Concern | Decision |
 |---|---|
 | **Web framework** | Flask, organized as blueprints: `auth`, `otp`, `requests`, `offers`, `jobs`, `payments`, `ratings`, `workers`, `ai`, `webhooks` |
-| **DB access** | **Supabase REST Client**, connecting via  the Supabase REST/Python client. Gives an easier approach for DB integration — **Storage uploads happen client-side** (see below), so the backend never touches the Supabase Storage SDK for the request-creation flow |
+| **DB access** | **SQLAlchemy ORM**, connecting directly to the Supabase-hosted Postgres instance via `DATABASE_URL` (not the Supabase REST/Python client — superseded during implementation, see this row). Alembic (via `flask-migrate`) manages schema migrations against the same connection. **Storage uploads still happen client-side** (see below), so the backend never touches the Supabase Storage SDK for the request-creation flow |
 | **Auth** | `flask-jwt-extended`, `bcrypt` password hashing. JWT payload: `{ sub: user_id, role: 'user'\|'worker' }`. No refresh-token flow for v1 (long-lived access token; revisit if needed) |
 | **Realtime** | `flask-socketio` with `eventlet` (or `gevent`) worker. Socket auth: client connects with the JWT (as an `auth` payload or query param on connect); server verifies and joins the socket to a `user:{id}` room, plus `worktype:{type}` room if role=worker. **Event names match what the frontend's `WebSocketService` already expects — see §10, not the dot-notation originally drafted in `BACKEND_PROMPT.md`** |
 | **AI Suggestion** | Gemini Flash via REST (`google-genai` or plain `requests`), wrapped in a `providers/gemini.py` module so it's mockable offline |
@@ -111,38 +111,39 @@ backend/
 
 ## 2. Project Scaffolding
 
-- [ ] `flask`, `flask-socketio[eventlet]`, `flask-jwt-extended`, `flask-cors`, `supabase` , `bcrypt`, `marshmallow`, `phonenumbers`, `python-dotenv`, `requests`, `google-generativeai`
-- [ ] App factory pattern (`create_app(config_name)`) with `SocketIO(app, cors_allowed_origins=..., async_mode='eventlet')`
-- [ ] `.env.example` documenting every required var: `DATABASE_URL`, `JWT_SECRET_KEY`, `AUTHEVO_API_KEY`, `AUTHEVO_MODE` (`sandbox`/`live`/`mock`), `GEMINI_API_KEY`, `PAYMOB_API_KEY`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, `PAYMOB_MODE`, `FRONTEND_URL` (for Paymob return-URL + CORS)
-- [ ] `providers/*` stubbed with a `mock` mode that returns deterministic fake data so the rest of the team can build against it without live keys
-- [ ] `requirements.txt` pinned
+- [x] `flask`, `flask-socketio[eventlet]`, `flask-jwt-extended`, `flask-cors`, `flask-sqlalchemy`, `flask-migrate`, `psycopg2-binary`, `flask-bcrypt`, `marshmallow`, `phonenumbers`, `python-dotenv`, `requests`, `google-generativeai`
+- [x] App factory pattern (`create_app(config_name)`) with `SocketIO(app, cors_allowed_origins=..., async_mode='eventlet')`
+- [x] `.env.example` documenting every required var: `DATABASE_URL`, `JWT_SECRET_KEY`, `AUTHEVO_API_KEY`, `AUTHEVO_MODE` (`sandbox`/`live`/`mock`), `GEMINI_API_KEY`, `PAYMOB_API_KEY`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, `PAYMOB_MODE`, `FRONTEND_URL` (for Paymob return-URL + CORS)
+- [x] `providers/*` stubbed with a `mock` mode that returns deterministic fake data so the rest of the team can build against it without live keys
+- [x] `requirements.txt` pinned
 
 ---
 
 ## 3. Phase 1 — Foundation
 
 ### Database Schema (migrations)
-- [ ] Postgres enums: `work_type`, `request_status`, `offer_status`, `job_status`, `payment_method` (`online`, `cash` — **new**), `payment_status`, `canceled_by`
-- [ ] Tables per original schema (`users`, `worker_profiles`, `requests`, `request_images`, `offers`, `jobs`, `ratings`, `payments`, `payouts`, `otp_verifications`, `telegram_links`), with these amendments:
+- [x] Postgres enums: `work_type`, `request_status`, `offer_status`, `job_status`, `payment_method` (`online`, `cash` — **new**), `payment_status`, `canceled_by` — modeled as Python `enum.Enum` classes in `app/models/enums.py`, mapped via SQLAlchemy `Enum`
+- [x] Tables per original schema (`users`, `worker_profiles`, `requests`, `request_images`, `offers`, `jobs`, `ratings`, `payments`, `payouts`, `otp_verifications`, `telegram_links`), with these amendments:
   - `users`: drop standalone `country_prefix` storage as client input; derive-on-write from `phone_number`, still store it for display convenience
   - `jobs`: add `payment_type` (`payment_method` enum, nullable until finish)
   - `payments`: `method` column (`online`/`cash`); `paymob_order_id`/`paymob_transaction_id` nullable (unused for cash)
-- [ ] Unique constraints: `ratings.job_id` (one rating per job), `offers (request_id, worker_id)`
-- [ ] Indexes: `requests.work_type` + `status` (feed queries), `jobs.user_id`, `jobs.worker_id`
+- [x] Unique constraints: `ratings.job_id` (one rating per job), `offers (request_id, worker_id)`
+- [x] Indexes: `requests.work_type` + `status` (feed queries), `jobs.user_id`, `jobs.worker_id`
+- [ ] Actual Alembic migration generated & applied against a real Postgres/Supabase instance (blocked on `DATABASE_URL` credentials — models are ready via `flask db migrate` once configured)
 
 ### App Core
-- [ ] Config classes (Dev/Test/Prod) reading all env vars from §2
-- [ ] Global error handler → consistent JSON error shape `{ error: { code, message } }`
-- [ ] CORS restricted to `FRONTEND_URL`
-- [ ] Marshmallow base schema mixin that auto-converts snake_case ↔ camelCase, used by every blueprint
-- [ ] `decorators.py`: `@jwt_required()` wrappers for `@user_required` / `@worker_required`
-- [ ] SocketIO connect handler: reads JWT from the client's `auth` payload, joins `user:{id}` room (+ `worktype:{type}` if worker); rejects unauthenticated connections
-- [ ] `sockets/emitters.py`: one typed function per event in §10 so route/service code never hand-builds socket payloads inline
+- [x] Config classes (Dev/Test/Prod) reading all env vars from §2
+- [x] Global error handler → consistent JSON error shape `{ error: { code, message } }`
+- [x] CORS restricted to `FRONTEND_URL`
+- [x] Marshmallow base schema mixin that auto-converts snake_case ↔ camelCase, used by every blueprint
+- [x] `decorators.py`: `@jwt_required()` wrappers for `@user_required` / `@worker_required`
+- [x] SocketIO connect handler: reads JWT from the client's `auth` payload, joins `user:{id}` room (+ `worktype:{type}` if worker); rejects unauthenticated connections
+- [x] `sockets/emitters.py`: one typed function per event in §10 so route/service code never hand-builds socket payloads inline
 
 ### Provider Stubs
-- [ ] `providers/authevo.py`: `send_otp(phone) -> OtpSendResult`, `verify_otp(phone, code) -> bool`, `link_telegram(phone) -> TelegramLinkResult`; mock mode always "succeeds" and logs instead of calling AuthEvo
-- [ ] `providers/paymob.py`: `create_checkout(job, amount) -> checkout_url`, `verify_webhook_signature(payload, hmac) -> bool`, `create_payout(worker, amount) -> reference`; mock mode returns a fake checkout URL and auto-fires a local "webhook" for dev testing
-- [ ] `providers/gemini.py`: `suggest(description) -> (polished_description, recommended_work_type)`; mock mode does simple string passthrough
+- [x] `providers/authevo.py`: `send_otp(phone) -> OtpSendResult`, `verify_otp(phone, code) -> bool`, `link_telegram(phone) -> TelegramLinkResult`; mock mode always "succeeds" and logs instead of calling AuthEvo
+- [x] `providers/paymob.py`: `create_checkout(job, amount) -> checkout_url`, `verify_webhook_signature(payload, hmac) -> bool`, `create_payout(worker, amount) -> reference`; mock mode returns a fake checkout URL (auto-fired local webhook for dev testing left for Phase 4, when the webhook route exists)
+- [x] `providers/gemini.py`: `suggest(description) -> (polished_description, recommended_work_type)`; mock mode does simple string passthrough
 
 ---
 
