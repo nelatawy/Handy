@@ -85,7 +85,17 @@
     "plumber": "Plumber",
     "electrician": "Electrician",
     "carpenter": "Carpenter",
-    "it": "IT Technician"
+    "it": "IT Technician",
+    "ac_technician": "AC Technician",
+    "painter": "Painter",
+    "alumetal": "Alumetal Technician",
+    "appliance_repair": "Appliance Repair",
+    "satellite": "Satellite Technician",
+    "tiler": "Tiler / Flooring",
+    "welder": "Welder / Blacksmith",
+    "cleaner": "Cleaning Services",
+    "pest_control": "Pest Control",
+    "car_mechanic": "Car Mechanic / Towing"
   },
   "JOB_STATUS": {
     "pending": "Pending",
@@ -94,7 +104,7 @@
     "canceled": "Canceled"
   },
   "PAYMENT_TYPE": {
-    "online": "Paid Online",
+    "online": "Vodafone Cash",
     "cash": "Paid in Cash"
   },
   "REQUEST": {
@@ -151,8 +161,12 @@
     "CANCEL_CONFIRM_YES": "Yes, cancel",
     "FINISH_CONFIRM": "Choose how to pay",
     "FINISH_WARNING": "Marking this finished will initiate payment of {{amount}}",
-    "PAY_ONLINE": "Pay Online",
-    "PAY_ONLINE_DESC": "Securely pay via card or mobile wallet",
+    "PAY_ONLINE": "Vodafone Cash",
+    "PAY_ONLINE_DESC": "Pay securely using Vodafone Cash or mobile wallet",
+    "PAY_WALLET": "Vodafone Cash / Mobile Wallet",
+    "PAY_WALLET_DESC": "Pay securely using Vodafone Cash or any Egyptian mobile wallet",
+    "WALLET_PHONE_LABEL": "Vodafone Cash Number (or your mobile wallet):",
+    "WALLET_PHONE_PLACEHOLDER": "010xxxxxxxx",
     "PAY_CASH": "Paid in Cash",
     "PAY_CASH_DESC": "I've already paid the handyman in cash",
     "FINISHED_TITLE": "Job Completed!",
@@ -302,6 +316,19 @@
     "PAYMENT_CONFIRMED": "Payment of {{amount}} confirmed!",
     "GENERIC_ERROR": "Something went wrong. Please try again."
   },
+
+  "PAYMENT_CALLBACK": {
+    "TITLE_PROCESSING": "Processing Payment...",
+    "TITLE_SUCCESS": "Payment Successful!",
+    "TITLE_FAILED": "Payment Failed",
+    "SUBTITLE_PROCESSING": "Please wait while we confirm your payment with Paymob.",
+    "SUBTITLE_SUCCESS": "Your payment has been confirmed. The job is now complete.",
+    "SUBTITLE_FAILED": "Something went wrong with your payment. Please try again.",
+    "VIEW_JOB": "View Job",
+    "RETRY": "Try Again",
+    "GO_HOME": "Go Home"
+  },
+
   "COMMON": {
     "LOADING": "Loading...",
     "SAVE": "Save",

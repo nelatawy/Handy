@@ -22,7 +22,7 @@ class SuggestionResult:
 
 class GeminiResponse(BaseModel):
     suggested_description: str = Field(description="The expanded and improved description in Arabic.")
-    recommended_work_type: str = Field(description="One of the allowed work types: plumber, electrician, carpenter, it.")
+    recommended_work_type: str = Field(description="One of the allowed work types: plumber, electrician, carpenter, it, ac_technician, painter, alumetal, appliance_repair, satellite, tiler, welder, cleaner, pest_control, car_mechanic.")
 
 
 def _has_live_key() -> bool:
@@ -41,10 +41,10 @@ def suggest(description: str) -> SuggestionResult:
     client = genai.Client(api_key=api_key)
 
     system_instruction = (
-        "أنت مساعد ذكي لتطبيق خدمات الصيانة المنزلية (سباك، كهربائي، نجار، صيانة حاسوب/تقنية معلومات). "
+        "أنت مساعد ذكي لتطبيق خدمات الصيانة المنزلية والمهنية. "
         "مهمتك هي أخذ وصف المشكلة الموجز من المستخدم، وتوسيعه ليصبح وصفاً احترافياً ودقيقاً ومفصلاً بالمصري، "
         "ثم تحديد نوع العامل الأنسب لهذه المشكلة من بين الخيارات التالية فقط: "
-        "'plumber', 'electrician', 'carpenter', 'it'."
+        "'plumber', 'electrician', 'carpenter', 'it', 'ac_technician', 'painter', 'alumetal', 'appliance_repair', 'satellite', 'tiler', 'welder', 'cleaner', 'pest_control', 'car_mechanic'."
     )
 
     try:

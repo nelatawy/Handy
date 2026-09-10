@@ -44,7 +44,9 @@ def update_status(job_id):
             return jsonify(_job_dict(job)), 200
 
         if status == JobStatus.FINISHED.value:
-            job, payment_url = job_service.finish_job(job_id, user_id, data["payment_type"])
+            job, payment_url = job_service.finish_job(
+                job_id, user_id, data["payment_type"], wallet_phone=data.get("wallet_phone")
+            )
             return jsonify(_job_dict(job, payment_url)), 200
 
         job = job_service.cancel_job_by_user(job_id, user_id)

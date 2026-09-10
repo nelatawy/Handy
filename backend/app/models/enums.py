@@ -6,6 +6,16 @@ class WorkType(str, enum.Enum):
     ELECTRICIAN = "electrician"
     CARPENTER = "carpenter"
     IT = "it"
+    AC_TECHNICIAN = "ac_technician"
+    PAINTER = "painter"
+    ALUMETAL = "alumetal"
+    APPLIANCE_REPAIR = "appliance_repair"
+    SATELLITE = "satellite"
+    TILER = "tiler"
+    WELDER = "welder"
+    CLEANER = "cleaner"
+    PEST_CONTROL = "pest_control"
+    CAR_MECHANIC = "car_mechanic"
 
 
 class RequestStatus(str, enum.Enum):

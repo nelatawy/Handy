@@ -132,19 +132,31 @@
         }
 
         <div class="payment-options">
-          <!-- Pay Online -->
-          <button
-            class="payment-option payment-option--online"
-            (click)="confirmPayOnline()"
-            [disabled]="paymentStep() === 'confirming'"
-          >
-            <span class="payment-option__icon">💳</span>
-            <div>
-              <div class="payment-option__title">{{ 'JOB.PAY_ONLINE' | translate }}</div>
-              <div class="payment-option__desc">{{ 'JOB.PAY_ONLINE_DESC' | translate }}</div>
+          <!-- Vodafone Cash / Mobile Wallet -->
+          <div class="payment-option-card">
+            <button
+              class="payment-option payment-option--wallet"
+              (click)="confirmPayOnline()"
+              [disabled]="paymentStep() === 'confirming'"
+            >
+              <span class="payment-option__icon">📱</span>
+              <div>
+                <div class="payment-option__title">{{ 'JOB.PAY_WALLET' | translate }}</div>
+                <div class="payment-option__desc">{{ 'JOB.PAY_WALLET_DESC' | translate }}</div>
+              </div>
+              <span class="payment-option__arrow">→</span>
+            </button>
+            <div class="wallet-input-group">
+              <label class="wallet-input-label">{{ 'JOB.WALLET_PHONE_LABEL' | translate }}</label>
+              <input
+                type="tel"
+                class="wallet-input"
+                [placeholder]="'JOB.WALLET_PHONE_PLACEHOLDER' | translate"
+                [ngModel]="walletPhone()"
+                (ngModelChange)="walletPhone.set($event)"
+              />
             </div>
-            <span class="payment-option__arrow">→</span>
-          </button>
+          </div>
 
           <!-- Paid in Cash -->
           <button
