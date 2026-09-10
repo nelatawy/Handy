@@ -1,53 +1,57 @@
 @use 'variables' as v;
 
 // ============================================================
-//  Handy — Responsive Mixins
+//  Handy — Mixins
 // ============================================================
 
-@mixin sm {
-  @media (min-width: #{v.$bp-sm}) { @content; }
-}
-@mixin md {
-  @media (min-width: #{v.$bp-md}) { @content; }
-}
-@mixin lg {
-  @media (min-width: #{v.$bp-lg}) { @content; }
-}
-@mixin xl {
-  @media (min-width: #{v.$bp-xl}) { @content; }
-}
-@mixin xxl {
-  @media (min-width: #{v.$bp-2xl}) { @content; }
-}
+// ------------------------------------------------------------
+//  Breakpoints — mobile-first. Asymmetric layouts are only ever
+//  introduced inside md/lg; below that everything is one column.
+// ------------------------------------------------------------
+@mixin sm  { @media (min-width: #{v.$bp-sm})  { @content; } }
+@mixin md  { @media (min-width: #{v.$bp-md})  { @content; } }
+@mixin lg  { @media (min-width: #{v.$bp-lg})  { @content; } }
+@mixin xl  { @media (min-width: #{v.$bp-xl})  { @content; } }
+@mixin xxl { @media (min-width: #{v.$bp-2xl}) { @content; } }
 
-// Max-width (for overrides)
 @mixin max-sm { @media (max-width: #{v.$bp-sm - 1px}) { @content; } }
 @mixin max-md { @media (max-width: #{v.$bp-md - 1px}) { @content; } }
 @mixin max-lg { @media (max-width: #{v.$bp-lg - 1px}) { @content; } }
 
-// ============================================================
-//  Flex helpers
-// ============================================================
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// Motion-safety wrapper. Anything decorative — perpetual pulses,
+// shimmer, lift-on-hover — belongs inside this so it disappears for
+// users who asked for less motion.
+@mixin motion-safe { @media (prefers-reduced-motion: no-preference) { @content; } }
+
+// ------------------------------------------------------------
+//  Layout helpers
+// ------------------------------------------------------------
+@mixin flex-center  { display: flex; align-items: center; justify-content: center; }
+@mixin flex-between { display: flex; align-items: center; justify-content: space-between; }
+@mixin flex-col     { display: flex; flex-direction: column; }
+
+// Swiss-grid page container.
+@mixin container($max: v.$container-max) {
+  width: 100%;
+  max-width: $max;
+  margin-inline: auto;
+  padding-inline: v.$space-4;
+
+  @include md { padding-inline: v.$space-6; }
+  @include lg { padding-inline: v.$space-8; }
 }
 
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin flex-col {
+// A page-level vertical stack. Nearly every screen is a single column
+// of sections; this gives them one consistent rhythm.
+@mixin stack($gap: v.$space-6) {
   display: flex;
   flex-direction: column;
+  gap: $gap;
 }
 
-// ============================================================
+// ------------------------------------------------------------
 //  Typography helpers
-// ============================================================
+// ------------------------------------------------------------
 @mixin text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,157 +61,398 @@
 @mixin line-clamp($lines) {
   display: -webkit-box;
   -webkit-line-clamp: $lines;
+  line-clamp: $lines;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-// ============================================================
-//  Interactive element states
-// ============================================================
-@mixin focus-ring {
-  &:focus-visible {
-    outline: none;
-    box-shadow: v.$shadow-glow;
-  }
+@mixin numeric {
+  font-family: v.$font-mono;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: v.$tracking-tight;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
-@mixin hover-lift {
-  transition: v.$transition-base;
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: v.$shadow-lg;
-  }
-  &:active { transform: translateY(0); }
-}
-
-// ============================================================
-//  Card
-// ============================================================
-@mixin card {
+// ------------------------------------------------------------
+//  Elevation
+//
+//  Material's z-depth, adapted: in light mode a tinted cast shadow
+//  reads as depth; in dark mode shadows vanish against the ground, so
+//  the same elevation is carried by a 1px top highlight — the edge
+//  catching light from above. Both are applied together and each
+//  theme simply ignores the one that does not apply.
+// ------------------------------------------------------------
+@mixin surface($level: 1, $radius: v.$radius-xl) {
+  position: relative;
   background: v.$color-surface;
   border: 1px solid v.$color-border;
-  border-radius: v.$radius-xl;
-  box-shadow: v.$shadow-md;
+  border-radius: $radius;
+
+  @if $level == 0 {
+    box-shadow: none;
+  } @else if $level == 1 {
+    box-shadow: var(--shadow-sm);
+  } @else if $level == 2 {
+    box-shadow: var(--shadow-md);
+  } @else if $level == 3 {
+    box-shadow: var(--shadow-lg);
+  } @else {
+    box-shadow: var(--shadow-xl);
+  }
+
+  // Dark-mode edge highlight — the "catching the light" cue that
+  // replaces a cast shadow. Inset so it never affects layout.
+  :root.theme-dark & {
+    @if $level == 0 {
+      box-shadow: inset 0 1px 0 rgba(v.$color-white, 0.05);
+    } @else {
+      box-shadow:
+        inset 0 1px 0 rgba(v.$color-white, 0.05),
+        var(--shadow-md);
+    }
+  }
 }
 
-@mixin card-hover {
-  @include card;
-  @include hover-lift;
-  cursor: pointer;
+// Tactile press. The lift is decorative (motion-safe); the press is
+// NOT — it is the confirmation that a tap registered, which matters
+// most on a phone, so it stays even under reduced-motion.
+@mixin interactive-lift($lift: 2px) {
+  transition: transform #{v.$duration-base} #{v.$ease-standard},
+              box-shadow #{v.$duration-base} #{v.$ease-standard},
+              border-color #{v.$duration-fast} #{v.$ease-standard};
+
+  @include motion-safe {
+    &:hover:not(:disabled) {
+      transform: translate3d(0, -#{$lift}, 0);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.985);
+    box-shadow: var(--shadow-sm);
+    transition-duration: #{v.$duration-instant};
+  }
 }
 
-// ============================================================
-//  Button base
-// ============================================================
+// ------------------------------------------------------------
+//  Material ripple
+//
+//  Pure CSS, no JS: a radial gradient scaled from the centre on
+//  :active. It communicates "the surface acknowledged your touch"
+//  without the per-tap DOM node a true coordinate ripple needs.
+//  Requires the host to be position: relative + overflow: hidden.
+// ------------------------------------------------------------
+@mixin ripple($color: currentColor) {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: radial-gradient(circle at center, $color 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    opacity: 0;
+    transform: scale(1);
+    transition: transform #{v.$duration-slower} #{v.$ease-decelerate},
+                opacity #{v.$duration-slow} #{v.$ease-standard};
+    pointer-events: none;
+  }
+
+  &:active::after {
+    transform: scale(24);
+    opacity: 0.14;
+    transition-duration: 0ms;
+  }
+}
+
+// ------------------------------------------------------------
+//  Focus
+// ------------------------------------------------------------
+@mixin focus-ring($offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid v.$color-border-focus;
+    outline-offset: $offset;
+  }
+}
+
+// Focus ring drawn as a shadow instead of an outline — for controls
+// whose own border should stay visible (inputs, selects).
+@mixin focus-shadow {
+  &:focus-visible {
+    outline: none;
+    border-color: v.$color-border-focus;
+    box-shadow: v.$shadow-focus;
+  }
+}
+
+// ------------------------------------------------------------
+//  Controls
+// ------------------------------------------------------------
 @mixin btn-base {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: v.$space-2;
-  padding: v.$space-3 v.$space-6;
-  border: none;
+  min-height: 40px;             // comfortable touch target
+  padding: v.$space-3 v.$space-5;
+  border: 1px solid transparent;
   border-radius: v.$radius-lg;
+  font-family: inherit;
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-semibold;
   line-height: 1;
-  cursor: pointer;
-  transition: v.$transition-base;
-  text-decoration: none;
+  letter-spacing: 0;
   white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;             // clips the ripple
+  transition: v.$transition-fast;
   @include focus-ring;
 
-  &:disabled {
-    opacity: 0.5;
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.45;
     cursor: not-allowed;
     transform: none !important;
+    box-shadow: none !important;
   }
+
+  // Icons inside buttons should never stretch.
+  :where(svg, lucide-icon) { flex-shrink: 0; }
 }
 
-// ============================================================
-//  Input base
-// ============================================================
 @mixin input-base {
   width: 100%;
+  min-height: 44px;
   padding: v.$space-3 v.$space-4;
-  border: 1.5px solid v.$color-border;
-  border-radius: v.$radius-md;
-  font-size: v.$font-size-base;
+  border: 1px solid v.$color-border-strong;
+  border-radius: v.$radius-lg;
+  font-family: inherit;
+  font-size: v.$font-size-md;   // >=16px avoids iOS zoom-on-focus
   color: v.$color-text-primary;
   background: v.$color-surface;
-  transition: v.$transition-fast;
+  transition: border-color #{v.$duration-fast} #{v.$ease-standard},
+              box-shadow #{v.$duration-fast} #{v.$ease-standard};
   outline: none;
 
   &::placeholder { color: v.$color-text-muted; }
 
+  &:hover:not(:disabled):not(:focus) { border-color: v.$color-text-muted; }
+
   &:focus {
     border-color: v.$color-border-focus;
-    box-shadow: v.$shadow-glow;
+    box-shadow: v.$shadow-focus;
   }
 
-  &.error {
-    border-color: v.$color-danger;
-    box-shadow: 0 0 0 3px rgba(v.$color-danger, 0.2);
+  &:disabled {
+    background: v.$color-surface-2;
+    color: v.$color-text-muted;
+    cursor: not-allowed;
+  }
+
+  &.error,
+  &[aria-invalid='true'] {
+    border-color: v.$color-danger-text;
+    &:focus { box-shadow: 0 0 0 3px #{rgba(v.$color-danger, 0.2)}; }
   }
 }
 
-// ============================================================
-//  RTL helpers
-// ============================================================
+// ------------------------------------------------------------
+//  Trust primitives
+//
+//  Ratings, completed-job counts and shop badges are what separate a
+//  marketplace from a generic storefront, so they get first-class
+//  mixins rather than being restyled ad hoc on every screen.
+// ------------------------------------------------------------
+
+// Identity avatar. Deterministic hue from the name means the same
+// handyman keeps the same colour across the whole app — a small,
+// free recognition cue. Callers set --avatar-hue.
+@mixin avatar($size: 44px) {
+  @include flex-center;
+  width: $size;
+  height: $size;
+  flex-shrink: 0;
+  border-radius: v.$radius-full;
+  overflow: hidden;
+  font-weight: v.$font-weight-semibold;
+  font-size: #{$size * 0.4};
+  line-height: 1;
+  color: v.$color-white;
+  background:
+    linear-gradient(
+      140deg,
+      hsl(var(--avatar-hue, 201) 52% 42%),
+      hsl(calc(var(--avatar-hue, 201) + 18) 48% 32%)
+    );
+  // Keeps a light-skinned avatar from disappearing into a white card.
+  box-shadow: inset 0 0 0 1px rgba(v.$color-gray-900, 0.08);
+  user-select: none;
+}
+
+// Status pill. Tone is passed in so every badge shares one geometry.
+@mixin pill($fg, $bg) {
+  display: inline-flex;
+  align-items: center;
+  gap: v.$space-1;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-xs;
+  font-weight: v.$font-weight-semibold;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: $fg;
+  background: $bg;
+}
+
+// "Live" indicator — a dot with an expanding halo. This is the app's
+// signal that the connection is open and offers can still arrive, so
+// the halo is motion-safe but the dot itself always renders.
+@mixin live-dot($size: 8px) {
+  position: relative;
+  width: $size;
+  height: $size;
+  border-radius: v.$radius-full;
+  background: v.$color-accent;
+  flex-shrink: 0;
+
+  @include motion-safe {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: inherit;
+      animation: live-halo 2s #{v.$ease-decelerate} infinite;
+    }
+  }
+}
+
+@keyframes live-halo {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+// ------------------------------------------------------------
+//  Logical spacing — flips automatically under RTL.
+// ------------------------------------------------------------
 @mixin rtl { [dir='rtl'] & { @content; } }
 @mixin ltr { [dir='ltr'] & { @content; } }
 
-// Logical margin/padding (auto-flip for RTL)
-@mixin margin-start($val) {
-  margin-inline-start: $val;
-}
-@mixin margin-end($val) {
-  margin-inline-end: $val;
-}
-@mixin padding-start($val) {
-  padding-inline-start: $val;
-}
-@mixin padding-end($val) {
-  padding-inline-end: $val;
+@mixin margin-start($val)  { margin-inline-start: $val; }
+@mixin margin-end($val)    { margin-inline-end: $val; }
+@mixin padding-start($val) { padding-inline-start: $val; }
+@mixin padding-end($val)   { padding-inline-end: $val; }
+
+// Mirrors a glyph that encodes direction (chevrons, arrows). Only for
+// icons whose meaning is directional — never for logos or avatars.
+@mixin flip-rtl {
+  [dir='rtl'] & { transform: scaleX(-1); }
 }
 
-// ============================================================
+// ------------------------------------------------------------
 //  Scrollbar
-// ============================================================
+// ------------------------------------------------------------
 @mixin custom-scrollbar {
-  &::-webkit-scrollbar { width: 6px; height: 6px; }
-  &::-webkit-scrollbar-track { background: v.$color-gray-100; border-radius: 3px; }
-  &::-webkit-scrollbar-thumb { background: v.$color-gray-300; border-radius: 3px;
-    &:hover { background: v.$color-gray-400; }
+  scrollbar-width: thin;
+  scrollbar-color: v.$color-border-strong transparent;
+
+  &::-webkit-scrollbar { width: 8px; height: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: v.$color-border-strong;
+    border-radius: v.$radius-full;
+    border: 2px solid transparent;
+    background-clip: content-box;
+
+    &:hover { background: v.$color-text-muted; background-clip: content-box; }
   }
 }
 
-// ============================================================
-//  Overlay / backdrop
-// ============================================================
+// Horizontal scroller with edge padding preserved on mobile.
+@mixin scroll-row($gap: v.$space-3) {
+  display: flex;
+  gap: $gap;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  @include custom-scrollbar;
+
+  > * { scroll-snap-align: start; flex-shrink: 0; }
+}
+
+// ------------------------------------------------------------
+//  Overlay
+// ------------------------------------------------------------
 @mixin overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background: rgba(v.$color-ink-900, 0.5);
+  backdrop-filter: blur(6px);
   z-index: v.$z-overlay;
 }
 
-// ============================================================
+// ------------------------------------------------------------
 //  Skeleton loading
-// ============================================================
+//
+//  Skeletons mirror the real layout's box sizes rather than showing a
+//  spinner, so the page does not reflow when data lands.
+// ------------------------------------------------------------
 @mixin skeleton {
-  background: linear-gradient(
-    90deg,
-    v.$color-gray-200 25%,
-    v.$color-gray-100 50%,
-    v.$color-gray-200 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.5s infinite;
+  position: relative;
+  overflow: hidden;
+  background: v.$color-surface-2;
   border-radius: v.$radius-md;
+
+  @include motion-safe {
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(v.$color-white, 0.45),
+        transparent
+      );
+      animation: skeleton-sweep 1.6s #{v.$ease-standard} infinite;
+    }
+
+    :root.theme-dark &::after {
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(v.$color-white, 0.07),
+        transparent
+      );
+    }
+  }
+
+  // The sweep is a light source: it travels left-to-right regardless
+  // of text direction, so it is NOT mirrored under RTL.
 }
 
-@keyframes skeleton-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+@keyframes skeleton-sweep {
+  to { transform: translateX(100%); }
+}
+
+// ------------------------------------------------------------
+//  Screen-reader-only content
+// ------------------------------------------------------------
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

@@ -2,67 +2,165 @@
 //  Handy — Global Stylesheet Entry Point
 // ============================================================
 
-// Design system (order matters — @use must come before @import)
+// Font faces are loaded via <link> in index.html, not @import here —
+// see the comment there for why. (Sass also requires @use to precede
+// every other rule, so a CSS @import cannot sit above these anyway.)
+
 @use 'styles/variables' as v;
 @use 'styles/reset';
 @use 'styles/typography';
 @use 'styles/utilities';
 
-// Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap');
-
-
 // ============================================================
-//  Global page / app shell styles
+//  Theme definitions
+//
+//  Light is the default. Dark is opt-in via .theme-dark on <html>
+//  (set by ThemeService). Both themes define the SAME set of custom
+//  properties — never add a property to one without the other.
 // ============================================================
 
 :root {
-  /* Layout variables */
-  --color-primary: #{v.$color-primary-500};
+  color-scheme: light;
+
   --navbar-height: #{v.$navbar-height};
   --container-max: #{v.$container-max};
 
-  /* Light Theme */
-  --color-bg:            #{v.$color-gray-50};
-  --color-surface:       #{v.$color-white};
-  --color-surface-2:     #{v.$color-gray-100};
-  --color-text-primary:  #{v.$color-gray-900};
-  --color-text-secondary:#{v.$color-gray-600};
-  --color-text-muted:    #{v.$color-gray-400};
-  --color-text-inverse:  #{v.$color-white};
-  --color-text-link:     #{v.$color-primary-600};
+  // --- Surfaces: the page sits lower than cards, so cards read raised ---
+  --color-bg:        #{v.$color-gray-50};
+  --color-surface:   #{v.$color-white};
+  --color-surface-2: #{v.$color-gray-100};
+  --color-surface-3: #{v.$color-gray-200};
+
+  // --- Text ---
+  --color-text-primary:   #{v.$color-gray-900};
+  --color-text-secondary: #{v.$color-gray-600};
+  --color-text-muted:     #{v.$color-gray-500};   // 5.45:1 on white (AA)
+  --color-text-inverse:   #{v.$color-white};
+  --color-text-link:      #{v.$color-primary-600};
+
+  // --- Borders ---
   --color-border:        #{v.$color-gray-200};
-  --color-border-focus:  #{v.$color-primary-500};
+  --color-border-strong: #{v.$color-gray-300};
+  --color-border-focus:  #{v.$color-primary-600};
+
+  // --- Accent (action / trust / live) ---
+  --color-accent:       #{v.$color-primary-600};
+  --color-accent-hover: #{v.$color-primary-700};
+  --color-accent-soft:  #{v.$color-primary-50};
+  --color-accent-text:  #{v.$color-primary-700};
+
+  // --- Semantic text, theme-corrected ---
+  --color-success-text: #{v.$color-success-on-light};
+  --color-danger-text:  #{v.$color-danger-on-light};
+  --color-warning-text: #{v.$color-warning-on-light};
+
+  // Rings. Focus is keyboard-only and transient; the accent ring marks
+  // a persistent selected/live state (see $shadow-glow).
+  --color-focus-ring:  #{rgba(v.$color-primary-600, 0.32)};
+  --color-accent-ring: #{rgba(v.$color-primary-500, 0.28)};
+
+  // Live-region tint used by the "waiting for offers" states.
+  --color-live-pulse: #{rgba(v.$color-primary-500, 0.35)};
+
+  // Elevation, tinted to the slate ground.
+  --shadow-sm: #{v.$shadow-sm};
+  --shadow-md: #{v.$shadow-md};
+  --shadow-lg: #{v.$shadow-lg};
+  --shadow-xl: #{v.$shadow-xl};
 }
 
 :root.theme-dark {
-  /* Dark Theme */
-  --color-bg:            #{v.$color-gray-900}; /* #0f172a */
-  --color-surface:       #{v.$color-gray-800}; /* #1e293b */
-  --color-surface-2:     #{v.$color-gray-700}; /* #334155 */
-  --color-text-primary:  #{v.$color-gray-50};  /* #f8fafc */
-  --color-text-secondary:#{v.$color-gray-300}; /* #cbd5e1 */
-  --color-text-muted:    #{v.$color-gray-500}; /* #64748b */
-  --color-text-inverse:  #{v.$color-gray-900}; /* #0f172a */
-  --color-text-link:     #{v.$color-primary-400};
-  --color-border:        rgba(255, 255, 255, 0.1);
-  --color-border-focus:  #{v.$color-primary-400};
+  color-scheme: dark;
+
+  // Dark surfaces step UP in lightness as they rise — the inverse of
+  // light mode, matching how Material handles elevation in the dark.
+  --color-bg:        #{v.$color-ink-900};
+  --color-surface:   #{v.$color-ink-800};
+  --color-surface-2: #{v.$color-ink-700};
+  --color-surface-3: #{v.$color-ink-600};
+
+  --color-text-primary:   #{v.$color-ink-text};
+  --color-text-secondary: #{v.$color-ink-text-2};
+  --color-text-muted:     #{v.$color-ink-text-muted};
+  --color-text-inverse:   #{v.$color-ink-900};
+  --color-text-link:      #{v.$color-sky-on-dark};
+
+  --color-border:        #{v.$color-ink-600};
+  --color-border-strong: #{v.$color-ink-border};
+  --color-border-focus:  #{v.$color-sky-on-dark};
+
+  // The dense action blue is unreadable on a dark ground, so the
+  // accent moves up the ramp to keep reading as "live" not muddy.
+  --color-accent:       #{v.$color-primary-500};
+  --color-accent-hover: #{v.$color-primary-400};
+  --color-accent-soft:  #{rgba(v.$color-primary-500, 0.16)};
+  --color-accent-text:  #{v.$color-sky-on-dark};
+
+  --color-success-text: #{v.$color-success-on-dark};
+  --color-danger-text:  #{v.$color-danger-on-dark};
+  --color-warning-text: #{v.$color-warning-on-dark};
+
+  --color-focus-ring:  #{rgba(v.$color-sky-on-dark, 0.4)};
+  --color-accent-ring: #{rgba(v.$color-primary-400, 0.34)};
+  --color-live-pulse:  #{rgba(v.$color-primary-400, 0.4)};
+
+  // Shadows barely register on a dark ground, so elevation is carried
+  // by a hairline highlight (see the .surface mixin) plus deeper cast.
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px -6px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 20px 48px -12px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-// Smooth page transitions
+// ============================================================
+//  App shell
+// ============================================================
+
+// Route transition — a short rise, not a slide. Anything longer than
+// ~320ms makes navigation feel laggy rather than polished.
 router-outlet + * {
-  animation: fade-in-up 0.25s ease forwards;
+  animation: route-enter #{v.$duration-slow} #{v.$ease-decelerate} both;
 }
 
-// Selection color
+@keyframes route-enter {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
 ::selection {
   background: v.$color-primary-200;
   color: v.$color-primary-900;
 }
 
-// Focus visible only on keyboard nav
+:root.theme-dark ::selection {
+  background: rgba(v.$color-primary-500, 0.4);
+  color: v.$color-ink-text;
+}
+
+// Keyboard-only focus.
 :focus { outline: none; }
+
 :focus-visible {
-  outline: 2px solid v.$color-primary-500;
+  outline: 2px solid v.$color-border-focus;
   outline-offset: 2px;
+  border-radius: v.$radius-sm;
+}
+
+// ============================================================
+//  Reduced motion
+//
+//  The live feed leans on motion to signal "a real person just
+//  responded". For users who opt out, motion collapses to near-zero
+//  but is never removed outright — a 0.01ms transition still fires
+//  transitionend/animationend, so anything awaiting them still runs.
+// ============================================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

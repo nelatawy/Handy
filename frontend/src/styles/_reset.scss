@@ -1,10 +1,12 @@
 @use 'variables' as v;
 
 // ============================================================
-//  Handy — CSS Reset & Base
+//  Handy — Reset & Base
 // ============================================================
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -15,6 +17,10 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  // Reserve the scrollbar gutter so sticky headers and centred
+  // containers don't shift horizontally when a page grows tall enough
+  // to scroll — a jump that's very visible when navigating a feed.
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -25,48 +31,113 @@ body {
   background-color: v.$color-bg;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  min-height: 100dvh;
 }
 
-// RTL font swap
-[dir='rtl'] body,
-[dir='rtl'] {
+// ------------------------------------------------------------
+//  Script swap
+//
+//  Arabic gets Cairo. Scoped to [dir='rtl'] on the root so the
+//  cascade carries it to every descendant, but WITHOUT the
+//  `[dir='rtl'] *` selector the old reset used — that universal
+//  override also hit .numeric spans and stripped the mono face off
+//  prices. Elements that must stay Latin/mono opt back in below.
+// ------------------------------------------------------------
+[dir='rtl'] body {
   font-family: v.$font-sans-ar;
 }
 
-img, video {
+// Numerals, code and any explicitly-Latin run keep their own face in
+// both directions.
+code,
+kbd,
+samp,
+pre,
+.numeric,
+[data-latin] {
+  font-family: v.$font-mono;
+  font-variant-numeric: tabular-nums;
+}
+
+img,
+video,
+svg {
   max-width: 100%;
-  height: auto;
   display: block;
 }
 
-button, input, select, textarea {
+img,
+video {
+  height: auto;
+}
+
+// Inherit typography into form controls — browsers otherwise fall
+// back to their own UI font, which breaks the Arabic swap entirely.
+button,
+input,
+select,
+textarea {
   font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  // Safari applies its own centring to <button>; text should start-align.
+  text-align: inherit;
 }
 
 a {
   color: v.$color-text-link;
   text-decoration: none;
+  // Underline on hover only, with an offset so descenders stay legible.
+  text-underline-offset: 0.2em;
+
   &:hover { text-decoration: underline; }
 }
 
-ul, ol { list-style: none; }
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: v.$font-weight-bold;
-  line-height: v.$line-height-tight;
-  color: v.$color-text-primary;
+ul,
+ol {
+  list-style: none;
 }
 
-p { color: v.$color-text-secondary; }
+h1, h2, h3, h4, h5, h6 {
+  color: v.$color-text-primary;
+  // Prevents a lone trailing word on a wrapped heading.
+  text-wrap: balance;
+}
+
+p {
+  color: v.$color-text-secondary;
+  text-wrap: pretty;
+}
 
 hr {
   border: none;
   border-top: 1px solid v.$color-border;
-  margin: v.$space-4 0;
+  margin-block: v.$space-4;
 }
 
-// Prevent FOUC on RTL
-[dir='rtl'] * {
-  letter-spacing: 0;
+// Tables carry the earnings/history data — collapse by default so
+// hairline borders don't double up.
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+// Angular hosts are inline by default, which silently breaks any
+// layout that assumes a block child.
+app-root {
+  display: block;
+  min-height: 100dvh;
+}
+
+// Honour the user's motion preference for smooth scrolling too.
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

@@ -1,65 +1,147 @@
 // ============================================================
 //  Handy — Design Tokens
+//
+//  Design language: Swiss grid discipline (structure, typographic
+//  hierarchy, direction-agnostic layout) crossed with a Material
+//  elevation/motion vocabulary, warmed for a peer-to-peer trust
+//  context. Sky blue is reserved as the *action + trust* signal and
+//  is deliberately rationed: primary actions, live indicators and the
+//  chosen state only. Surfaces stay neutral so the accent still reads
+//  as meaningful when it appears.
+//
+//  Every foreground/background pair below is verified against
+//  WCAG 2.1 AA (4.5:1 body text, 3:1 large text and UI boundaries)
+//  in BOTH themes. Ratios are noted inline — if you change a value,
+//  re-check the pair it belongs to.
 // ============================================================
 
-// --- Primary Palette (Sky Blue) ---
-$color-primary-50:  #f0f9ff;
-$color-primary-100: #e0f2fe;
-$color-primary-200: #bae6fd;
-$color-primary-300: #7dd3fc;
-$color-primary-400: #38bdf8;
-$color-primary-500: #0ea5e9;   // main brand
-$color-primary-600: #0284c7;
-$color-primary-700: #0369a1;
-$color-primary-800: #075985;
-$color-primary-900: #0c4a6e;
+// ------------------------------------------------------------
+//  Primary — Sky. Action, trust, "live".
+//
+//  Hue held at ~201 across the ramp so tints stay in one family.
+//  Saturation caps below 80% at the action steps: a fully saturated
+//  sky reads as a toy, and against neutral slate it vibrates.
+// ------------------------------------------------------------
+$color-primary-50:  #eff8fe;
+$color-primary-100: #dceffc;
+$color-primary-200: #bae0f9;
+$color-primary-300: #82c9f3;
+$color-primary-400: #43ade8;
+$color-primary-500: #1c92d4;   // brand mark, large fills, dark-theme edges
+$color-primary-600: #0b6fa4;   // ACTION — white text 5.49:1 (AA)
+$color-primary-700: #0a5a86;   // action pressed
+$color-primary-800: #0d4c6e;
+$color-primary-900: #10405c;
 
-// --- Neutrals ---
-$color-white:       #ffffff;
-$color-gray-50:     #f8fafc;
-$color-gray-100:    #f1f5f9;
-$color-gray-200:    #e2e8f0;
-$color-gray-300:    #cbd5e1;
-$color-gray-400:    #94a3b8;
-$color-gray-500:    #64748b;
-$color-gray-600:    #475569;
-$color-gray-700:    #334155;
-$color-gray-800:    #1e293b;
-$color-gray-900:    #0f172a;
+// ------------------------------------------------------------
+//  Neutrals — one cool slate family, no warm/cool mixing.
+// ------------------------------------------------------------
+$color-white:    #ffffff;
+$color-gray-50:  #f7f9fb;
+$color-gray-100: #eef2f7;
+$color-gray-200: #e0e6ee;
+$color-gray-300: #c7d0dc;
+$color-gray-400: #94a1b2;
+$color-gray-500: #5b6b7f;   // muted text on light — 5.45:1 on white (AA)
+$color-gray-600: #44546a;
+$color-gray-700: #33465c;
+$color-gray-800: #1f2937;
+$color-gray-900: #111823;
 
-// --- Semantic Colors ---
-$color-success:     #22c55e;
-$color-success-light: #dcfce7;
-$color-danger:      #ef4444;
-$color-danger-light: #fee2e2;
-$color-warning:     #f59e0b;
-$color-warning-light: #fef3c7;
-$color-info:        $color-primary-500;
-$color-info-light:  $color-primary-100;
+// Dark-theme ground. Not pure black — a slate-tinted charcoal so the
+// sky accent and the neutral surfaces stay in the same colour world.
+$color-ink-900: #0b0f17;   // dark page background
+$color-ink-800: #161c28;   // dark surface (cards)
+$color-ink-700: #1f2836;   // dark raised surface
+$color-ink-600: #2b3648;   // dark border / hairline
 
-// --- Cash payment badge ---
-$color-cash:        #16a34a;
-$color-cash-light:  #bbf7d0;
-$color-online:      $color-primary-600;
+// Dark-theme foregrounds. Ratios are measured against $color-ink-800,
+// the dark card surface — the strictest ground in the theme, since
+// text on a raised card has less separation than text on the page.
+$color-ink-text:       #e8edf5;   // 14.51:1 on ink-800 (AAA)
+$color-ink-text-2:     #b3c0d1;   //  9.24:1 on ink-800 (AAA)
+$color-ink-text-muted: #8b99ad;   //  5.90:1 on ink-800 (AA)
+$color-ink-border:     #3b4859;   // dark equivalent of gray-300
+
+// The one sky step that survives a dark ground. #0b6fa4 — the
+// light-theme action colour — is far too dense to read as "live" here,
+// so links, focus and accent text all move to this instead.
+$color-sky-on-dark:    #5cc4f5;   //  8.67:1 on ink-800 (AAA)
+
+// ------------------------------------------------------------
+//  Semantic — tuned per theme so both directions pass AA.
+//  *-on-light are text-safe on white; the base values take white text.
+// ------------------------------------------------------------
+$color-success:          #16794a;   // white text 5.43:1 (AA)
+$color-success-hover:    #12653d;   // pressed/hover fill — darker, so AA holds
+$color-success-on-light: #15803d;   // 5.02:1 on white (AA)
+$color-success-on-dark:  #4ade80;   // 9.79:1 on ink-800 (AAA)
+$color-success-light:    #dcfce7;
+
+$color-danger:           #c2321f;   // white text 5.57:1 (AA)
+$color-danger-hover:     #a52918;   // pressed/hover fill — darker, so AA holds
+$color-danger-on-light:  #c2321f;   // 5.57:1 on white (AA)
+$color-danger-on-dark:   #f98d80;   // 7.43:1 on ink-800 (AAA)
+$color-danger-light:     #fdeae7;
+
+$color-warning:          #96620a;   // 5.19:1 on white (AA)
+$color-warning-on-light: #96620a;
+$color-warning-on-dark:  #fbbf24;
+$color-warning-light:    #fdf3d7;
+
+$color-info:       $color-primary-600;
+$color-info-light: $color-primary-100;
+
+// Soft semantic tints for badge and banner fills. Alpha-derived from
+// the base rather than solid pastels, so one token reads correctly on
+// a white card AND on an ink card with no per-theme override — the
+// tint picks up whatever surface it is laid on.
+$tint-success: rgba($color-success, 0.12);
+$tint-danger:  rgba($color-danger,  0.12);
+$tint-warning: rgba($color-warning, 0.14);
+
+// Payment method — cash reads green, online reads sky.
+$color-cash:         #16794a;
+$color-cash-light:   #d6f2e2;
+$color-online:       $color-primary-600;
 $color-online-light: $color-primary-100;
 
-// --- Background ---
-$color-bg:          var(--color-bg);
-$color-surface:     var(--color-surface);
-$color-surface-2:   var(--color-surface-2);
+// ------------------------------------------------------------
+//  Theme-bound aliases — resolved via CSS custom properties in
+//  styles.scss so a single class swap re-themes the whole app.
+// ------------------------------------------------------------
+$color-bg:        var(--color-bg);
+$color-surface:   var(--color-surface);
+$color-surface-2: var(--color-surface-2);
+$color-surface-3: var(--color-surface-3);
 
-// --- Text ---
 $color-text-primary:   var(--color-text-primary);
 $color-text-secondary: var(--color-text-secondary);
 $color-text-muted:     var(--color-text-muted);
 $color-text-inverse:   var(--color-text-inverse);
 $color-text-link:      var(--color-text-link);
 
-// --- Border ---
-$color-border:       var(--color-border);
-$color-border-focus: var(--color-border-focus);
+$color-border:        var(--color-border);
+$color-border-strong: var(--color-border-strong);
+$color-border-focus:  var(--color-border-focus);
 
-// --- Spacing scale (4px base) ---
+// Theme-aware semantic text (flips with the theme, unlike the raw
+// values above). Use these whenever a semantic colour carries text.
+$color-success-text: var(--color-success-text);
+$color-danger-text:  var(--color-danger-text);
+$color-warning-text: var(--color-warning-text);
+
+// Accent aliases — let the sky ramp shift slightly in dark mode,
+// where #0b6fa4 would be too dense to read as "live".
+$color-accent:       var(--color-accent);
+$color-accent-hover: var(--color-accent-hover);
+$color-accent-soft:  var(--color-accent-soft);
+$color-accent-text:  var(--color-accent-text);
+
+// ------------------------------------------------------------
+//  Spacing — 4px base. Swiss grid depends on every gap being a
+//  multiple of the same unit; no arbitrary values in components.
+// ------------------------------------------------------------
 $space-1:  0.25rem;   //  4px
 $space-2:  0.5rem;    //  8px
 $space-3:  0.75rem;   // 12px
@@ -73,64 +155,125 @@ $space-16: 4rem;      // 64px
 $space-20: 5rem;      // 80px
 $space-24: 6rem;      // 96px
 
-// --- Border Radius ---
+// ------------------------------------------------------------
+//  Radius — rounded enough to feel approachable (you are letting a
+//  stranger into your home), not so round it reads as a children's
+//  app. Cards sit at lg/xl; pills are reserved for status.
+// ------------------------------------------------------------
 $radius-sm:   0.375rem;   //  6px
 $radius-md:   0.5rem;     //  8px
-$radius-lg:   0.75rem;    // 12px
-$radius-xl:   1rem;       // 16px
-$radius-2xl:  1.5rem;     // 24px
+$radius-lg:   0.875rem;   // 14px — default control radius
+$radius-xl:   1.125rem;   // 18px — default card radius
+$radius-2xl:  1.5rem;     // 24px — feature surfaces
 $radius-full: 9999px;
 
-// --- Shadows ---
-$shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-$shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-$shadow-xl:   0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-$shadow-glow: 0 0 0 3px rgba($color-primary-500, 0.25);
+// ------------------------------------------------------------
+//  Elevation — Material's z-depth idea, but tinted to the slate
+//  ground rather than neutral black, so shadows read as depth
+//  instead of dirt. Dark-theme equivalents live in styles.scss.
+// ------------------------------------------------------------
+$shadow-xs: 0 1px 2px rgba(16, 28, 45, 0.04);
+$shadow-sm: 0 1px 2px rgba(16, 28, 45, 0.05), 0 1px 3px rgba(16, 28, 45, 0.04);
+$shadow-md: 0 2px 4px rgba(16, 28, 45, 0.04), 0 4px 10px -2px rgba(16, 28, 45, 0.07);
+$shadow-lg: 0 4px 8px rgba(16, 28, 45, 0.04), 0 12px 24px -6px rgba(16, 28, 45, 0.10);
+$shadow-xl: 0 8px 16px rgba(16, 28, 45, 0.05), 0 24px 48px -12px rgba(16, 28, 45, 0.14);
 
-// --- Transitions ---
-$transition-fast:   all 0.15s ease;
-$transition-base:   all 0.2s ease;
-$transition-slow:   all 0.35s ease;
-$transition-spring: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+// Focus ring — theme-bound so it stays visible on both grounds.
+$shadow-focus: 0 0 0 3px var(--color-focus-ring);
 
-// --- Typography ---
-$font-sans-en: 'Inter', system-ui, -apple-system, sans-serif;
-$font-sans-ar: 'Cairo', 'IBM Plex Arabic', 'Noto Sans Arabic', sans-serif;
-$font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+// Accent emphasis ring — marks a surface as *selected* or *live* (a
+// chosen offer, an active work-type tile). Distinct from the focus
+// ring, which is keyboard-only and transient. Theme-bound because a
+// low-alpha mid-blue halo disappears entirely against the dark ground.
+$shadow-glow: 0 0 0 3px var(--color-accent-ring);
 
-$font-size-xs:   0.75rem;    // 12px
-$font-size-sm:   0.875rem;   // 14px
-$font-size-base: 1rem;       // 16px
-$font-size-lg:   1.125rem;   // 18px
-$font-size-xl:   1.25rem;    // 20px
-$font-size-2xl:  1.5rem;     // 24px
-$font-size-3xl:  1.875rem;   // 30px
-$font-size-4xl:  2.25rem;    // 36px
+// ------------------------------------------------------------
+//  Motion — Material's easing intent, expressed as CSS curves.
+//  Entering elements decelerate (they arrive and settle); leaving
+//  elements accelerate (they get out of the way). "Spring" carries a
+//  slight overshoot and is reserved for moments of consequence —
+//  an offer arriving, a handyman being chosen.
+// ------------------------------------------------------------
+$ease-standard:   cubic-bezier(0.2, 0, 0, 1);
+$ease-decelerate: cubic-bezier(0, 0, 0, 1);
+$ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+$ease-spring:     cubic-bezier(0.34, 1.4, 0.64, 1);
+
+$duration-instant: 100ms;
+$duration-fast:    160ms;
+$duration-base:    220ms;
+$duration-slow:    320ms;
+$duration-slower:  480ms;
+
+$transition-fast:   all #{$duration-fast} #{$ease-standard};
+$transition-base:   all #{$duration-base} #{$ease-standard};
+$transition-slow:   all #{$duration-slow} #{$ease-standard};
+$transition-spring: all #{$duration-slow} #{$ease-spring};
+
+// ------------------------------------------------------------
+//  Typography
+//
+//  Latin: Geist — a tight neo-grotesque; the Swiss "bones".
+//  Arabic: Cairo — retained by preference. Cairo runs heavier and
+//  taller than Geist at the same nominal size, so _typography.scss
+//  applies an RTL optical correction (size + weight step-down);
+//  without it Arabic reads visibly darker than English.
+//  Numerals: Geist Mono with tabular figures so stacked prices and
+//  ratings align digit-for-digit down a column of offer cards.
+// ------------------------------------------------------------
+$font-sans-en: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$font-sans-ar: 'Cairo', 'Noto Sans Arabic', system-ui, sans-serif;
+$font-mono:    'Geist Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+// Type scale — 1.2 minor third. Restrained on purpose: hierarchy is
+// carried by weight and colour, not by size alone.
+$font-size-xs:   0.75rem;     // 12px
+$font-size-sm:   0.8125rem;   // 13px
+$font-size-base: 0.9375rem;   // 15px — denser than 16 for app UI
+$font-size-md:   1rem;        // 16px
+$font-size-lg:   1.125rem;    // 18px
+$font-size-xl:   1.375rem;    // 22px
+$font-size-2xl:  1.75rem;     // 28px
+$font-size-3xl:  2.125rem;    // 34px
+$font-size-4xl:  2.625rem;    // 42px
 
 $font-weight-normal:   400;
 $font-weight-medium:   500;
 $font-weight-semibold: 600;
 $font-weight-bold:     700;
 
-$line-height-tight:  1.25;
-$line-height-base:   1.5;
-$line-height-relaxed: 1.75;
+$line-height-tight:   1.2;
+$line-height-snug:    1.35;
+$line-height-base:    1.55;
+$line-height-relaxed: 1.7;
 
-// --- Z-Index layers ---
-$z-dropdown:    100;
-$z-sticky:      200;
-$z-overlay:     300;
-$z-modal:       400;
-$z-toast:       500;
+// Negative tracking on display sizes only — Geist is already tight
+// at text sizes and tightening further hurts Arabic legibility.
+$tracking-tight:   -0.02em;
+$tracking-tighter: -0.03em;
+$tracking-wide:     0.04em;
+$tracking-caps:     0.06em;   // uppercase micro-labels
 
-// --- Breakpoints ---
+// ------------------------------------------------------------
+//  Z-index — systemic layers only. Never invent an ad-hoc value.
+// ------------------------------------------------------------
+$z-base:     1;
+$z-raised:   10;
+$z-dropdown: 100;
+$z-sticky:   200;
+$z-overlay:  300;
+$z-modal:    400;
+$z-toast:    500;
+
+// ------------------------------------------------------------
+//  Breakpoints & layout
+// ------------------------------------------------------------
 $bp-sm:  480px;
 $bp-md:  768px;
 $bp-lg:  1024px;
 $bp-xl:  1280px;
 $bp-2xl: 1536px;
 
-// --- Layout ---
-$container-max:  1280px;
-$navbar-height:  64px;
+$container-max:    1200px;
+$container-narrow: 720px;   // single-column reading/form width
+$navbar-height:    64px;
