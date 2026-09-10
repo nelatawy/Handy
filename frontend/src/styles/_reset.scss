@@ -1,0 +1,72 @@
+@use 'variables' as v;
+
+// ============================================================
+//  Handy — CSS Reset & Base
+// ============================================================
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: v.$font-sans-en;
+  font-size: v.$font-size-base;
+  line-height: v.$line-height-base;
+  color: v.$color-text-primary;
+  background-color: v.$color-bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+// RTL font swap
+[dir='rtl'] body,
+[dir='rtl'] {
+  font-family: v.$font-sans-ar;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+a {
+  color: v.$color-text-link;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+ul, ol { list-style: none; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: v.$font-weight-bold;
+  line-height: v.$line-height-tight;
+  color: v.$color-text-primary;
+}
+
+p { color: v.$color-text-secondary; }
+
+hr {
+  border: none;
+  border-top: 1px solid v.$color-border;
+  margin: v.$space-4 0;
+}
+
+// Prevent FOUC on RTL
+[dir='rtl'] * {
+  letter-spacing: 0;
+}

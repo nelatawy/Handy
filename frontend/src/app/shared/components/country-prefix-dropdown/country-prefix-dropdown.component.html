@@ -1,0 +1,29 @@
+<div class="prefix-wrap" [class.prefix-wrap--open]="open()">
+    <button type="button" class="prefix-btn" (click)="toggle()" [attr.aria-expanded]="open()" aria-haspopup="listbox">
+        <span class="prefix-btn__flag">{{ selected().flag }}</span>
+        <span class="prefix-btn__code">{{ selected().dialCode }}</span>
+        <span class="prefix-btn__chevron">▾</span>
+    </button>
+
+    @if (open()) {
+    <div class="prefix-dropdown" role="listbox">
+        <div class="prefix-search">
+            <input class="prefix-search__input" type="text" placeholder="Search..." [(ngModel)]="query"
+                (click)="$event.stopPropagation()" autofocus />
+        </div>
+        <ul class="prefix-list">
+            @for (country of filtered(); track country.code) {
+            <li class="prefix-item" [class.prefix-item--active]="country.dialCode === selectedCode"
+                (click)="select(country)" role="option" [attr.aria-selected]="country.dialCode === selectedCode">
+                <span class="prefix-item__flag">{{ country.flag }}</span>
+                <span class="prefix-item__name">{{ country.name }}</span>
+                <span class="prefix-item__code">{{ country.dialCode }}</span>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Backdrop to close -->
+    <div class="prefix-backdrop" (click)="open.set(false)"></div>
+    }
+</div>

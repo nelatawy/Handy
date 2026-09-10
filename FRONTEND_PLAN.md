@@ -118,84 +118,86 @@ src/
 
 ## 2. Project Scaffolding
 
-- [ ] Create Angular 21 project (`ng new handy --style=scss --routing --standalone`)
-- [ ] Install dependencies: `@ngx-translate/core`, `@ngx-translate/http-loader`, `rxjs` (bundled), `socket.io-client` (backend confirmed `flask-socketio`)
-- [ ] Set up `environment.ts` with `apiUrl` and `wsUrl` placeholders
-- [ ] Set up global SCSS design system (`_variables.scss`, `_mixins.scss`, `_typography.scss`, `_reset.scss`, `_utilities.scss`)
-- [ ] Import a clean web font (e.g. Inter for EN, Cairo or IBM Plex Arabic for AR)
-- [ ] Configure `@ngx-translate` with `HttpLoader` and create skeleton `en.json` / `ar.json`
+- [x] Create Angular 21 project (`ng new handy --style=scss --routing --standalone`) — Angular CLI 21.2.8
+- [x] Install dependencies: `@ngx-translate/core` v18, `@ngx-translate/http-loader`, `rxjs`, `socket.io-client`, `@supabase/supabase-js`, `@angular/animations`
+- [x] Set up `environment.ts` with `apiUrl` and `wsUrl` placeholders
+- [x] Set up global SCSS design system (`_variables.scss`, `_mixins.scss`, `_typography.scss`, `_reset.scss`, `_utilities.scss`)
+- [x] Import Inter (EN) and Cairo (AR) fonts via Google Fonts
+- [x] Configure `@ngx-translate` with `provideTranslateHttpLoader` and create full `en.json` / `ar.json`
 
 ---
 
-## 3. Phase 1 — Foundation
+## 3. Phase 1 — Foundation ✅
 
 ### Design System & Layout
-- [ ] Define SCSS variables: primary sky-blue (`#0ea5e9` family), white, accent green/red, neutrals, shadows, border-radii, spacing scale
-- [ ] Build responsive mixins (mobile-first breakpoints: 480, 768, 1024, 1280)
-- [ ] Typography scale (headings, body, caption) with font-family fallback chains
-- [ ] Global reset + base styles
-- [ ] Utility classes (flex, grid, text-align, spacing)
+- [x] Define SCSS variables: primary sky-blue (`#0ea5e9` family), white, accent green/red, neutrals, shadows, border-radii, spacing scale
+- [x] Build responsive mixins (mobile-first breakpoints: 480, 768, 1024, 1280)
+- [x] Typography scale (headings, body, caption) with font-family fallback chains
+- [x] Global reset + base styles
+- [x] Utility classes (flex, grid, text-align, spacing, buttons, badges, skeleton)
 
 ### Core Services
-- [ ] `AuthService` — login, register, logout, token storage, role getter, `isAuthenticated$` observable
-- [ ] `WebSocketService` — connect/disconnect, auto-reconnect with backoff, typed event sending/receiving, channel multiplexing
-- [ ] `NotificationService` — in-app toast queue driven by WebSocket events, configurable duration, action buttons
-- [ ] `LanguageService` — get/set language, toggle `dir` attribute on `<html>`, persist preference in `localStorage`
+- [x] `AuthService` — login, register, logout, JWT storage/decode, role signals, `isAuthenticated` computed
+- [x] `WebSocketService` — Socket.IO client, auto-reconnect, typed event observables via Subject
+- [x] `NotificationService` — signal-based toast queue, success/error/info/warning, auto-dismiss, action buttons
+- [x] `LanguageService` — signal-based language toggle, RTL/LTR direction, persist in `localStorage`
 
 ### Interceptors
-- [ ] `AuthInterceptor` — attach JWT `Authorization: Bearer <token>` header to outgoing requests
-- [ ] `ApiUrlInterceptor` — prepend `environment.apiUrl` to relative paths
+- [x] `AuthInterceptor` — attach JWT `Authorization: Bearer <token>` header to outgoing requests
+- [x] `ApiUrlInterceptor` — prepend `environment.apiUrl` to relative paths
 
 ### Guards
-- [ ] `AuthGuard` — redirect to `/login` if not authenticated
-- [ ] `RoleGuard` — redirect if role doesn't match route data (`expectedRole: 'user' | 'worker'`)
-- [ ] `NoAuthGuard` — redirect authenticated users away from login/register
+- [x] `AuthGuard` — redirect to `/auth/login` if not authenticated
+- [x] `RoleGuard` — redirect if role doesn't match route `data.expectedRole`
+- [x] `NoAuthGuard` — redirect authenticated users away from login/register
 
 ### Models & Enums
-- [ ] `WorkType` enum
-- [ ] `JobStatus` enum (`Pending`, `Started`, `Finished`, `Canceled`)
-- [ ] `PaymentType` enum (`Online = 'online'`, `Cash = 'cash'`) — sent to backend when marking a job Finished to indicate how the user paid
-- [ ] `User`, `Worker`, `Request`, `Offer`, `Job`, `Rating` interfaces/types
+- [x] `WorkType` enum (with EN + AR labels)
+- [x] `JobStatus` enum (`Pending`, `Started`, `Finished`, `Canceled`)
+- [x] `PaymentType` enum (`Online = 'online'`, `Cash = 'cash'`)
+- [x] `User`, `Worker`, `JobRequest`, `Offer`, `Job`, `Rating`, `Transaction`, auth response interfaces
+- [x] `geo-data.ts` — bundled country + governorate static data (Egypt 27 govs, Saudi, UAE, etc.)
 
 ### Shared Components
-- [ ] **Star Rating** — read-only (filled/empty stars based on value) + interactive mode (click to set value), emits `ratingChange` event
-- [ ] **Job Status Badge / Stepper** — visual stepper (Pending → Started → Finished) with canceled branch, current step highlighted
-- [ ] **Language Switcher** — toggle button (EN/AR), calls `LanguageService`, updates direction
-- [ ] **OTP Verification** — phone input → "Send OTP" → code input → "Verify" flow; handles WhatsApp primary + Telegram fallback link; emits `verified` event
-- [ ] **Toast / Notification** — animated slide-in toast with icon, message, optional action; auto-dismiss
-- [ ] **Country Prefix Dropdown** — searchable dropdown of country codes with flags, outputs selected code
-- [ ] **Image Upload** — multi-file picker with drag-and-drop, previews, remove button; emits file list. **Max 5 images, max 20 MB per file.** Uploads go to **Supabase Storage bucket** via presigned URL / direct upload
+- [x] **Star Rating** — read-only + interactive mode, hover states, size variants, `ratingChange` event
+- [x] **Job Status Badge / Stepper** — colored badge or horizontal stepper (Pending → Started → Finished)
+- [x] **Language Switcher** — flag + label toggle button
+- [x] **OTP Verification** — phone input → "Send OTP" → code input → "Verify" flow; Telegram fallback
+- [x] **Toast / Notification** — animated slide-in toast with type icons, auto-dismiss, action button
+- [x] **Country Prefix Dropdown** — searchable dropdown of country codes with flags, outputs selected code
+- [x] **Image Upload** — multi-file picker with drag-and-drop, previews, remove button; Supabase upload
 
 ### Layouts
-- [ ] **Auth Layout** — centered card, Handy branding, language switcher, minimal chrome
-- [ ] **Main Layout** — top navbar (branding, nav links by role, language switcher, notifications bell, logout), responsive sidebar on mobile, `<router-outlet>`
+- [x] **Auth Layout** — gradient background, centered card, Handy branding, language switcher
+- [x] **Main Layout** — sticky glassmorphism navbar, role-based nav links, mobile hamburger drawer
 
 ### Routing Skeleton
-- [ ] Define route tree with lazy loading: `/auth/**`, `/user/**`, `/worker/**`
-- [ ] Apply guards to route groups
-- [ ] Default redirect logic based on auth state + role
+- [x] Define route tree with lazy loading: `/auth/**`, `/user/**`, `/worker/**`
+- [x] Apply guards to route groups (authGuard + roleGuard on user/worker, noAuthGuard on auth)
+- [x] Default redirect logic based on auth state + role
+- [x] Build passes clean (zero errors) ✓
 
 ---
 
-## 4. Phase 2 — Auth
+## 4. Phase 2 — Auth ✅
 
 ### Register Page
-- [ ] Role toggle (Normal User / Worker) at top — switches visible fields
-- [ ] Shared fields: username, phone (with country-prefix dropdown), country, governorate, password, confirm password
-- [ ] Worker-specific fields: work-type dropdown, bio textarea, "Has a shop?" toggle → shop location input
-- [ ] Client-side validation (required, password match, phone format, min lengths)
-- [ ] Integrate OTP verification component after phone entry — block submission until verified
-- [ ] Handle Telegram fallback display (show link/QR when backend returns `CHANNEL_NOT_LINKED`)
-- [ ] On success → **auto-login**: backend returns JWT on successful registration, store it and redirect to the appropriate home page based on role
-- [ ] All strings via `@ngx-translate`
+- [x] Role toggle (Normal User / Worker) at top — switches visible fields
+- [x] Shared fields: username, phone (with country-prefix dropdown), country, governorate, password, confirm password
+- [x] Worker-specific fields: work-type dropdown, bio textarea, "Has a shop?" toggle → shop location input
+- [x] Client-side validation (required, password match, phone format, min lengths)
+- [x] Integrate OTP verification component after phone entry — block submission until verified
+- [x] Handle Telegram fallback display (show link/QR when backend returns `CHANNEL_NOT_LINKED`)
+- [x] On success → **auto-login**: backend returns JWT on successful registration, store it and redirect to the appropriate home page based on role
+- [x] All strings via `@ngx-translate`
 
 ### Login Page
-- [ ] Identifier type selector (Username / Phone Number)
-- [ ] Dynamic input (label + placeholder change based on selection)
-- [ ] Password field
-- [ ] Call backend `/api/auth/login`, store JWT, decode role, redirect to `/user/home` or `/worker/home`
-- [ ] Error handling (invalid credentials, account not found, etc.)
-- [ ] All strings via `@ngx-translate`
+- [x] Identifier type selector (Username / Phone Number)
+- [x] Dynamic input (label + placeholder change based on selection)
+- [x] Password field
+- [x] Call backend `/api/auth/login`, store JWT, decode role, redirect to `/user/home` or `/worker/home`
+- [x] Error handling (invalid credentials, account not found, etc.)
+- [x] All strings via `@ngx-translate`
 
 ---
 
@@ -367,4 +369,4 @@ src/
 
 ---
 
-*Last updated: 2026-09-10 (v2 — open questions resolved, cash payment option added)*
+*Last updated: 2026-09-10 (v4 — Phase 1 Foundation & Phase 2 Auth complete, templates extracted, live-tested)*

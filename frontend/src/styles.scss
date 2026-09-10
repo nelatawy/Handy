@@ -1,0 +1,43 @@
+// ============================================================
+//  Handy — Global Stylesheet Entry Point
+// ============================================================
+
+// Design system (order matters — @use must come before @import)
+@use 'styles/variables' as v;
+@use 'styles/reset';
+@use 'styles/typography';
+@use 'styles/utilities';
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap');
+
+
+// ============================================================
+//  Global page / app shell styles
+// ============================================================
+
+:root {
+  // CSS custom properties (useful for JS integration)
+  --color-primary: #{v.$color-primary-500};
+  --color-bg:      #{v.$color-bg};
+  --navbar-height: #{v.$navbar-height};
+  --container-max: #{v.$container-max};
+}
+
+// Smooth page transitions
+router-outlet + * {
+  animation: fade-in-up 0.25s ease forwards;
+}
+
+// Selection color
+::selection {
+  background: v.$color-primary-200;
+  color: v.$color-primary-900;
+}
+
+// Focus visible only on keyboard nav
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid v.$color-primary-500;
+  outline-offset: 2px;
+}

@@ -1,0 +1,110 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+.upload-wrap {
+  @include m.flex-col;
+  gap: v.$space-4;
+}
+
+.drop-zone {
+  @include m.flex-col;
+  @include m.flex-center;
+  gap: v.$space-2;
+  padding: v.$space-8;
+  border: 2px dashed v.$color-border;
+  border-radius: v.$radius-xl;
+  background: v.$color-gray-50;
+  cursor: pointer;
+  text-align: center;
+  transition: v.$transition-base;
+  user-select: none;
+
+  &:hover, &--over {
+    border-color: v.$color-primary-400;
+    background: v.$color-primary-50;
+  }
+
+  &--full {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__icon { font-size: 2rem; }
+
+  &__primary {
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-primary;
+    margin: 0;
+  }
+
+  &__hint {
+    font-size: v.$font-size-xs;
+    color: v.$color-text-muted;
+    margin: 0;
+  }
+
+  &__count {
+    font-size: v.$font-size-xs;
+    color: v.$color-primary-500;
+    font-weight: v.$font-weight-semibold;
+    background: v.$color-primary-100;
+    padding: v.$space-1 v.$space-3;
+    border-radius: v.$radius-full;
+  }
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: v.$space-3;
+}
+
+.preview-item {
+  position: relative;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: v.$color-gray-100;
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    @include m.flex-center;
+    color: white;
+
+    &--error { background: rgba(239, 68, 68, 0.6); }
+  }
+
+  &__remove {
+    position: absolute;
+    top: 4px;
+    inset-inline-end: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    @include m.flex-center;
+    transition: v.$transition-fast;
+
+    &:hover { background: v.$color-danger; }
+  }
+}

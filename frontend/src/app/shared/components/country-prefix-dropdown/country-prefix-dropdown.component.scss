@@ -1,0 +1,101 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.prefix-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.prefix-btn {
+  display: flex;
+  align-items: center;
+  gap: v.$space-1;
+  padding: v.$space-3 v.$space-3;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  background: v.$color-surface;
+  cursor: pointer;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  white-space: nowrap;
+  transition: v.$transition-fast;
+  height: 100%;
+
+  &:hover, .prefix-wrap--open & {
+    border-color: v.$color-primary-500;
+    background: v.$color-primary-50;
+  }
+
+  &__flag { font-size: 1.1em; }
+  &__code { color: v.$color-text-primary; }
+  &__chevron {
+    color: v.$color-text-muted;
+    font-size: 0.7em;
+    transition: transform 0.2s ease;
+    .prefix-wrap--open & { transform: rotate(180deg); }
+  }
+}
+
+.prefix-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  inset-inline-start: 0;
+  width: 260px;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-xl;
+  z-index: v.$z-dropdown;
+  overflow: hidden;
+  animation: fade-in-up 0.15s ease;
+}
+
+.prefix-search {
+  padding: v.$space-2;
+  border-bottom: 1px solid v.$color-border;
+
+  &__input {
+    width: 100%;
+    padding: v.$space-2 v.$space-3;
+    border: 1.5px solid v.$color-border;
+    border-radius: v.$radius-md;
+    font-size: v.$font-size-sm;
+    outline: none;
+
+    &:focus { border-color: v.$color-primary-500; }
+  }
+}
+
+.prefix-list {
+  max-height: 220px;
+  overflow-y: auto;
+  @include m.custom-scrollbar;
+}
+
+.prefix-item {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  padding: v.$space-2 v.$space-3;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  font-size: v.$font-size-sm;
+
+  &:hover { background: v.$color-gray-50; }
+
+  &--active {
+    background: v.$color-primary-50;
+    color: v.$color-primary-700;
+    font-weight: v.$font-weight-semibold;
+  }
+
+  &__flag { font-size: 1.1em; flex-shrink: 0; }
+  &__name { flex: 1; @include m.text-truncate; }
+  &__code { color: v.$color-text-muted; flex-shrink: 0; }
+}
+
+.prefix-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(#{v.$z-dropdown} - 1);
+}

@@ -1,0 +1,223 @@
+{
+  "APP_NAME": "Handy",
+  "APP_TAGLINE": "Your trusted handyman, on demand",
+
+  "NAV": {
+    "HOME": "Home",
+    "REQUESTS": "Requests",
+    "ACTIVE_JOB": "Active Job",
+    "EARNINGS": "Earnings",
+    "PROFILE": "Profile",
+    "HISTORY": "History",
+    "LOGOUT": "Logout"
+  },
+
+  "AUTH": {
+    "LOGIN": "Login",
+    "REGISTER": "Register",
+    "LOGOUT": "Logout",
+    "HAVE_ACCOUNT": "Already have an account?",
+    "NO_ACCOUNT": "Don't have an account?",
+    "ROLE_LABEL": "I am a...",
+    "ROLE_USER": "Normal User",
+    "ROLE_WORKER": "Handyman / Worker",
+    "USERNAME": "Username",
+    "USERNAME_PLACEHOLDER": "Enter your username",
+    "PHONE": "Phone Number",
+    "PHONE_PLACEHOLDER": "Enter your phone number",
+    "COUNTRY": "Country",
+    "COUNTRY_PLACEHOLDER": "Select your country",
+    "GOVERNORATE": "Governorate",
+    "GOVERNORATE_PLACEHOLDER": "Select your governorate",
+    "PASSWORD": "Password",
+    "PASSWORD_PLACEHOLDER": "Create a password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Re-enter your password",
+    "WORK_TYPE": "Work Type",
+    "WORK_TYPE_PLACEHOLDER": "Select your specialty",
+    "BIO": "Short Bio",
+    "BIO_PLACEHOLDER": "Tell customers about your experience and specialties...",
+    "HAS_SHOP": "I have a shop",
+    "SHOP_LOCATION": "Shop Location",
+    "SHOP_LOCATION_PLACEHOLDER": "Enter your shop address",
+    "REGISTER_BTN": "Create Account",
+    "LOGIN_BTN": "Sign In",
+    "IDENTIFIER_TYPE": "Login with",
+    "IDENTIFIER_USERNAME": "Username",
+    "IDENTIFIER_PHONE": "Phone Number",
+    "IDENTIFIER_PLACEHOLDER_USERNAME": "Your username",
+    "IDENTIFIER_PLACEHOLDER_PHONE": "Your phone number",
+    "OTP_SENT_WHATSAPP": "We sent a verification code to your WhatsApp",
+    "OTP_SENT_TELEGRAM": "We couldn't reach you on WhatsApp — tap the link in Telegram to get your code",
+    "OTP_OPEN_TELEGRAM": "Open Telegram to get your code",
+    "OTP_CODE": "Verification Code",
+    "OTP_CODE_PLACEHOLDER": "Enter 6-digit code",
+    "OTP_SEND": "Send Code",
+    "OTP_VERIFY": "Verify",
+    "OTP_RESEND": "Resend Code",
+    "OTP_VERIFIED": "Phone verified ✓",
+    "ERRORS": {
+      "REQUIRED": "This field is required",
+      "PHONE_FORMAT": "Enter a valid phone number",
+      "PASSWORD_MISMATCH": "Passwords do not match",
+      "INVALID_CREDENTIALS": "Invalid username or password",
+      "ACCOUNT_NOT_FOUND": "Account not found",
+      "OTP_INVALID": "Invalid or expired code",
+      "GENERIC": "Something went wrong. Please try again."
+    }
+  },
+
+  "WORK_TYPE": {
+    "plumber": "Plumber",
+    "electrician": "Electrician",
+    "carpenter": "Carpenter",
+    "it": "IT Technician"
+  },
+
+  "JOB_STATUS": {
+    "pending": "Pending",
+    "started": "In Progress",
+    "finished": "Completed",
+    "canceled": "Canceled"
+  },
+
+  "PAYMENT_TYPE": {
+    "online": "Paid Online",
+    "cash": "Paid in Cash"
+  },
+
+  "REQUEST": {
+    "MAKE_REQUEST": "Make a Request",
+    "DESCRIPTION": "Job Description",
+    "DESCRIPTION_PLACEHOLDER": "Describe what needs to be done...",
+    "IMAGES": "Photos (optional)",
+    "IMAGES_HINT": "Upload up to 5 photos (max 20 MB each)",
+    "WORK_TYPE": "Worker Type Needed",
+    "AI_SUGGEST": "AI Suggest",
+    "AI_SUGGEST_LOADING": "Generating suggestion...",
+    "AI_SUGGESTION_TITLE": "AI Suggestion",
+    "AI_ACCEPT": "Use This",
+    "AI_DISMISS": "Keep Mine",
+    "CONFIRM": "Post Request",
+    "CANCEL": "Cancel",
+    "ERRORS": {
+      "DESCRIPTION_REQUIRED": "Please describe the job",
+      "WORK_TYPE_REQUIRED": "Please select a worker type",
+      "TOO_MANY_IMAGES": "Maximum 5 images allowed",
+      "IMAGE_TOO_LARGE": "Each image must be under 20 MB"
+    }
+  },
+
+  "OFFERS": {
+    "TITLE": "Offers Received",
+    "WAITING": "Waiting for offers...",
+    "HANDYMAN_NAME": "Handyman",
+    "PRICE": "Quoted Price",
+    "USER_PAYS": "You pay",
+    "RATING": "Rating",
+    "COMPLETED_JOBS": "jobs completed",
+    "HAS_SHOP": "Has a shop",
+    "CHOOSE": "Hire",
+    "DECLINE": "Decline",
+    "CHOSEN_CONFIRM": "You've hired {{name}}!"
+  },
+
+  "JOB": {
+    "TITLE": "Active Job",
+    "HANDYMAN": "Your Handyman",
+    "PRICE": "Agreed Price",
+    "YOU_PAY": "You pay (incl. fee)",
+    "MARK_STARTED": "Mark as Started",
+    "MARK_FINISHED": "Mark as Finished",
+    "CANCEL_JOB": "Cancel Job",
+    "CANCEL_CONFIRM": "Are you sure you want to cancel this job?",
+    "FINISH_CONFIRM": "Choose how to pay",
+    "FINISH_WARNING": "Marking this finished will initiate payment of {{amount}}",
+    "PAY_ONLINE": "Pay Online",
+    "PAY_ONLINE_DESC": "Securely pay via card or mobile wallet",
+    "PAY_CASH": "Paid in Cash",
+    "PAY_CASH_DESC": "I've already paid the handyman in cash",
+    "FINISHED_TITLE": "Job Completed!",
+    "CANCELED_TITLE": "Job Canceled",
+    "CANCELED_BY_USER": "You canceled this job. No charge was made.",
+    "CANCELED_BY_WORKER": "The handyman canceled this job. No charge was made.",
+    "MAKE_NEW_REQUEST": "Make a New Request",
+    "RATE_TITLE": "Rate Your Experience",
+    "RATE_PROMPT": "How was the service?",
+    "RATE_COMMENT": "Add a comment (optional)",
+    "RATE_COMMENT_PLACEHOLDER": "Tell others about your experience...",
+    "RATE_SUBMIT": "Submit Rating",
+    "RATE_SKIP": "Skip",
+    "EARNINGS_INFO": "Your earnings for this job will be credited to your balance"
+  },
+
+  "WORKER": {
+    "FEED_TITLE": "Available Requests",
+    "FEED_EMPTY": "No open requests right now. Check back soon!",
+    "REQUEST_DETAIL": "Request Details",
+    "ACCEPT": "Accept",
+    "DECLINE": "Decline",
+    "YOUR_PRICE": "Your Price",
+    "YOUR_PRICE_PLACEHOLDER": "Enter your price (EGP)",
+    "USER_PAYS_PREVIEW": "Customer will pay",
+    "PLATFORM_FEE": "Includes 5% platform fee",
+    "SUBMIT_OFFER": "Submit Offer",
+    "WAITING_FOR_SELECTION": "Waiting for customer to choose...",
+    "YOU_WERE_CHOSEN": "Congratulations! You've been selected for this job!",
+    "OFFER_REJECTED": "The customer chose another handyman for this request.",
+    "CANCEL_JOB": "Cancel Job",
+    "CANCEL_CONFIRM": "Are you sure you want to cancel? The customer will be notified."
+  },
+
+  "PROFILE": {
+    "TITLE": "Profile",
+    "EDIT": "Edit Profile",
+    "SAVE": "Save Changes",
+    "AVERAGE_RATING": "Average Rating",
+    "TOTAL_RATINGS": "ratings",
+    "COMPLETED_JOBS": "Completed Jobs",
+    "BIO": "About",
+    "SHOP": "Shop"
+  },
+
+  "PAYMENT": {
+    "HISTORY_TITLE": "Payment History",
+    "HISTORY_EMPTY": "No transactions yet",
+    "EARNINGS_TITLE": "Earnings",
+    "BALANCE": "Available Balance",
+    "WITHDRAW": "Withdraw",
+    "PAYOUT_VIA": "Payout via Paymob",
+    "DATE": "Date",
+    "AMOUNT": "Amount",
+    "STATUS": "Status",
+    "TYPE": "Payment Type"
+  },
+
+  "TOAST": {
+    "NEW_OFFER": "New offer received from {{name}}",
+    "OFFER_CHOSEN": "You've been selected! Check your active job.",
+    "OFFER_REJECTED": "Another handyman was chosen for this request.",
+    "JOB_STARTED": "Job has been marked as started.",
+    "JOB_FINISHED": "Job completed and payment confirmed!",
+    "JOB_CANCELED_BY_USER": "The customer canceled this job.",
+    "JOB_CANCELED_BY_WORKER": "The handyman canceled your job. No charge was made.",
+    "NEW_REQUEST": "New matching request available!",
+    "PAYMENT_CONFIRMED": "Payment of {{amount}} confirmed!",
+    "GENERIC_ERROR": "Something went wrong. Please try again."
+  },
+
+  "COMMON": {
+    "LOADING": "Loading...",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "CONFIRM": "Confirm",
+    "BACK": "Back",
+    "CLOSE": "Close",
+    "YES": "Yes",
+    "NO": "No",
+    "OR": "or",
+    "CURRENCY": "EGP",
+    "STARS": "stars",
+    "RATING_OF": "out of 5"
+  }
+}

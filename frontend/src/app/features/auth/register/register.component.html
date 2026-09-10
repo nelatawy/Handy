@@ -1,0 +1,182 @@
+<div class="register">
+
+    <div class="register__header">
+        <h1 class="register__title">{{ 'AUTH.REGISTER' | translate }}</h1>
+    </div>
+
+    <!-- Role toggle -->
+    <div class="role-toggle">
+        <button type="button" class="role-toggle__btn" [class.role-toggle__btn--active]="role() === UserRole.User"
+            (click)="role.set(UserRole.User)">
+            <span>👤</span>
+            {{ 'AUTH.ROLE_USER' | translate }}
+        </button>
+        <button type="button" class="role-toggle__btn" [class.role-toggle__btn--active]="role() === UserRole.Worker"
+            (click)="role.set(UserRole.Worker)">
+            <span>🔧</span>
+            {{ 'AUTH.ROLE_WORKER' | translate }}
+        </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="register__form">
+
+        <!-- Username -->
+        <div class="form-group">
+            <label>{{ 'AUTH.USERNAME' | translate }}</label>
+            <input class="form-control" [class.error]="invalid('username')" type="text"
+                [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate" formControlName="username"
+                autocomplete="username" />
+            @if (invalid('username')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+            <label>{{ 'AUTH.PHONE' | translate }}</label>
+            <div class="phone-row">
+                <app-country-prefix-dropdown [(selectedCode)]="dialCode" />
+                <input class="form-control phone-input" [class.error]="invalid('phone')" type="tel"
+                    [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate" formControlName="phone"
+                    (blur)="phoneBlurred.set(true)" />
+            </div>
+            @if (invalid('phone')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- OTP verification (shown after phone is entered) -->
+        @if (form.get('phone')?.value && phoneBlurred()) {
+        <app-otp-verification [prefilledPhone]="e164Phone()" [phoneFixed]="true" (verified)="onPhoneVerified()" />
+        }
+
+        <!-- Country -->
+        <div class="form-group">
+            <label>{{ 'AUTH.COUNTRY' | translate }}</label>
+            <select class="form-control" [class.error]="invalid('country')" formControlName="country">
+                <option value="">{{ 'AUTH.COUNTRY_PLACEHOLDER' | translate }}</option>
+                @for (c of countries; track c.code) {
+                <option [value]="c.code">{{ c.flag }} {{ c.name }}</option>
+                }
+            </select>
+            @if (invalid('country')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Governorate -->
+        <div class="form-group">
+            <label>{{ 'AUTH.GOVERNORATE' | translate }}</label>
+            <select class="form-control" [class.error]="invalid('governorate')" formControlName="governorate"
+                [disabled]="!selectedCountry()">
+                <option value="">{{ 'AUTH.GOVERNORATE_PLACEHOLDER' | translate }}</option>
+                @for (g of governorates(); track g.name) {
+                <option [value]="g.name">{{ g.name }}</option>
+                }
+            </select>
+            @if (invalid('governorate')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label>{{ 'AUTH.PASSWORD' | translate }}</label>
+            <div class="pw-wrap">
+                <input class="form-control" [class.error]="invalid('password')" [type]="showPw() ? 'text' : 'password'"
+                    [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate" formControlName="password"
+                    autocomplete="new-password" />
+                <button type="button" class="pw-toggle" (click)="showPw.update(v => !v)">
+                    {{ showPw() ? '🙈' : '👁️' }}
+                </button>
+            </div>
+            @if (invalid('password')) {
+            <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+            }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+            <label>{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
+            <div class="pw-wrap">
+                <input class="form-control"
+                    [class.error]="invalid('confirmPassword') || form.errors?.['passwordMismatch']"
+                    [type]="showPw() ? 'text' : 'password'"
+                    [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" formControlName="confirmPassword" />
+            </div>
+            @if (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched) {
+            <span class="error-message">{{ 'AUTH.ERRORS.PASSWORD_MISMATCH' | translate }}</span>
+            }
+        </div>
+
+        <!-- ── Worker-only fields ── -->
+        @if (role() === UserRole.Worker) {
+        <div class="worker-fields">
+            <div class="worker-fields__divider">
+                <span>Worker Details</span>
+            </div>
+
+            <!-- Work type -->
+            <div class="form-group">
+                <label>{{ 'AUTH.WORK_TYPE' | translate }}</label>
+                <select class="form-control" [class.error]="invalid('workType')" formControlName="workType">
+                    <option value="">{{ 'AUTH.WORK_TYPE_PLACEHOLDER' | translate }}</option>
+                    @for (wt of workTypes; track wt) {
+                    <option [value]="wt">{{ WorkTypeLabel[wt] }}</option>
+                    }
+                </select>
+                @if (invalid('workType')) {
+                <span class="error-message">{{ 'AUTH.ERRORS.REQUIRED' | translate }}</span>
+                }
+            </div>
+
+            <!-- Bio -->
+            <div class="form-group">
+                <label>{{ 'AUTH.BIO' | translate }}</label>
+                <textarea class="form-control" rows="3" [placeholder]="'AUTH.BIO_PLACEHOLDER' | translate"
+                    formControlName="bio"></textarea>
+            </div>
+
+            <!-- Has shop toggle -->
+            <div class="shop-toggle">
+                <label class="shop-toggle__label">
+                    <div class="shop-toggle__text">{{ 'AUTH.HAS_SHOP' | translate }}</div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" formControlName="hasShop" id="hasShop" class="toggle-switch__input" />
+                        <span class="toggle-switch__track"></span>
+                    </div>
+                </label>
+            </div>
+
+            @if (form.get('hasShop')?.value) {
+            <div class="form-group">
+                <label>{{ 'AUTH.SHOP_LOCATION' | translate }}</label>
+                <input class="form-control" type="text" [placeholder]="'AUTH.SHOP_LOCATION_PLACEHOLDER' | translate"
+                    formControlName="shopLocation" />
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Server error -->
+        @if (serverError()) {
+        <div class="server-error">{{ serverError() }}</div>
+        }
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-full btn-lg" [disabled]="loading() || !phoneVerified()">
+            @if (loading()) { <span class="spinner"></span> }
+            {{ 'AUTH.REGISTER_BTN' | translate }}
+        </button>
+
+        @if (!phoneVerified()) {
+        <p class="verify-hint">Please verify your phone number before registering.</p>
+        }
+
+    </form>
+
+    <p class="register__footer">
+        {{ 'AUTH.HAVE_ACCOUNT' | translate }}
+        <a routerLink="/auth/login">{{ 'AUTH.LOGIN' | translate }}</a>
+    </p>
+</div>

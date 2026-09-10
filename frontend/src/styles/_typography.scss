@@ -1,0 +1,45 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// ============================================================
+//  Handy — Typography Scale
+// ============================================================
+
+h1 { font-size: v.$font-size-4xl; font-weight: v.$font-weight-bold; }
+h2 { font-size: v.$font-size-3xl; font-weight: v.$font-weight-bold; }
+h3 { font-size: v.$font-size-2xl; font-weight: v.$font-weight-semibold; }
+h4 { font-size: v.$font-size-xl;  font-weight: v.$font-weight-semibold; }
+h5 { font-size: v.$font-size-lg;  font-weight: v.$font-weight-medium; }
+h6 { font-size: v.$font-size-base; font-weight: v.$font-weight-medium; }
+
+.text-xs   { font-size: v.$font-size-xs; }
+.text-sm   { font-size: v.$font-size-sm; }
+.text-base { font-size: v.$font-size-base; }
+.text-lg   { font-size: v.$font-size-lg; }
+.text-xl   { font-size: v.$font-size-xl; }
+.text-2xl  { font-size: v.$font-size-2xl; }
+.text-3xl  { font-size: v.$font-size-3xl; }
+.text-4xl  { font-size: v.$font-size-4xl; }
+
+.font-normal   { font-weight: v.$font-weight-normal; }
+.font-medium   { font-weight: v.$font-weight-medium; }
+.font-semibold { font-weight: v.$font-weight-semibold; }
+.font-bold     { font-weight: v.$font-weight-bold; }
+
+.text-primary   { color: v.$color-text-primary; }
+.text-secondary { color: v.$color-text-secondary; }
+.text-muted     { color: v.$color-text-muted; }
+.text-link      { color: v.$color-text-link; }
+.text-brand     { color: v.$color-primary-500; }
+.text-success   { color: v.$color-success; }
+.text-danger    { color: v.$color-danger; }
+.text-warning   { color: v.$color-warning; }
+.text-inverse   { color: v.$color-text-inverse; }
+
+.text-start  { text-align: start; }
+.text-center { text-align: center; }
+.text-end    { text-align: end; }
+
+.truncate    { @include m.text-truncate; }
+.line-clamp-2 { @include m.line-clamp(2); }
+.line-clamp-3 { @include m.line-clamp(3); }

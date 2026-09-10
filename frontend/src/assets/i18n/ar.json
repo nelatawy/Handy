@@ -1,0 +1,223 @@
+{
+  "APP_NAME": "Handy",
+  "APP_TAGLINE": "فني موثوق، في متناول يدك",
+
+  "NAV": {
+    "HOME": "الرئيسية",
+    "REQUESTS": "الطلبات",
+    "ACTIVE_JOB": "المهمة الحالية",
+    "EARNINGS": "الأرباح",
+    "PROFILE": "الملف الشخصي",
+    "HISTORY": "السجل",
+    "LOGOUT": "تسجيل الخروج"
+  },
+
+  "AUTH": {
+    "LOGIN": "تسجيل الدخول",
+    "REGISTER": "إنشاء حساب",
+    "LOGOUT": "تسجيل الخروج",
+    "HAVE_ACCOUNT": "لديك حساب بالفعل؟",
+    "NO_ACCOUNT": "ليس لديك حساب؟",
+    "ROLE_LABEL": "أنا...",
+    "ROLE_USER": "مستخدم عادي",
+    "ROLE_WORKER": "فني / حرفي",
+    "USERNAME": "اسم المستخدم",
+    "USERNAME_PLACEHOLDER": "أدخل اسم المستخدم",
+    "PHONE": "رقم الهاتف",
+    "PHONE_PLACEHOLDER": "أدخل رقم هاتفك",
+    "COUNTRY": "الدولة",
+    "COUNTRY_PLACEHOLDER": "اختر دولتك",
+    "GOVERNORATE": "المحافظة",
+    "GOVERNORATE_PLACEHOLDER": "اختر محافظتك",
+    "PASSWORD": "كلمة المرور",
+    "PASSWORD_PLACEHOLDER": "أنشئ كلمة مرور",
+    "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "أعد إدخال كلمة المرور",
+    "WORK_TYPE": "نوع العمل",
+    "WORK_TYPE_PLACEHOLDER": "اختر تخصصك",
+    "BIO": "نبذة قصيرة",
+    "BIO_PLACEHOLDER": "أخبر العملاء عن خبرتك وتخصصاتك...",
+    "HAS_SHOP": "لدي محل",
+    "SHOP_LOCATION": "موقع المحل",
+    "SHOP_LOCATION_PLACEHOLDER": "أدخل عنوان محلك",
+    "REGISTER_BTN": "إنشاء الحساب",
+    "LOGIN_BTN": "تسجيل الدخول",
+    "IDENTIFIER_TYPE": "تسجيل الدخول بـ",
+    "IDENTIFIER_USERNAME": "اسم المستخدم",
+    "IDENTIFIER_PHONE": "رقم الهاتف",
+    "IDENTIFIER_PLACEHOLDER_USERNAME": "اسم المستخدم",
+    "IDENTIFIER_PLACEHOLDER_PHONE": "رقم الهاتف",
+    "OTP_SENT_WHATSAPP": "أرسلنا رمز التحقق إلى واتساب الخاص بك",
+    "OTP_SENT_TELEGRAM": "لم نتمكن من الوصول إليك عبر واتساب — افتح تيليغرام للحصول على رمزك",
+    "OTP_OPEN_TELEGRAM": "افتح تيليغرام للحصول على رمزك",
+    "OTP_CODE": "رمز التحقق",
+    "OTP_CODE_PLACEHOLDER": "أدخل الرمز المكون من 6 أرقام",
+    "OTP_SEND": "إرسال الرمز",
+    "OTP_VERIFY": "تحقق",
+    "OTP_RESEND": "إعادة إرسال الرمز",
+    "OTP_VERIFIED": "تم التحقق من الهاتف ✓",
+    "ERRORS": {
+      "REQUIRED": "هذا الحقل مطلوب",
+      "PHONE_FORMAT": "أدخل رقم هاتف صحيح",
+      "PASSWORD_MISMATCH": "كلمات المرور غير متطابقة",
+      "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة",
+      "ACCOUNT_NOT_FOUND": "الحساب غير موجود",
+      "OTP_INVALID": "رمز غير صحيح أو منتهي الصلاحية",
+      "GENERIC": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    }
+  },
+
+  "WORK_TYPE": {
+    "plumber": "سباك",
+    "electrician": "كهربائي",
+    "carpenter": "نجار",
+    "it": "تقنية معلومات"
+  },
+
+  "JOB_STATUS": {
+    "pending": "قيد الانتظار",
+    "started": "جارٍ التنفيذ",
+    "finished": "مكتمل",
+    "canceled": "ملغى"
+  },
+
+  "PAYMENT_TYPE": {
+    "online": "دفع إلكتروني",
+    "cash": "دفع نقدي"
+  },
+
+  "REQUEST": {
+    "MAKE_REQUEST": "طلب خدمة",
+    "DESCRIPTION": "وصف العمل",
+    "DESCRIPTION_PLACEHOLDER": "صف ما تحتاج إليه...",
+    "IMAGES": "صور (اختياري)",
+    "IMAGES_HINT": "ارفع حتى 5 صور (بحد أقصى 20 ميغابايت لكل صورة)",
+    "WORK_TYPE": "نوع الفني المطلوب",
+    "AI_SUGGEST": "اقتراح بالذكاء الاصطناعي",
+    "AI_SUGGEST_LOADING": "جارٍ إنشاء الاقتراح...",
+    "AI_SUGGESTION_TITLE": "اقتراح الذكاء الاصطناعي",
+    "AI_ACCEPT": "استخدم هذا",
+    "AI_DISMISS": "احتفظ بوصفي",
+    "CONFIRM": "نشر الطلب",
+    "CANCEL": "إلغاء",
+    "ERRORS": {
+      "DESCRIPTION_REQUIRED": "يرجى وصف العمل المطلوب",
+      "WORK_TYPE_REQUIRED": "يرجى اختيار نوع الفني",
+      "TOO_MANY_IMAGES": "الحد الأقصى 5 صور",
+      "IMAGE_TOO_LARGE": "يجب أن يكون حجم كل صورة أقل من 20 ميغابايت"
+    }
+  },
+
+  "OFFERS": {
+    "TITLE": "العروض المستلمة",
+    "WAITING": "بانتظار العروض...",
+    "HANDYMAN_NAME": "الفني",
+    "PRICE": "السعر المعروض",
+    "USER_PAYS": "ستدفع",
+    "RATING": "التقييم",
+    "COMPLETED_JOBS": "مهمة مكتملة",
+    "HAS_SHOP": "لديه محل",
+    "CHOOSE": "توظيف",
+    "DECLINE": "رفض",
+    "CHOSEN_CONFIRM": "تم توظيف {{name}}!"
+  },
+
+  "JOB": {
+    "TITLE": "المهمة الحالية",
+    "HANDYMAN": "الفني الخاص بك",
+    "PRICE": "السعر المتفق عليه",
+    "YOU_PAY": "ستدفع (شامل الرسوم)",
+    "MARK_STARTED": "تأكيد بدء العمل",
+    "MARK_FINISHED": "تأكيد اكتمال العمل",
+    "CANCEL_JOB": "إلغاء المهمة",
+    "CANCEL_CONFIRM": "هل أنت متأكد من إلغاء هذه المهمة؟",
+    "FINISH_CONFIRM": "اختر طريقة الدفع",
+    "FINISH_WARNING": "سيُبدأ الدفع بمبلغ {{amount}} عند تأكيد الاكتمال",
+    "PAY_ONLINE": "الدفع الإلكتروني",
+    "PAY_ONLINE_DESC": "ادفع بأمان عبر البطاقة أو المحفظة الإلكترونية",
+    "PAY_CASH": "دفعت نقداً",
+    "PAY_CASH_DESC": "لقد دفعت للفني نقداً بالفعل",
+    "FINISHED_TITLE": "اكتملت المهمة!",
+    "CANCELED_TITLE": "تم إلغاء المهمة",
+    "CANCELED_BY_USER": "قمت بإلغاء هذه المهمة. لم يتم خصم أي مبلغ.",
+    "CANCELED_BY_WORKER": "قام الفني بإلغاء المهمة. لم يتم خصم أي مبلغ.",
+    "MAKE_NEW_REQUEST": "طلب خدمة جديدة",
+    "RATE_TITLE": "قيّم تجربتك",
+    "RATE_PROMPT": "كيف كانت الخدمة؟",
+    "RATE_COMMENT": "أضف تعليقاً (اختياري)",
+    "RATE_COMMENT_PLACEHOLDER": "شاركنا تجربتك...",
+    "RATE_SUBMIT": "إرسال التقييم",
+    "RATE_SKIP": "تخطي",
+    "EARNINGS_INFO": "ستُضاف أرباحك من هذه المهمة إلى رصيدك"
+  },
+
+  "WORKER": {
+    "FEED_TITLE": "الطلبات المتاحة",
+    "FEED_EMPTY": "لا توجد طلبات متاحة الآن. تحقق لاحقاً!",
+    "REQUEST_DETAIL": "تفاصيل الطلب",
+    "ACCEPT": "قبول",
+    "DECLINE": "رفض",
+    "YOUR_PRICE": "سعرك",
+    "YOUR_PRICE_PLACEHOLDER": "أدخل سعرك (جنيه)",
+    "USER_PAYS_PREVIEW": "سيدفع العميل",
+    "PLATFORM_FEE": "تشمل رسوم المنصة 5٪",
+    "SUBMIT_OFFER": "إرسال العرض",
+    "WAITING_FOR_SELECTION": "في انتظار اختيار العميل...",
+    "YOU_WERE_CHOSEN": "تهانينا! تم اختيارك لهذه المهمة!",
+    "OFFER_REJECTED": "اختار العميل فنياً آخر لهذا الطلب.",
+    "CANCEL_JOB": "إلغاء المهمة",
+    "CANCEL_CONFIRM": "هل أنت متأكد من الإلغاء؟ سيتم إخطار العميل."
+  },
+
+  "PROFILE": {
+    "TITLE": "الملف الشخصي",
+    "EDIT": "تعديل الملف",
+    "SAVE": "حفظ التغييرات",
+    "AVERAGE_RATING": "متوسط التقييم",
+    "TOTAL_RATINGS": "تقييم",
+    "COMPLETED_JOBS": "مهمة مكتملة",
+    "BIO": "نبذة",
+    "SHOP": "المحل"
+  },
+
+  "PAYMENT": {
+    "HISTORY_TITLE": "سجل المدفوعات",
+    "HISTORY_EMPTY": "لا توجد معاملات بعد",
+    "EARNINGS_TITLE": "الأرباح",
+    "BALANCE": "الرصيد المتاح",
+    "WITHDRAW": "سحب",
+    "PAYOUT_VIA": "سحب عبر Paymob",
+    "DATE": "التاريخ",
+    "AMOUNT": "المبلغ",
+    "STATUS": "الحالة",
+    "TYPE": "طريقة الدفع"
+  },
+
+  "TOAST": {
+    "NEW_OFFER": "عرض جديد من {{name}}",
+    "OFFER_CHOSEN": "تم اختيارك! تحقق من مهمتك الحالية.",
+    "OFFER_REJECTED": "اختار العميل فنياً آخر لهذا الطلب.",
+    "JOB_STARTED": "تم تأكيد بدء العمل.",
+    "JOB_FINISHED": "اكتملت المهمة وتم تأكيد الدفع!",
+    "JOB_CANCELED_BY_USER": "قام العميل بإلغاء هذه المهمة.",
+    "JOB_CANCELED_BY_WORKER": "قام الفني بإلغاء مهمتك. لم يتم خصم أي مبلغ.",
+    "NEW_REQUEST": "طلب جديد متاح!",
+    "PAYMENT_CONFIRMED": "تم تأكيد الدفع بمبلغ {{amount}}!",
+    "GENERIC_ERROR": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
+
+  "COMMON": {
+    "LOADING": "جارٍ التحميل...",
+    "SAVE": "حفظ",
+    "CANCEL": "إلغاء",
+    "CONFIRM": "تأكيد",
+    "BACK": "رجوع",
+    "CLOSE": "إغلاق",
+    "YES": "نعم",
+    "NO": "لا",
+    "OR": "أو",
+    "CURRENCY": "جنيه",
+    "STARS": "نجوم",
+    "RATING_OF": "من 5"
+  }
+}

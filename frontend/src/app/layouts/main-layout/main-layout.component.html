@@ -1,0 +1,67 @@
+<div class="main-layout">
+    <header class="navbar">
+        <div class="navbar__inner container">
+            <!-- Brand -->
+            <a class="navbar__brand" [routerLink]="auth.getHomeRoute()">
+                <span class="navbar__logo">🔧</span>
+                <span class="navbar__name">{{ 'APP_NAME' | translate }}</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="navbar__nav hide-mobile" aria-label="Main navigation">
+                @if (auth.isUser()) {
+                <a routerLink="/user/home" routerLinkActive="navbar__link--active" class="navbar__link">{{ 'NAV.HOME' |
+                    translate }}</a>
+                <a routerLink="/user/history" routerLinkActive="navbar__link--active" class="navbar__link">{{
+                    'NAV.HISTORY' | translate }}</a>
+                } @else {
+                <a routerLink="/worker/home" routerLinkActive="navbar__link--active" class="navbar__link">{{ 'NAV.HOME'
+                    | translate }}</a>
+                <a routerLink="/worker/feed" routerLinkActive="navbar__link--active" class="navbar__link">{{
+                    'NAV.REQUESTS' | translate }}</a>
+                <a routerLink="/worker/profile" routerLinkActive="navbar__link--active" class="navbar__link">{{
+                    'NAV.PROFILE' | translate }}</a>
+                <a routerLink="/worker/earnings" routerLinkActive="navbar__link--active" class="navbar__link">{{
+                    'NAV.EARNINGS' | translate }}</a>
+                }
+            </nav>
+
+            <!-- Right controls -->
+            <div class="navbar__actions">
+                <app-language-switcher />
+                <button class="btn-ghost btn-sm navbar__logout" (click)="auth.logout()">
+                    {{ 'NAV.LOGOUT' | translate }}
+                </button>
+            </div>
+
+            <!-- Mobile hamburger (shows nav below on tap) -->
+            <button class="navbar__hamburger hide-desktop" (click)="mobileOpen = !mobileOpen" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <!-- Mobile nav drawer -->
+        @if (mobileOpen) {
+        <nav class="navbar__mobile-nav hide-desktop" (click)="mobileOpen = false">
+            @if (auth.isUser()) {
+            <a routerLink="/user/home" class="navbar__mobile-link">{{ 'NAV.HOME' | translate }}</a>
+            <a routerLink="/user/history" class="navbar__mobile-link">{{ 'NAV.HISTORY' | translate }}</a>
+            } @else {
+            <a routerLink="/worker/home" class="navbar__mobile-link">{{ 'NAV.HOME' | translate }}</a>
+            <a routerLink="/worker/feed" class="navbar__mobile-link">{{ 'NAV.REQUESTS' | translate }}</a>
+            <a routerLink="/worker/profile" class="navbar__mobile-link">{{ 'NAV.PROFILE' | translate }}</a>
+            <a routerLink="/worker/earnings" class="navbar__mobile-link">{{ 'NAV.EARNINGS' | translate }}</a>
+            }
+            <button class="navbar__mobile-link navbar__mobile-logout" (click)="auth.logout()">
+                {{ 'NAV.LOGOUT' | translate }}
+            </button>
+        </nav>
+        }
+    </header>
+
+    <main class="main-layout__content">
+        <div class="container animate-fade-in-up">
+            <router-outlet />
+        </div>
+    </main>
+</div>
