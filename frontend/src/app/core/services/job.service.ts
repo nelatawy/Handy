@@ -9,6 +9,16 @@ export interface UpdateJobStatusBody {
   paymentType?: PaymentType;
 }
 
+/**
+ * Response from PATCH /api/jobs/:id/status
+ * `paymentUrl` is only present when status='finished' AND paymentType='online'.
+ * The frontend must redirect to this URL for Paymob hosted checkout.
+ */
+export interface UpdateJobStatusResponse {
+  job: Job;
+  paymentUrl?: string;
+}
+
 export interface RateJobBody {
   stars: number;
   comment?: string;
@@ -28,9 +38,10 @@ export class JobService {
     return this.http.get<Job | null>('/api/jobs/active');
   }
 
-  /** PATCH /api/jobs/:id/status — transition job state */
-  updateStatus(id: string, body: UpdateJobStatusBody): Observable<Job> {
-    return this.http.patch<Job>(`/api/jobs/${id}/status`, body);
+  /** PATCH /api/jobs/:id/status — user-only state transition (started/finished/canceled).
+   *  Response includes `paymentUrl` only when finishing with paymentType='online'. */
+  updateStatus(id: string, body: UpdateJobStatusBody): Observable<UpdateJobStatusResponse> {
+    return this.http.patch<UpdateJobStatusResponse>(`/api/jobs/${id}/status`, body);
   }
 
   /** POST /api/jobs/:id/rate — submit a rating after finishing */

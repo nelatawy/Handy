@@ -22,8 +22,8 @@ export interface Worker extends User {
   hasShop: boolean;
   shopLocation?: string;
   averageRating: number;
-  totalRatings: number;
-  completedJobs: number;
+  ratingsCount: number;      // matches backend field name
+  completedJobsCount: number; // matches backend field name
 }
 
 /** A job request posted by a normal user */
@@ -33,7 +33,8 @@ export interface JobRequest {
   description: string;
   workType: WorkType;
   imageUrls: string[];   // public Supabase Storage URLs
-  status: 'open' | 'closed';
+  /** Backend statuses: open → offer_selected → cancelled */
+  status: 'open' | 'offer_selected' | 'cancelled';
   createdAt: string;
 }
 
@@ -89,8 +90,8 @@ export interface Transaction {
   userId: string;
   workerId: string;
   amount: number;
-  paymentType: import('./enums').PaymentType;
-  status: 'pending' | 'confirmed' | 'failed';
+  method: import('./enums').PaymentType; // 'online' | 'cash' — matches backend `payments.method`
+  status: 'pending' | 'paid' | 'failed'; // matches backend PaymentStatus enum
   createdAt: string;
 }
 
@@ -102,18 +103,18 @@ export interface TokenPayload {
   exp: number;
 }
 
-/** API response shape for auth endpoints */
+/** API response shape for auth endpoints (login + register) */
 export interface AuthResponse {
   token: string;
   role: UserRole;
-  user: User | Worker;
+  // Note: no `user` object — profile is fetched separately after login if needed
 }
 
 /** OTP send response from backend */
 export interface OtpSendResponse {
-  success: boolean;
   channel: 'whatsapp' | 'telegram';
-  telegramLink?: string; // present when channel === 'telegram'
+  telegramBotUrl?: string; // present when channel === 'telegram'
+  expiresIn: number;       // seconds until the OTP expires
 }
 
 /** AI suggestion response */

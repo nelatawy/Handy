@@ -8,10 +8,16 @@ export interface EarningsResponse {
   transactions: Transaction[];
 }
 
-export interface WithdrawResponse {
-  /** Paymob redirect URL — backend performs the disbursement call server-side */
-  redirectUrl?: string;
-  message: string;
+/** Response from POST /api/jobs/:id/payout */
+export interface PayoutResponse {
+  payout: {
+    id: string;
+    jobId: string;
+    workerId: string;
+    amount: number;
+    status: string;
+    createdAt: string;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,18 +35,18 @@ export class PaymentService {
   /**
    * GET /api/workers/me/earnings
    * Returns the worker's available balance and transaction history.
+   * Only online-paid jobs are included — cash jobs are excluded (worker holds cash).
    */
   getEarnings(): Observable<EarningsResponse> {
     return this.http.get<EarningsResponse>('/api/workers/me/earnings');
   }
 
   /**
-   * POST /api/workers/me/withdraw
-   * Initiates a payout via Paymob (server-side disbursement call using Paymob secret key).
-   * Backend returns a Paymob redirect URL or confirmation message.
-   * NOTE (sandbox): backend may return a mock response; the frontend redirects if redirectUrl is present.
+   * POST /api/jobs/:id/payout
+   * Worker requests payout of earnings for a specific finished job via Paymob.
+   * This is per-job, not a global withdrawal — the job ID is required.
    */
-  withdraw(): Observable<WithdrawResponse> {
-    return this.http.post<WithdrawResponse>('/api/workers/me/withdraw', {});
+  requestPayout(jobId: string): Observable<PayoutResponse> {
+    return this.http.post<PayoutResponse>(`/api/jobs/${jobId}/payout`, {});
   }
 }

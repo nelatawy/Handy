@@ -374,39 +374,80 @@ Many components called `NotificationService` with hardcoded English literals, an
 
 ## 9. API Contract Notes
 
-> To be filled in as endpoints are built/discovered. This section serves as a quick reference for frontend ↔ backend alignment.
+> This section is reconciled against `BACKEND_PLAN.md` §9–10 and is the authoritative frontend reference. All request/response bodies are **camelCase**. Path params use `:id` notation.
 
 | Method | Endpoint | Body / Params | Response | Notes |
 |--------|----------|---------------|----------|-------|
-| POST | `/api/auth/register` | `{ username, phone, country, governorate, password, role, workType?, bio?, hasShop?, shopLocation? }` | `{ message }` | Phone must already be OTP-verified |
-| POST | `/api/auth/login` | `{ identifierType, identifier, password }` | `{ token, role }` | JWT returned |
-| POST | `/api/otp/send` | `{ phone }` (E.164) | `{ success, channel }` | Calls AuthEvo |
-| POST | `/api/otp/verify` | `{ phone, code }` | `{ verified }` | |
-| POST | `/api/ai-suggest` | `{ description }` | `{ suggestedDescription, recommendedWorkType }` | Gemini Flash |
-| POST | `/api/requests` | `{ description, workType, images[] }` | `{ requestId }` | |
+| POST | `/api/otp/send` | `{ phone }` (E.164) | `{ channel: 'whatsapp'\|'telegram', telegramBotUrl?, expiresIn }` | HTTP 200 even on Telegram-fallback branch. OTP component branches on `channel`, not HTTP status |
+| POST | `/api/otp/verify` | `{ phone, code }` | `{ verified }` | Triggers background Telegram-link on first success |
+| POST | `/api/auth/register` | `{ username, phone, country, governorate, password, role, workType?, bio?, hasShop?, shopLocation? }` | `{ token, role }` | Requires a verified OTP row for `phone`. **Auto-login** — store token and redirect on success |
+| POST | `/api/auth/login` | `{ identifierType, identifier, password }` | `{ token, role }` | Password-only, no OTP step |
+| POST | `/api/ai-suggest` | `{ description }` | `{ suggestedDescription, recommendedWorkType }` | Gemini Flash. `recommendedWorkType` is always a valid `WorkType` enum value |
+| POST | `/api/requests` | `{ description, workType, images[] }` | `{ requestId }` | `images[]` are Supabase Storage URLs already uploaded client-side (max 5) |
 | GET | `/api/requests/mine` | — | `Request[]` | User's own requests |
-| POST | `/api/requests/{id}/offer` | `{ price }` | `{ offerId }` | Handyman submits offer |
-| POST | `/api/requests/{id}/choose` | `{ offerId }` | `{ jobId }` | User picks handyman |
-| PATCH | `/api/jobs/{id}/status` | `{ status, paymentType? }` | `{ job }` | Started / Finished / Canceled. `paymentType` (`'online'` \| `'cash'`) is **required** when `status = 'finished'` — tells the backend how the user paid |
-| POST | `/api/jobs/{id}/rate` | `{ stars, comment? }` | `{ rating }` | |
-| GET | `/api/workers/me` | — | `Worker` | |
-| PUT | `/api/workers/me` | `{ bio?, hasShop?, shopLocation? }` | `{ worker }` | |
-| GET | `/api/payments/history` | — | `Transaction[]` | |
-| GET | `/api/workers/me/earnings` | — | `{ balance, transactions[] }` | |
+| GET | `/api/requests/:id/offers` | — | `Offer[]` | Reconnect / initial-load fallback for the live offers feed |
+| POST | `/api/requests/:id/cancel` | — | `{ request }` | User cancels their own request — only allowed while status is `open` |
+| GET | `/api/workers/me/requests` | — | `Request[]` | Open requests matching this worker's `workType` (used by requests feed) |
+| POST | `/api/requests/:id/offer` | `{ price }` | `{ offerId, priceWithFee }` | Worker submits a price. Server computes `price × 1.05` — **never trust a client-sent total** |
+| POST | `/api/requests/:id/decline` | — | `{ success }` | Worker declines a request — drops it from their feed |
+| POST | `/api/requests/:id/choose` | `{ offerId }` | `{ jobId }` | User picks a handyman **by offerId** (not workerId). Creates a `pending` job |
+| PATCH | `/api/jobs/:id/status` | `{ status: 'started'\|'finished'\|'canceled', paymentType?: 'online'\|'cash' }` | `{ job, paymentUrl? }` | **User-only.** `paymentType` required when `status = 'finished'`. `paymentUrl` is present in the response only for `finished` + `online` (Paymob hosted-checkout redirect) |
+| POST | `/api/jobs/:id/cancel` | — | `{ job }` | **Worker-only** — distinct from the PATCH above. Allowed from `pending` or `started` |
+| POST | `/api/webhooks/paymob` | Paymob payload | `200 OK` | HMAC-verified. Backend confirms payment and emits `payment_confirmed` → `job_status_changed` |
+| POST | `/api/jobs/:id/payout` | — | `{ payout }` | Worker requests payout of their earnings balance via Paymob |
+| GET | `/api/payments/history` | — | `Transaction[]` | Paginated list of user's payments with job summary, amount, status, and `method` |
+| GET | `/api/workers/me/earnings` | — | `{ balance, transactions[] }` | Worker's payable balance + transaction history (online jobs only — cash jobs excluded) |
+| GET | `/api/workers/me` | — | `Worker` | Authenticated worker's own profile |
+| PUT | `/api/workers/me` | `{ bio?, hasShop?, shopLocation? }` | `{ worker }` | Edit worker profile |
+| GET | `/api/workers/:id` | — | `Worker` (public) | Public profile: name, workType, bio, shop info, `averageRating`, `ratingsCount`, `completedJobsCount` |
+| POST | `/api/jobs/:id/rate` | `{ stars, comment? }` | `{ rating }` | User-only, once per job, only after `status = 'finished'` |
+| GET | `/api/workers/:id/ratings` | pagination params | `{ ratings[], average, count }` | Paginated ratings for a worker's public profile |
 
-### WebSocket Events (planned)
+### WebSocket Events
+
+> Event names match exactly what `WebSocketService` exposes — snake_case, not dot-notation. Backend emits these names verbatim.
 
 | Event | Direction | Payload | Description |
 |-------|-----------|---------|-------------|
-| `new_request` | Server → Worker | `{ request }` | New matching request available |
-| `request_closed` | Server → Worker | `{ requestId }` | Request no longer open |
-| `new_offer` | Server → User | `{ offer }` | Handyman submitted an offer |
-| `offer_chosen` | Server → Worker | `{ jobId }` | This handyman was selected |
-| `offer_rejected` | Server → Worker | `{ requestId }` | Another handyman was chosen |
-| `job_status_changed` | Server → Both | `{ jobId, status }` | Job state transition |
-| `job_canceled_by_user` | Server → Worker | `{ jobId }` | User canceled the job |
-| `job_canceled_by_worker` | Server → User | `{ jobId }` | Handyman canceled the job |
-| `payment_confirmed` | Server → Both | `{ jobId, amount }` | Payment successful |
+| `new_request` | Server → matching Workers (`worktype:{type}` room) | `{ request }` | New request broadcast to workers with matching work type |
+| `request_closed` | Server → other matching Workers | `{ requestId }` | Request no longer open (another worker was chosen) |
+| `new_offer` | Server → requesting User | `{ offer }` | Worker submitted an offer |
+| `offer_chosen` | Server → chosen Worker | `{ jobId }` | This worker was selected by the user |
+| `offer_rejected` | Server → losing Workers | `{ requestId }` | Someone else was chosen for this request |
+| `job_status_changed` | Server → User + Worker | `{ jobId, status }` | Covers `started`, `finished`, and user-initiated `canceled` transitions |
+| `job_canceled_by_user` | Server → Worker | `{ jobId }` | User canceled the job — distinct event for targeted UI copy |
+| `job_canceled_by_worker` | Server → User | `{ jobId }` | Worker canceled the job — renders "The handyman canceled" messaging |
+| `payment_confirmed` | Server → User + Worker | `{ jobId, amount }` | Fired from Paymob webhook, immediately before `job_status_changed` → `finished` |
+
+### Service-only / unconfirmed endpoints
+
+The following endpoints are called in the frontend services but have **no matching row** in `BACKEND_PLAN.md §9`. The backend team must confirm or add them:
+
+| Method | Endpoint | Service | Notes |
+|--------|----------|---------|-------|
+| GET | `/api/jobs/:id` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | Single job fetch — likely needed but unlisted in backend contract |
+| GET | `/api/jobs/active` | [`job.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/job.service.ts) | Current user's active job — unlisted; backend team must confirm URL and shape |
+| GET | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | Normal user self-profile — no backend endpoint defined for this |
+| PUT | `/api/users/me` | [`profile.service.ts`](file:///home/nelatawy/Projects/Handy/frontend/src/app/core/services/profile.service.ts) | Normal user profile edit — no backend endpoint defined for this |
+
+### Service ↔ Contract discrepancy fix log (2026-09-10)
+
+All of the following were found by comparing service code to this contract table and corrected in the same commit:
+
+| File | Was | Fixed to |
+|------|-----|----------|
+| `models.ts` → `OtpSendResponse` | `{ success, channel, telegramLink? }` | `{ channel, telegramBotUrl?, expiresIn }` |
+| `models.ts` → `AuthResponse` | `{ token, role, user }` | `{ token, role }` (no embedded user object) |
+| `models.ts` → `Worker` | `totalRatings`, `completedJobs` | `ratingsCount`, `completedJobsCount` |
+| `models.ts` → `JobRequest.status` | `'open' \| 'closed'` | `'open' \| 'offer_selected' \| 'cancelled'` |
+| `models.ts` → `Transaction` | `paymentType`, `status: 'confirmed'` | `method`, `status: 'paid'` |
+| `request.service.ts` → `CreateRequestBody` | `imageUrls: string[]` | `images: string[]` |
+| `request.service.ts` → `CreateRequestResponse` | `{ requestId, request }` | `{ requestId }` |
+| `request.service.ts` → `declineOffer()` | sent body `{ offerId }` | no body (parameterless POST) |
+| `request.service.ts` → `getOpenRequests()` | `GET /api/requests/open` | `GET /api/workers/me/requests` |
+| `job.service.ts` → `updateStatus()` | returns `Observable<Job>` | returns `Observable<{ job, paymentUrl? }>` |
+| `payment.service.ts` → `withdraw()` | `POST /api/workers/me/withdraw → { redirectUrl?, message }` | `POST /api/jobs/:id/payout → { payout }` |
+| `profile.service.ts` | missing `getPublicWorkerProfile()` and `getWorkerRatings()` | added both |
 
 ---
 

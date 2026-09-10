@@ -7,17 +7,14 @@ import { WorkType } from '../models/enums';
 export interface CreateRequestBody {
   description: string;
   workType: WorkType;
-  imageUrls: string[];
+  images: string[]; // already-uploaded Supabase Storage URLs (max 5)
 }
 
 export interface CreateRequestResponse {
   requestId: string;
-  request: JobRequest;
 }
 
-export interface ChooseOfferResponse {
-  jobId: string;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class RequestService {
@@ -44,18 +41,23 @@ export class RequestService {
   }
 
   /** POST /api/requests/:id/choose — user picks an offer → creates a Job */
-  chooseOffer(requestId: string, offerId: string): Observable<ChooseOfferResponse> {
-    return this.http.post<ChooseOfferResponse>(`/api/requests/${requestId}/choose`, { offerId });
+  chooseOffer(requestId: string, offerId: string): Observable<{ jobId : string }> {
+    return this.http.post<{ jobId : string }>(`/api/requests/${requestId}/choose`, { offerId });
   }
 
-  /** GET /api/requests/open — fetch open requests visible to the current worker */
+  /** POST /api/requests/:id/decline — worker signals no interest; no body required */
+  declineOffer(requestId: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`/api/requests/${requestId}/decline`, {});
+  }
+
+  /** GET /api/workers/me/requests — open requests matching this worker's work type */
   getOpenRequests(): Observable<JobRequest[]> {
-    return this.http.get<JobRequest[]>('/api/requests/open');
+    return this.http.get<JobRequest[]>('/api/workers/me/requests');
   }
 
   /** POST /api/requests/:id/offer — worker submits an offer */
-  submitOffer(requestId: string, price: number): Observable<{ offerId: string }> {
-    return this.http.post<{ offerId: string }>(`/api/requests/${requestId}/offer`, { price });
+  submitOffer(requestId: string, price: number): Observable<{ offerId: string , priceWithFee : number }> {
+    return this.http.post<{ offerId: string , priceWithFee : number }>(`/api/requests/${requestId}/offer`, { price });
   }
 
   /** POST /api/ai-suggest — Gemini Flash description enhancement */
