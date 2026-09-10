@@ -54,10 +54,15 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.requestId.set(id);
     this.loadRequest(id);
-    this.subscribeToWebSocket();
+    this.subscribeToWebSocket(id);
   }
 
   ngOnDestroy(): void {
+    // Leave the request room so we stop receiving events for this request
+    const id = this.requestId();
+    if (id) {
+      this.ws.leaveRequestRoom(id);
+    }
     this.subs.unsubscribe();
   }
 
@@ -73,27 +78,27 @@ export class LiveOffersComponent implements OnInit, OnDestroy {
       },
     });
 
-    // Fetch existing offers (in case page was refreshed)
+    // Fetch existing offers (in case page was refreshed or navigated back to)
     this.requestSvc.getOffers(id).subscribe({
       next: (offers) => this.offers.set(offers),
       error: () => {},
     });
   }
 
-  private subscribeToWebSocket(): void {
+  private subscribeToWebSocket(requestId: string): void {
     this.ws.connect();
+    // Join the request-scoped room — all new_offer events from here belong to this request
+    this.ws.joinRequestRoom(requestId);
 
-    // New offer from a handyman — backend emits { offer: {...} }, not the offer directly
+    // New offer from a handyman — no client-side requestId filtering needed
+    // because the backend only emits to request:{requestId} room members
     this.subs.add(
       this.ws.on<{ offer: Offer }>('new_offer').subscribe(({ offer }) => {
-        // Only add if this offer is for the current request
-        if (offer.requestId === this.requestId()) {
-          this.offers.update(list => {
-            const exists = list.some(o => o.id === offer.id);
-            return exists ? list : [...list, offer];
-          });
-          this.notify.info('TOAST.NEW_OFFER', { name: offer.worker.username });
-        }
+        this.offers.update(list => {
+          const exists = list.some(o => o.id === offer.id);
+          return exists ? list : [...list, offer];
+        });
+        this.notify.info('TOAST.NEW_OFFER', { name: offer.worker.username });
       })
     );
   }

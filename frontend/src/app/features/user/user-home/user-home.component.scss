@@ -222,15 +222,104 @@
 
 // Skeleton
 .skeleton {
-  background: linear-gradient(90deg, v.$color-gray-100 25%, v.$color-gray-200 50%, v.$color-gray-100 75%);
+  background: linear-gradient(90deg, v.$color-surface-2 25%, v.$color-border 50%, v.$color-surface-2 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: v.$radius-2xl;
 
   &--card { height: 160px; }
+  &--sm   { height: 80px; }
 }
 
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position:  200% 0; }
+}
+
+// Pending requests section
+.pending-requests {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-3;
+
+  &__title {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: v.$space-2;
+  }
+}
+
+// Individual pending request card
+.pending-req-card {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  background: v.$color-surface;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-xl;
+  padding: v.$space-4 v.$space-4;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: v.$transition-base;
+
+  &:hover {
+    border-color: v.$color-primary-400;
+    box-shadow: v.$shadow-md;
+    transform: translateY(-1px);
+  }
+
+  &__emoji {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__type {
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-semibold;
+    color: v.$color-primary-600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: v.$space-1;
+  }
+
+  &__desc {
+    font-size: v.$font-size-sm;
+    color: v.$color-text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__badge {
+    flex-shrink: 0;
+    font-size: v.$font-size-xs;
+    font-weight: v.$font-weight-semibold;
+    padding: v.$space-1 v.$space-2;
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: v.$radius-full;
+    white-space: nowrap;
+  }
+
+  &__arrow {
+    color: v.$color-text-muted;
+    font-size: v.$font-size-lg;
+    flex-shrink: 0;
+  }
 }

@@ -40,3 +40,26 @@ def handle_connect(auth=None):
 @socketio.on("disconnect")
 def handle_disconnect():
     pass
+
+
+@socketio.on("join_request_room")
+def handle_join_request_room(data):
+    """Allow a client to subscribe to real-time offer updates for a specific request.
+
+    The client emits: { requestId: "<uuid>" }
+    The socket connection was already authenticated at connect time,
+    so we simply join the scoped room here.
+    """
+    request_id = (data or {}).get("requestId")
+    if request_id:
+        join_room(f"request:{request_id}")
+
+
+@socketio.on("leave_request_room")
+def handle_leave_request_room(data):
+    """Allow a user to unsubscribe from a request room when they navigate away."""
+    from flask_socketio import leave_room
+
+    request_id = (data or {}).get("requestId")
+    if request_id:
+        leave_room(f"request:{request_id}")

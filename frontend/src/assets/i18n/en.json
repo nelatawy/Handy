@@ -1,7 +1,6 @@
 {
   "APP_NAME": "Handy",
   "APP_TAGLINE": "Your trusted handyman, on demand",
-
   "HOME": {
     "GREETING": "Hello,",
     "GREETING_FALLBACK_NAME": "there",
@@ -11,9 +10,10 @@
     "WORKER_WELCOME": "Welcome back,",
     "WORKER_SUB": "Ready to take on your next job?",
     "BROWSE_REQUESTS_CTA": "Browse Requests",
-    "BROWSE_REQUESTS_CTA_SUB": "Find jobs matching your skill set and submit offers"
+    "BROWSE_REQUESTS_CTA_SUB": "Find jobs matching your skill set and submit offers",
+    "PENDING_REQUESTS": "Pending Requests",
+    "WAITING_OFFERS": "Waiting for offers"
   },
-
   "NAV": {
     "HOME": "Home",
     "REQUESTS": "Requests",
@@ -23,7 +23,6 @@
     "HISTORY": "History",
     "LOGOUT": "Logout"
   },
-
   "AUTH": {
     "LOGIN": "Login",
     "REGISTER": "Register",
@@ -82,26 +81,22 @@
       "GENERIC": "Something went wrong. Please try again."
     }
   },
-
   "WORK_TYPE": {
     "plumber": "Plumber",
     "electrician": "Electrician",
     "carpenter": "Carpenter",
     "it": "IT Technician"
   },
-
   "JOB_STATUS": {
     "pending": "Pending",
     "started": "In Progress",
     "finished": "Completed",
     "canceled": "Canceled"
   },
-
   "PAYMENT_TYPE": {
     "online": "Paid Online",
     "cash": "Paid in Cash"
   },
-
   "REQUEST": {
     "MAKE_REQUEST": "Make a Request",
     "PAGE_SUB": "Tell us what you need and we'll find you the right handyman.",
@@ -128,7 +123,6 @@
       "IMAGE_TOO_LARGE_NAMED": "{{name}} is too large (max 20 MB)"
     }
   },
-
   "OFFERS": {
     "TITLE": "Offers Received",
     "WAITING": "Waiting for offers...",
@@ -145,7 +139,6 @@
     "CHOSEN_CONFIRM": "You've hired {{name}}!",
     "REDIRECTING_TO_JOB": "Redirecting to your active job..."
   },
-
   "JOB": {
     "TITLE": "Active Job",
     "HANDYMAN": "Your Handyman",
@@ -178,7 +171,6 @@
     "RATE_THANKS": "Thanks for your rating!",
     "EARNINGS_INFO": "Your earnings for this job will be credited to your balance"
   },
-
   "WORKER": {
     "FEED_TITLE": "Available Requests",
     "FEED_SUB": "Open requests that match your specialty",
@@ -233,7 +225,6 @@
     "CANCEL_CONFIRM": "Are you sure you want to cancel? The customer will be notified.",
     "YES_CANCEL_JOB": "Yes, Cancel Job"
   },
-
   "PROFILE": {
     "TITLE": "Profile",
     "EDIT": "Edit Profile",
@@ -253,7 +244,6 @@
     "NO_BIO": "No bio added yet.",
     "NO_SHOP": "No shop listed."
   },
-
   "PAYMENT": {
     "HISTORY_TITLE": "Payment History",
     "HISTORY_SUBTITLE": "All your past payments for completed jobs",
@@ -276,7 +266,6 @@
     "STATUS_PENDING": "Pending",
     "STATUS_FAILED": "Failed"
   },
-
   "TOAST": {
     "NEW_OFFER": "New offer received from {{name}}",
     "OFFER_CHOSEN": "You've been selected! Check your active job.",
@@ -313,7 +302,6 @@
     "PAYMENT_CONFIRMED": "Payment of {{amount}} confirmed!",
     "GENERIC_ERROR": "Something went wrong. Please try again."
   },
-
   "COMMON": {
     "LOADING": "Loading...",
     "SAVE": "Save",

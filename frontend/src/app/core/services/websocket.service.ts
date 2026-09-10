@@ -60,6 +60,16 @@ export class WebSocketService implements OnDestroy {
     this.socket?.emit(event, data);
   }
 
+  /** Join a request-scoped room to receive targeted offer events for that request */
+  joinRequestRoom(requestId: string): void {
+    this.socket?.emit('join_request_room', { requestId });
+  }
+
+  /** Leave the request-scoped room when navigating away */
+  leaveRequestRoom(requestId: string): void {
+    this.socket?.emit('leave_request_room', { requestId });
+  }
+
   ngOnDestroy(): void {
     this.disconnect();
     this._messages$.complete();

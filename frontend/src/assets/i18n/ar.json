@@ -10,7 +10,9 @@
     "WORKER_WELCOME": "مرحباً بعودتك،",
     "WORKER_SUB": "هل أنت مستعد لمهمتك التالية؟",
     "BROWSE_REQUESTS_CTA": "تصفح الطلبات",
-    "BROWSE_REQUESTS_CTA_SUB": "ابحث عن مهام تناسب مهاراتك وقدم عروضك"
+    "BROWSE_REQUESTS_CTA_SUB": "ابحث عن مهام تناسب مهاراتك وقدم عروضك",
+    "PENDING_REQUESTS": "الطلبات المعلقة",
+    "WAITING_OFFERS": "في انتظار العروض"
   },
   "NAV": {
     "HOME": "الرئيسية",

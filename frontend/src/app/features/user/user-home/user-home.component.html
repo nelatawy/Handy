@@ -32,6 +32,32 @@
     </div>
   }
 
+  <!-- Pending Requests section -->
+  @if (loadingRequests()) {
+    <div class="skeleton skeleton--card skeleton--sm"></div>
+  } @else if (pendingRequests().length > 0) {
+    <section class="pending-requests">
+      <h2 class="pending-requests__title">{{ 'HOME.PENDING_REQUESTS' | translate }}</h2>
+      <div class="pending-requests__list">
+        @for (req of pendingRequests(); track req.id) {
+          <button
+            class="pending-req-card"
+            (click)="goToRequest(req.id)"
+            type="button"
+          >
+            <span class="pending-req-card__emoji">{{ workTypeEmoji[req.workType] ?? '🛠️' }}</span>
+            <div class="pending-req-card__body">
+              <div class="pending-req-card__type">{{ 'WORK_TYPE.' + req.workType | translate }}</div>
+              <div class="pending-req-card__desc">{{ req.description }}</div>
+            </div>
+            <span class="pending-req-card__badge">{{ 'HOME.WAITING_OFFERS' | translate }}</span>
+            <span class="pending-req-card__arrow">→</span>
+          </button>
+        }
+      </div>
+    </section>
+  }
+
   <!-- Primary CTA -->
   <button
     class="cta-btn"

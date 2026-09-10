@@ -112,7 +112,7 @@ def create_offer(request_id: str, worker_id: str, price: Decimal) -> Offer:
     db.session.add(offer)
     db.session.commit()
 
-    emit_new_offer(req.user_id, serialize_offer(offer))
+    emit_new_offer(req.user_id, req.id, serialize_offer(offer))
     return offer
 
 

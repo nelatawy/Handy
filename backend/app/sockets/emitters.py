@@ -15,8 +15,12 @@ def emit_request_closed(work_type: str, request_id: str):
     socketio.emit("request_closed", {"requestId": request_id}, room=f"worktype:{work_type}")
 
 
-def emit_new_offer(user_id: str, offer_payload: dict):
+def emit_new_offer(user_id: str, request_id: str, offer_payload: dict):
+    # Notify the user's personal room (for global in-app notifications)
     socketio.emit("new_offer", {"offer": offer_payload}, room=f"user:{user_id}")
+    # Also notify the request-scoped room (for the live-offers view, supports multiple concurrent requests)
+    socketio.emit("new_offer", {"offer": offer_payload}, room=f"request:{request_id}")
+
 
 
 def emit_offer_chosen(worker_id: str, job_id: str):
