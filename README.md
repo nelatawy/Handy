@@ -6,6 +6,8 @@
 
 *For the English version, scroll down to [English](#english).*
 
+Demo Video | فيديو توضيحي: https://drive.google.com/file/d/1LbaJne4zyKY5bRBFEMpfDtU9MIU_-O2e/view?usp=sharing
+
 ---
 
 ## جدول المحتويات (العربية)
